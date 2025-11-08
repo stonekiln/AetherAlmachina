@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "AetherAlmachina.sln"
+    "dotnet.defaultSolution": "AetherAlmachina.slnx"
 }
