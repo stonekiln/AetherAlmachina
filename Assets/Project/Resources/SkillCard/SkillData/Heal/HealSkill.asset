@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 027c72f9fedeceb45ac2cc7a4d670c30, type: 3}
+  m_Name: HealSkill
+  m_EditorClassIdentifier: Assembly-CSharp::HealSkill
+  skillName: "\u7652\u5F0F\u30D7\u30ED\u30C8\u30BF\u30A4\u30D7-\u58F1-"
+  cost: 1
+  power: 0.8
+  icon: {fileID: 21300000, guid: 7c83604fdb533f8478c9435bb2bd5bf1, type: 3}

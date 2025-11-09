@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-class Show
+static class ArrayLog
 {
-    static public void Array(List<int> list)
+    static public void Show(this List<int> list)
     {
         Debug.Log(string.Join(",", list));
     }
 
-    static public void Array(int[] list)
+    static public void Show(this int[] list)
     {
         Debug.Log(string.Join(",", list));
     }
