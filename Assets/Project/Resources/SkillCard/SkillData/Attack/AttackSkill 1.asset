@@ -15,4 +15,4 @@ MonoBehaviour:
   skillName: "\u6483\u5F0F\u30D7\u30ED\u30C8\u30BF\u30A4\u30D7-\u5F10-"
   cost: 2
   power: 1
-  icon: {fileID: 21300000, guid: 9f65c799cd6377f40b23bd4ac2138696, type: 3}
+  icon: {fileID: 21300000, guid: e9e9ba9972f9a41479c1dbea228c1ad7, type: 3}

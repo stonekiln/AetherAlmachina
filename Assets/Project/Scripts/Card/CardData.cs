@@ -1,16 +1,16 @@
-using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardData : MonoBehaviour
 {
-    int cardID;
     int cost;
-    SpriteRenderer spriteRenderer;
-    Image CardImage;
+    Image image;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void Initialize(Sprite icon, int cardCost)
     {
-        
+        Debug.Log(icon.name);
+        image = gameObject.GetComponent<Image>();
+        image.sprite = icon;
+        cost = cardCost;
     }
 }

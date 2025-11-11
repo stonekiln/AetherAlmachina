@@ -1,10 +1,10 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "BuffSkill", menuName = "Skills/Buff Skill")]
-public class BuffSkill : ScriptableObject
+public class BuffSkill : SkillBase
 {
-    public string skillName;
-    public int cost;
-    public float power;
-    public Sprite icon;
+    public override void Activate()
+    {
+        Debug.Log(name + "が発動しました");
+    }
 }

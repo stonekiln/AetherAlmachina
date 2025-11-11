@@ -1,22 +1,24 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class CardSelecter : MonoBehaviour, ButtonBase
 {
-    public System.Action onClickCallback;
-    Vector3 baseScale;
-    bool isHover;
+    public Action onClickCallback;
+    public bool isHover;
+    public GameObject designObject;
+    const float OffsetY= 20f;
 
     public void Awake()
     {
-        baseScale = transform.localScale;
         isHover = false;
+        designObject = transform.parent.GetChild(0).gameObject;
     }
 
     public void SetActive()
     {
-        transform.localScale = baseScale;
+
     }
 
     public void SetInActive()
@@ -27,11 +29,13 @@ public class CardSelecter : MonoBehaviour, ButtonBase
     void Hover()
     {
         isHover = true;
+        designObject.GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, OffsetY);
     }
 
     void DeHover()
     {
         isHover = false;
+        designObject.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0f, OffsetY);
     }
 
     void Push()
@@ -50,6 +54,7 @@ public class CardSelecter : MonoBehaviour, ButtonBase
     public void OnPointerClick(PointerEventData eventData)
     {
         onClickCallback.Invoke();
+        Destroy(transform.parent.gameObject);
     }
 
     public void OnPointerDown(PointerEventData eventData)
