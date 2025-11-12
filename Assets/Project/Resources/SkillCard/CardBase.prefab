@@ -88,6 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 346e381a9b1544d4da862c3ccb886a96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  image: {fileID: 0}
 --- !u!1 &6073471129331547462
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,6 +178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardSelecter
   isHover: 0
+  designObject: {fileID: 0}
 --- !u!1 &8404121699289616142
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,5 +214,5 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1, y: 100}
+  m_SizeDelta: {x: 70, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}

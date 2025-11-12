@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class HandController : MonoBehaviour
 {
@@ -20,17 +18,23 @@ public class HandController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void Draw(int count)
     {
-        hand.AddRange(deck.Take(count).Select(card => Instantiate(card.CardObject, transform)));
+        hand.AddRange(deck.Take(count).Select(card => SetPareantGetChild(card.Create.Invoke())));
         deck = deck.GetRange(count, deck.Count - count);
+    }
+
+    GameObject SetPareantGetChild(GameObject child)
+    {
+        child.transform.SetParent(transform, false);
+        return child;
     }
 
     void HandAdjust()
     {
-        
+
     }
 }

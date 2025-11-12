@@ -10,7 +10,7 @@ public abstract class SkillBase : ScriptableObject
 
     public GameObject CreateObject()
     {
-        GameObject cardObject = Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase"));
+        GameObject cardObject = Instantiate(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")));
         cardObject.transform.GetChild(0).GetComponent<CardData>().Initialize(icon, cost);
         cardObject.transform.GetChild(1).GetComponent<CardSelecter>().onClickCallback = () => Activate();
         return cardObject;

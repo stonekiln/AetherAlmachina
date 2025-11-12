@@ -4,11 +4,11 @@ using UnityEngine;
 public class SkillData
 {
     public Action Activate { get; private set; }
-    public GameObject CardObject { get; private set; }
+    public Func<GameObject> Create { get; private set; }
 
-    public SkillData(Action action, GameObject cardObject)
+    public SkillData(Action action, Func<GameObject> create)
     {
         Activate = action;
-        CardObject = cardObject;
+        Create = create;
     }
 }

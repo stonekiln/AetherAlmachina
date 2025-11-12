@@ -7,13 +7,18 @@ public class CardSelecter : MonoBehaviour, ButtonBase
 {
     public Action onClickCallback;
     public bool isHover;
-    public GameObject designObject;
-    const float OffsetY= 20f;
+    GameObject designObject;
+    readonly Vector2 Offset = new(0, 20f);
+    GameObject parentObject;
+    Vector2 initialSize;
+    readonly Vector2 extraSpacing = new(40f, 0);
 
     public void Awake()
     {
         isHover = false;
         designObject = transform.parent.GetChild(0).gameObject;
+        parentObject = transform.parent.gameObject;
+        initialSize = parentObject.GetComponent<RectTransform>().rect.size;
     }
 
     public void SetActive()
@@ -29,13 +34,17 @@ public class CardSelecter : MonoBehaviour, ButtonBase
     void Hover()
     {
         isHover = true;
-        designObject.GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, OffsetY);
+        designObject.GetComponent<RectTransform>().anchoredPosition = Offset;
+        RectTransform parentRect = parentObject.GetComponent<RectTransform>();
+        parentRect.sizeDelta = initialSize + extraSpacing;
     }
 
     void DeHover()
     {
         isHover = false;
-        designObject.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0f, OffsetY);
+        designObject.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        RectTransform parentRect = parentObject.GetComponent<RectTransform>();
+        parentRect.sizeDelta = initialSize;
     }
 
     void Push()
@@ -47,14 +56,13 @@ public class CardSelecter : MonoBehaviour, ButtonBase
     {
         if (isHover)
         {
-            
+
         }
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         onClickCallback.Invoke();
-        Destroy(transform.parent.gameObject);
     }
 
     public void OnPointerDown(PointerEventData eventData)

@@ -22,19 +22,19 @@ class SkillDataBase : MonoBehaviour
         }
         foreach (AttackSkill skill in Resources.LoadAll<AttackSkill>(Path.Combine("SkillCard", "SkillData", "Attack")))
         {
-            Skills[attack, skill.cost].Add(new SkillData(skill.Activate, skill.CreateObject()));
+            Skills[attack, skill.cost].Add(new SkillData(() => skill.Activate(), () => skill.CreateObject()));
         }
         foreach (GuardSkill skill in Resources.LoadAll<GuardSkill>(Path.Combine("SkillCard", "SkillData", "Guard")))
         {
-            Skills[Guard, skill.cost].Add(new SkillData(skill.Activate, skill.CreateObject()));
+            Skills[Guard, skill.cost].Add(new SkillData(() => skill.Activate(), () => skill.CreateObject()));
         }
         foreach (HealSkill skill in Resources.LoadAll<HealSkill>(Path.Combine("SkillCard", "SkillData", "Heal")))
         {
-            Skills[Heal, skill.cost].Add(new SkillData(skill.Activate, skill.CreateObject()));
+            Skills[Heal, skill.cost].Add(new SkillData(() => skill.Activate(), () => skill.CreateObject()));
         }
         foreach (BuffSkill skill in Resources.LoadAll<BuffSkill>(Path.Combine("SkillCard", "SkillData", "Buff")))
         {
-            Skills[Buff, skill.cost].Add(new SkillData(skill.Activate, skill.CreateObject()));
+            Skills[Buff, skill.cost].Add(new SkillData(() => skill.Activate(), () => skill.CreateObject()));
         }
     }
 }
