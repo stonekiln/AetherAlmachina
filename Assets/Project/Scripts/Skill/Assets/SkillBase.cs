@@ -7,6 +7,8 @@ public abstract class SkillBase : ScriptableObject
     public int cost;
     public float power;
     public Sprite icon;
+    public Entity owner;
+    public Entity target;
 
     public GameObject CreateObject()
     {

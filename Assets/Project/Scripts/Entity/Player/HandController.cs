@@ -23,7 +23,13 @@ public class HandController : MonoBehaviour
 
     void Draw(int count)
     {
-        hand.AddRange(deck.Take(count).Select(card => SetPareantGetChild(card.Create.Invoke())));
+        hand = hand.Concat(deck.Take(count).Select(card => SetPareantGetChild(card.Create.Invoke())))
+                   .OrderBy(card => card.transform.GetChild(0).GetComponent<CardData>().Cost)
+                   .Select((card, index) =>
+                   {
+                       card.transform.SetSiblingIndex(index);
+                       return card;
+                   }).ToList();
         deck = deck.GetRange(count, deck.Count - count);
     }
 
