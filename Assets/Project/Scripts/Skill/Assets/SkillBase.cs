@@ -8,7 +8,6 @@ public abstract class SkillBase : ScriptableObject
     public float power;
     public Sprite icon;
     public Entity owner;
-    public Entity target;
 
     public GameObject CreateObject()
     {
@@ -16,6 +15,10 @@ public abstract class SkillBase : ScriptableObject
         cardObject.transform.GetChild(0).GetComponent<CardData>().Initialize(icon, cost);
         cardObject.transform.GetChild(1).GetComponent<CardSelecter>().onClickCallback = () => Activate();
         return cardObject;
+    }
+    public void SetOwner(GameObject ownerObject)
+    {
+        owner = ownerObject.GetComponent<Entity>();
     }
     public abstract void Activate();
 }

@@ -6,5 +6,6 @@ public class AttackSkill : SkillBase
     public override void Activate()
     {
         Debug.Log(skillName + "が発動しました");
+        owner.Attack(power);
     }
 }

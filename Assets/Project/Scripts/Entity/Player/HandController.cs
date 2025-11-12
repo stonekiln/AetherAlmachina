@@ -5,12 +5,14 @@ using UnityEngine;
 public class HandController : MonoBehaviour
 {
     const int HandLimit = 5;
+    [SerializeField] GameObject playerObject;
     public List<SkillData> deck;
     List<GameObject> hand;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        deck.ForEach(card => card.SetOwner.Invoke(playerObject));
         hand = new List<GameObject>();
         Draw(HandLimit);
     }
@@ -23,24 +25,20 @@ public class HandController : MonoBehaviour
 
     void Draw(int count)
     {
-        hand = hand.Concat(deck.Take(count).Select(card => SetPareantGetChild(card.Create.Invoke())))
+        GameObject WrappedSetParent(GameObject child)
+        {
+            child.transform.SetParent(transform, false);
+            return child;
+        }
+
+        hand = hand.Concat(deck.Take(count).Select(card => WrappedSetParent(card.Create.Invoke())))
                    .OrderBy(card => card.transform.GetChild(0).GetComponent<CardData>().Cost)
                    .Select((card, index) =>
                    {
                        card.transform.SetSiblingIndex(index);
                        return card;
                    }).ToList();
+
         deck = deck.GetRange(count, deck.Count - count);
-    }
-
-    GameObject SetPareantGetChild(GameObject child)
-    {
-        child.transform.SetParent(transform, false);
-        return child;
-    }
-
-    void HandAdjust()
-    {
-
     }
 }

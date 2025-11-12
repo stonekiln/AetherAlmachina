@@ -4,11 +4,13 @@ using UnityEngine;
 public class SkillData
 {
     public Action Activate { get; private set; }
+    public Action<GameObject> SetOwner { get; private set; }
     public Func<GameObject> Create { get; private set; }
 
-    public SkillData(Action action, Func<GameObject> create)
+    public SkillData(SkillBase skill)
     {
-        Activate = action;
-        Create = create;
+        Activate = () => skill.Activate();
+        SetOwner = (ownerObject) => skill.SetOwner(ownerObject);
+        Create = () => skill.CreateObject();
     }
 }
