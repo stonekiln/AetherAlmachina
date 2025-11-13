@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ public abstract class SkillBase : ScriptableObject
     [SerializeField] private int cost;
     [SerializeField] private float power;
     [SerializeField] private Sprite icon;
-    public Entity owner;
+    [NonSerialized] public Entity owner;
 
     public string SkillName => skillName;
     public int Cost => cost;

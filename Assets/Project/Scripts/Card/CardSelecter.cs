@@ -6,7 +6,9 @@ using UnityEngine.EventSystems;
 public class CardSelecter : MonoBehaviour, IButtonBase
 {
     public Action onClickCallback;
+    public ClickCallBacks callBacks;
     public bool isHover;
+    public bool isSelect;
     GameObject designObject;
     readonly Vector2 Offset = new(0, 20f);
     GameObject parentObject;
@@ -16,6 +18,7 @@ public class CardSelecter : MonoBehaviour, IButtonBase
     public void Awake()
     {
         isHover = false;
+        isSelect = false;
         designObject = transform.parent.GetChild(0).gameObject;
         parentObject = transform.parent.gameObject;
         initialSize = parentObject.GetComponent<RectTransform>().rect.size;
@@ -39,9 +42,10 @@ public class CardSelecter : MonoBehaviour, IButtonBase
         parentRect.sizeDelta = initialSize + extraSpacing;
     }
 
-    void DeHover()
+    void UnHover()
     {
         isHover = false;
+        isSelect = false;
         designObject.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         RectTransform parentRect = parentObject.GetComponent<RectTransform>();
         parentRect.sizeDelta = initialSize;
@@ -52,7 +56,7 @@ public class CardSelecter : MonoBehaviour, IButtonBase
 
     }
 
-    void DePush()
+    void Release()
     {
         if (isHover)
         {
@@ -62,7 +66,16 @@ public class CardSelecter : MonoBehaviour, IButtonBase
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        onClickCallback.Invoke();
+        if (!isSelect)
+        {
+            isSelect = true;
+            callBacks.AddCallBacks(onClickCallback);
+            callBacks.AddCallBacks(() => UnHover());
+        }
+        else
+        {
+            callBacks.Invoke();
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -72,7 +85,7 @@ public class CardSelecter : MonoBehaviour, IButtonBase
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        DePush();
+        Release();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -82,6 +95,9 @@ public class CardSelecter : MonoBehaviour, IButtonBase
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        DeHover();
+        if (!isSelect)
+        {
+            UnHover();
+        }
     }
 }

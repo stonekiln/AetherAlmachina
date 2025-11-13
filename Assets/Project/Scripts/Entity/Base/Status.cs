@@ -4,7 +4,7 @@ public class Status
     public float attack;
     public float defence;
 
-    public Status(StatusData statusData)
+    public Status(StatusAsset statusData)
     {
         hitPoint = statusData.HitPoint;
         attack = statusData.Attack;

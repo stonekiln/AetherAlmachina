@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-    [SerializeField] protected StatusData statusData;
+    [SerializeField] protected StatusAsset statusAsset;
     protected Status status;
     protected int magicPoint;
     protected float power;
@@ -12,7 +12,7 @@ public class Entity : MonoBehaviour
 
     void Awake()
     {
-        status = new(statusData);
+        status = new(statusAsset);
         magicPoint = 1;
         power = 1;
         handPower = 1;

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Status", menuName = "Status")]
-public class StatusData : ScriptableObject
+public class StatusAsset : ScriptableObject
 {
     [SerializeField] private float hitPoint;
     [SerializeField] private float attack;
