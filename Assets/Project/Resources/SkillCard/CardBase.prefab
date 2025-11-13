@@ -88,7 +88,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 346e381a9b1544d4da862c3ccb886a96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  image: {fileID: 0}
 --- !u!1 &6073471129331547462
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,7 +177,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardSelecter
   isHover: 0
-  designObject: {fileID: 0}
+  isSelect: 0
 --- !u!1 &8404121699289616142
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,6 +187,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5718522449715694804}
+  - component: {fileID: 8145478023946831389}
   m_Layer: 5
   m_Name: CardBase
   m_TagString: Untagged
@@ -216,3 +216,15 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 70, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8145478023946831389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8404121699289616142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1955e7db689df614d82a8cd1cbf55387, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardManager

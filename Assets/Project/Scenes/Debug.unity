@@ -169,6 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandController
   playerObject: {fileID: 2065083159}
+  handPowerTable: {fileID: 11400000, guid: 4a0a141e688773f4a938e7ea083c4fc9, type: 2}
 --- !u!114 &47268807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -855,7 +856,7 @@ GameObject:
   - component: {fileID: 1172196925}
   - component: {fileID: 1172196926}
   m_Layer: 0
-  m_Name: Card
+  m_Name: Deck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

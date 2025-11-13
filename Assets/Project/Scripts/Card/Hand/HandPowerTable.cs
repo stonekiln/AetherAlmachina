@@ -4,24 +4,23 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "HandPowerTable", menuName = "GameSettings/HandPowerTable")]
 public class HandPowerTable : ScriptableObject
 {
-    [SerializeField] private StackTable stack;
-    [SerializeField] private ChainTable chain;
-    public StackTable Stack => stack;
-    public ChainTable Chain => chain;
-}
-
-public class TableBase
-{
-    protected float[] table;
-    public float Level(int value)
+    [SerializeField] StackTable stack;
+    [SerializeField] ChainTable chain;
+    public float Get(int type, int count)
     {
-        return table[value - 1];
+        return type switch
+        {
+            1 => stack.table[count - 1],
+            2 => chain.table[count - 1],
+            _ => 1,
+        };
     }
 }
-[Serializable]
 
-public class StackTable : TableBase
+[Serializable]
+public class StackTable
 {
+    [NonSerialized] public float[] table;
     [SerializeField] float level1;
     [SerializeField] float level2;
     [SerializeField] float level3;
@@ -33,8 +32,9 @@ public class StackTable : TableBase
 }
 
 [Serializable]
-public class ChainTable : TableBase
+public class ChainTable
 {
+    [NonSerialized] public float[] table;
     [SerializeField] float level1;
     [SerializeField] float level2;
     [SerializeField] float level3;

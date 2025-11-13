@@ -22,9 +22,13 @@ public class Entity : MonoBehaviour
     {
         target.Hit(status.attack, power * handPower * skillPower);
     }
-    public void Hit(float attackerAttack, float skillPower)
+    public void Hit(float attackerAttack, float power)
     {
-        status.hitPoint += ((status.defence - attackerAttack < 0) ? status.defence - attackerAttack : 0) * skillPower;
+        status.hitPoint += ((status.defence - attackerAttack < 0) ? status.defence - attackerAttack : 0) * power;
         Debug.Log(gameObject.name + "が攻撃を受けました。\n残りHP:" + status.hitPoint);
+    }
+    public void SetHandPower(float power)
+    {
+        handPower = power;
     }
 }

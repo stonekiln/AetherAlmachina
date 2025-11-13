@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardController : MonoBehaviour
+public class DeckController : MonoBehaviour
 {
     public GameObject playerHand;
     [NonSerialized] public List<SkillData> playerDeck;

@@ -6,22 +6,20 @@ using UnityEngine.EventSystems;
 public class CardSelecter : MonoBehaviour, IButtonBase
 {
     public Action onClickCallback;
-    public ClickCallBacks callBacks;
-    public bool isHover;
-    public bool isSelect;
-    GameObject designObject;
+    CardManager cardData;
+    [NonSerialized] public bool isHover;
+    [NonSerialized] public bool isSelect;
     readonly Vector2 Offset = new(0, 20f);
-    GameObject parentObject;
     Vector2 initialSize;
     readonly Vector2 extraSpacing = new(40f, 0);
 
-    public void Awake()
+    public void Initialize(CardManager cardManager, Action Callback)
     {
+        cardData = cardManager;
+        onClickCallback = Callback;
         isHover = false;
         isSelect = false;
-        designObject = transform.parent.GetChild(0).gameObject;
-        parentObject = transform.parent.gameObject;
-        initialSize = parentObject.GetComponent<RectTransform>().rect.size;
+        initialSize = cardManager.gameObject.GetComponent<RectTransform>().rect.size;
     }
 
     public void SetActive()
@@ -37,8 +35,8 @@ public class CardSelecter : MonoBehaviour, IButtonBase
     void Hover()
     {
         isHover = true;
-        designObject.GetComponent<RectTransform>().anchoredPosition = Offset;
-        RectTransform parentRect = parentObject.GetComponent<RectTransform>();
+        cardData.CardObject.GetComponent<RectTransform>().anchoredPosition = Offset;
+        RectTransform parentRect = cardData.gameObject.GetComponent<RectTransform>();
         parentRect.sizeDelta = initialSize + extraSpacing;
     }
 
@@ -46,8 +44,8 @@ public class CardSelecter : MonoBehaviour, IButtonBase
     {
         isHover = false;
         isSelect = false;
-        designObject.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-        RectTransform parentRect = parentObject.GetComponent<RectTransform>();
+        cardData.CardObject.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        RectTransform parentRect = cardData.gameObject.GetComponent<RectTransform>();
         parentRect.sizeDelta = initialSize;
     }
 
@@ -68,13 +66,11 @@ public class CardSelecter : MonoBehaviour, IButtonBase
     {
         if (!isSelect)
         {
-            isSelect = true;
-            callBacks.AddCallBacks(onClickCallback);
-            callBacks.AddCallBacks(() => UnHover());
+            isSelect = cardData.callBacks.AddCallBacks(onClickCallback + (() => UnHover()), cardData.Cost);
         }
         else
         {
-            callBacks.Invoke();
+            cardData.callBacks.Invoke();
         }
     }
 

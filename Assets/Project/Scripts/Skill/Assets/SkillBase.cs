@@ -18,8 +18,7 @@ public abstract class SkillBase : ScriptableObject
     public GameObject CreateObject()
     {
         GameObject cardObject = Instantiate(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")));
-        cardObject.transform.GetChild(0).GetComponent<CardData>().Initialize(Icon, Cost);
-        cardObject.transform.GetChild(1).GetComponent<CardSelecter>().onClickCallback = () => Activate();
+        cardObject.GetComponent<CardManager>().Initialize(Cost, Icon, () => Activate());
         return cardObject;
     }
     public void SetOwner(GameObject ownerObject)

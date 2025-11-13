@@ -6,6 +6,7 @@ public class HandController : MonoBehaviour
 {
     const int HandLimit = 5;
     [SerializeField] GameObject playerObject;
+    [SerializeField] HandPowerTable handPowerTable;
     public List<SkillData> deck;
     List<GameObject> hand;
     ClickCallBacks clickCallBacks;
@@ -14,7 +15,7 @@ public class HandController : MonoBehaviour
     void Start()
     {
         deck.ForEach(card => card.SetOwner.Invoke(playerObject));
-        clickCallBacks = new();
+        clickCallBacks = new((type,count)=>SetHandPower(type,count));
         hand = new List<GameObject>();
         Draw(HandLimit);
     }
@@ -27,22 +28,28 @@ public class HandController : MonoBehaviour
 
     void Draw(int count)
     {
-        GameObject WrappedSetParent(GameObject child)
+        GameObject SetCard(GameObject child)
         {
             child.transform.SetParent(transform, false);
-            child.transform.GetChild(1).GetComponent<CardSelecter>().callBacks = clickCallBacks;
+            child.GetComponent<CardManager>().callBacks = clickCallBacks;
             return child;
         }
-        GameObject WrappedSetIndex(GameObject child, int index)
+        GameObject SetHand(GameObject child, int index)
         {
             child.transform.SetSiblingIndex(index);
             return child;
         }
 
-        hand = hand.Concat(deck.Take(count).Select(card => WrappedSetParent(card.Create.Invoke())))
-                   .OrderBy(card => card.transform.GetChild(0).GetComponent<CardData>().Cost)
-                   .Select((card, index) => WrappedSetIndex(card, index)).ToList();
+        hand = hand.Concat(deck.Take(count).Select(card => SetCard(card.Create.Invoke())))
+                   .OrderBy(card => card.GetComponent<CardManager>().Cost)
+                   .Select((card, index) => SetHand(card, index)).ToList();
 
         deck = deck.GetRange(count, deck.Count - count);
+    }
+
+    void SetHandPower(int type,int count)
+    {
+        //Debug.Log(handPowerTable.Get(type, count));
+        playerObject.GetComponent<Entity>().SetHandPower(handPowerTable.Get(type,count));        
     }
 }
