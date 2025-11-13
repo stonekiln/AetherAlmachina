@@ -5,6 +5,6 @@ public class BuffSkill : SkillBase
 {
     public override void Activate()
     {
-        Debug.Log(skillName + "が発動しました");
+        Debug.Log(SkillName + "が発動しました");
     }
 }

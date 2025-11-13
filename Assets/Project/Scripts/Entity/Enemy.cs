@@ -20,10 +20,4 @@ public class Enemy : Entity
     {
         playerObject.GetComponent<Player>().target = gameObject.GetComponent<Enemy>();
     }
-    
-    public override void Hit(float attackerAttack, float skillPower)
-    {
-        base.Hit(attackerAttack, skillPower);
-        Debug.Log(gameObject.name + "が攻撃を受けました。\n残りHP:" + hitPoint);
-    }
 }

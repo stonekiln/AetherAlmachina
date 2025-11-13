@@ -168,6 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67b295f90bbe9ae4b9af5c30487981d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandController
+  playerObject: {fileID: 2065083159}
 --- !u!114 &47268807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,7 +209,7 @@ GameObject:
   - component: {fileID: 67899037}
   - component: {fileID: 67899036}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: DebugPuppet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -241,6 +242,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc1a8d09af7b818469cc9e4e3739e315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  statusData: {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
+  playerObject: {fileID: 2065083159}
 --- !u!136 &67899037
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1256,6 +1259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb172c25e4023fe4099a15ee197a8542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
+  statusData: {fileID: 11400000, guid: e27ed0df1bb44ec47a71dfba5b5d49d8, type: 2}
 --- !u!136 &2065083162
 CapsuleCollider:
   m_ObjectHideFlags: 0

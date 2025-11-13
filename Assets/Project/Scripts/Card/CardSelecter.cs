@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CardSelecter : MonoBehaviour, ButtonBase
+public class CardSelecter : MonoBehaviour, IButtonBase
 {
     public Action onClickCallback;
     public bool isHover;
