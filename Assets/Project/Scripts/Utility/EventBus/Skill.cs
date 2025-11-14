@@ -1,0 +1,7 @@
+namespace EventBus
+{
+    namespace Skill
+    {
+        
+    }
+}
