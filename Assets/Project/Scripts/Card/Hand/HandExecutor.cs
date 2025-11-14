@@ -1,23 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
-public class ClickCallBacks
+public abstract class HandExecutor : MonoBehaviour
 {
     const int Stack = 1;
     const int Chain = 2;
-    readonly Action<int, int> setHandPower;
     Action callBacks;
     LinkedList<int> selected;
-    public int type;
+    int type;
 
-    public ClickCallBacks(Action<int, int> action)
-    {
-        setHandPower = action;
-        Initialize();
-    }
+    protected abstract void Draw(int count);
 
-    public void Initialize()
+    protected abstract void SetHandPower(int type, int count);
+
+    protected void Initialize()
     {
         callBacks = null;
         selected = new();
@@ -48,27 +46,28 @@ public class ClickCallBacks
     }
     public void Invoke()
     {
-        setHandPower.Invoke(type, selected.Count == 0 ? 1 : selected.Count);
+        SetHandPower(type, selected.Count);
         callBacks.Invoke();
+        Draw(selected.Count);
         Initialize();
     }
     //2番目に選択されたコストの連結方法を設定し、どのように連結できるかを返す
     int SetSelectType(int value)
     {
-        //先頭よりも一つ小さい数ならば2(先頭)を返す
-        if (selected.First.Value == (value - 1))
+        //先頭よりも一つ大きい数ならば2(先頭)を返す
+        if (selected.First.Value == (value + 1))
         {
             type = Chain;
             return 2;
         }
-        //末尾よりも一つ大きいならば1(末尾)を返す
-        else if (selected.Last.Value == (value + 1))
+        //末尾よりも一つ小さい数ならば1(末尾)を返す
+        else if (selected.Last.Value == (value - 1))
         {
             type = Chain;
             return 1;
         }
-        //末尾と同じ かつ (そのひとつ前がnull もしくは 同じ)ならば1(末尾)を返す
-        else if (selected.Last.Value == value && (selected.Last.Previous?.Value ?? value) == value)
+        //末尾と同じかつStackならば1(末尾)を返す
+        else if (selected.Last.Value == value && type == Stack)
         {
             type = Stack;
             return 1;

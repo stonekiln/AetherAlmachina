@@ -8,7 +8,7 @@ public class CardManager : MonoBehaviour
     public CardDesign Design { get; private set; }
     public CardSelecter Selecter { get; private set; }
     public int Cost { get; private set; }
-    public ClickCallBacks callBacks;
+    public HandController callBacks;
 
     void Awake()
     {

@@ -10,8 +10,8 @@ public class HandPowerTable : ScriptableObject
     {
         return type switch
         {
-            1 => stack.table[count - 1],
-            2 => chain.table[count - 1],
+            1 => stack.Get(count),
+            2 => chain.Get(count),
             _ => 1,
         };
     }
@@ -20,28 +20,33 @@ public class HandPowerTable : ScriptableObject
 [Serializable]
 public class StackTable
 {
-    [NonSerialized] public float[] table;
-    [SerializeField] float level1;
+    const float Default = 1f;
     [SerializeField] float level2;
     [SerializeField] float level3;
     [SerializeField] float level4;
-    public StackTable()
+    public virtual float Get(int level)
     {
-        table = new float[] { level1, level2, level3, level4 };
+        return level switch
+        {
+            1 => Default,
+            2 => level2,
+            3 => level3,
+            4 => level4,
+            _ => Default,
+        };
     }
 }
 
 [Serializable]
-public class ChainTable
+public class ChainTable : StackTable
 {
-    [NonSerialized] public float[] table;
-    [SerializeField] float level1;
-    [SerializeField] float level2;
-    [SerializeField] float level3;
-    [SerializeField] float level4;
     [SerializeField] float level5;
-    public ChainTable()
+    public override float Get(int level)
     {
-        table = new float[] { level1, level2, level3, level4, level5 };
+        return level switch
+        {
+            5 => level5,
+            _ => base.Get(level),
+        };
     }
 }

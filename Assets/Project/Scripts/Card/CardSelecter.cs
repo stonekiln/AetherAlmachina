@@ -66,7 +66,7 @@ public class CardSelecter : MonoBehaviour, IButtonBase
     {
         if (!isSelect)
         {
-            isSelect = cardData.callBacks.AddCallBacks(onClickCallback + (() => UnHover()), cardData.Cost);
+            isSelect = cardData.callBacks.AddCallBacks(onClickCallback + (() => Destroy(cardData.gameObject)), cardData.Cost);
         }
         else
         {

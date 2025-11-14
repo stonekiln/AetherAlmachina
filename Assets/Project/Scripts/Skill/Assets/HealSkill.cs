@@ -5,6 +5,6 @@ public class HealSkill : SkillBase
 {
     public override void Activate()
     {
-        Debug.Log(SkillName + "が発動しました");
+        Debug.Log(skillName + "が発動しました");
     }
 }

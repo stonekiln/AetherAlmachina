@@ -12,4 +12,9 @@ static class ArrayLog
     {
         Debug.Log(string.Join(",", list));
     }
+
+    static public void Show(this float[] list)
+    {
+        Debug.Log(string.Join(",", list));
+    }
 }

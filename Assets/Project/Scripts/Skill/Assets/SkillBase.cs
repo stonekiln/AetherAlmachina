@@ -4,21 +4,17 @@ using UnityEngine;
 
 public abstract class SkillBase : ScriptableObject
 {
-    [SerializeField] private string skillName;
-    [SerializeField] private int cost;
-    [SerializeField] private float power;
-    [SerializeField] private Sprite icon;
-    [NonSerialized] public Entity owner;
-
-    public string SkillName => skillName;
+    [SerializeField] protected string skillName;
+    [SerializeField] int cost;
+    [SerializeField] protected float power;
+    [SerializeField] Sprite icon;
+    protected Entity owner;
     public int Cost => cost;
-    public float Power => power;
-    public Sprite Icon => icon;
 
     public GameObject CreateObject()
     {
         GameObject cardObject = Instantiate(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")));
-        cardObject.GetComponent<CardManager>().Initialize(Cost, Icon, () => Activate());
+        cardObject.GetComponent<CardManager>().Initialize(cost, icon, () => Activate());
         return cardObject;
     }
     public void SetOwner(GameObject ownerObject)
