@@ -30,7 +30,6 @@ public class HandController : HandExecutor
         GameObject SetCard(GameObject child)
         {
             child.transform.SetParent(transform, false);
-            child.GetComponent<CardManager>().callBacks = this;
             return child;
         }
         GameObject SetHand(GameObject child, int index)

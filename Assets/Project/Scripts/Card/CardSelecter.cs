@@ -1,99 +1,78 @@
 using System;
 using DG.Tweening;
+using R3;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class CardSelecter : MonoBehaviour, IButtonBase
+public class CardSelecter : ButtonBase
 {
-    public Action onClickCallback;
     CardManager cardData;
-    [NonSerialized] public bool isHover;
-    [NonSerialized] public bool isSelect;
+    readonly Vector2 ExtraSpacing = new(40f, 0);
     readonly Vector2 Offset = new(0, 20f);
-    Vector2 initialSize;
-    readonly Vector2 extraSpacing = new(40f, 0);
+
+    void Awake()
+    {
+        OnPointerClickAsObservable().Subscribe(eventData => MyPointerClick()).AddTo(this);
+        OnPointerDownAsObservable().Subscribe(eventData => Push()).AddTo(this);
+        OnPointerUpAsObservable().Subscribe(eventData => Release()).AddTo(this);
+        OnPointerEnterAsObservable().Subscribe(eventData => Hover()).AddTo(this);
+        OnPointerExitAsObservable().Subscribe(eventData => UnHover()).AddTo(this);
+    }
 
     public void Initialize(CardManager cardManager, Action Callback)
     {
         cardData = cardManager;
         onClickCallback = Callback;
-        isHover = false;
-        isSelect = false;
-        initialSize = cardManager.gameObject.GetComponent<RectTransform>().rect.size;
     }
 
-    public void SetActive()
+    public override void SetActive()
     {
 
     }
 
-    public void SetInActive()
+    public override void SetInActive()
     {
         transform.localScale = Vector3.zero;
     }
 
-    void Hover()
+    protected override void Hover()
     {
-        isHover = true;
-        cardData.CardObject.GetComponent<RectTransform>().anchoredPosition = Offset;
-        RectTransform parentRect = cardData.gameObject.GetComponent<RectTransform>();
-        parentRect.sizeDelta = initialSize + extraSpacing;
+        isHover.Value = true;
+        cardData.rectTransform.sizeDelta = cardData.initialSize + ExtraSpacing;
+        cardData.Design.rectTransform.anchoredPosition = cardData.Design.initialPosition + Offset;
     }
 
-    void UnHover()
+    protected override void UnHover()
     {
-        isHover = false;
-        isSelect = false;
-        cardData.CardObject.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-        RectTransform parentRect = cardData.gameObject.GetComponent<RectTransform>();
-        parentRect.sizeDelta = initialSize;
+        if (!isSelect.Value)
+        {
+            isHover.Value = false;
+            cardData.rectTransform.sizeDelta = cardData.initialSize;
+            cardData.Design.rectTransform.anchoredPosition = cardData.Design.initialPosition;
+        }
     }
 
-    void Push()
+    protected override void Push()
     {
 
     }
 
-    void Release()
+    protected override void Release()
     {
-        if (isHover)
+        if (isHover.Value)
         {
 
         }
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public void MyPointerClick()
     {
-        if (!isSelect)
+        if (!isSelect.Value)
         {
-            isSelect = cardData.callBacks.AddCallBacks(onClickCallback + (() => Destroy(cardData.gameObject)), cardData.Cost);
+            isSelect.Value = true;
         }
         else
         {
-            cardData.callBacks.Invoke();
-        }
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        Push();
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        Release();
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        Hover();
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        if (!isSelect)
-        {
-            UnHover();
+            cardData.Invoke();
         }
     }
 }

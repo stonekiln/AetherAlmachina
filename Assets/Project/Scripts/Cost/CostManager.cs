@@ -1,5 +1,4 @@
 using System;
-using EventBus;
 using R3;
 using UnityEngine;
 
@@ -9,6 +8,6 @@ public class CostManager : MonoBehaviour
     void Start()
     {
         Observable.Interval(TimeSpan.FromSeconds(costSettings.TimeSpan))
-            .Subscribe(_ => Cost.autoIncrease.OnNext(costSettings.CostDelta)).AddTo(this);
+            .Subscribe(_ => costSettings.Event.OnNext(costSettings.Delta)).AddTo(this);
     }
 }

@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EventBus.Card;
+using R3;
 using UnityEngine;
 
 public abstract class HandExecutor : MonoBehaviour
 {
+    [SerializeField] CardActiveEvent cardActive;
     const int Stack = 1;
     const int Chain = 2;
     Action callBacks;
@@ -15,13 +18,18 @@ public abstract class HandExecutor : MonoBehaviour
 
     protected abstract void SetHandPower(int type, int count);
 
+    void Awake()
+    {
+        cardActive.Add.Subscribe(element=>AddCallBacks(element.action,element.cost)).AddTo(this);
+        cardActive.Event.Subscribe(_=>Invoke());
+    }
     protected void Initialize()
     {
         callBacks = null;
         selected = new();
         type = Stack;
     }
-    public bool AddCallBacks(Action action, int cardCost)
+    bool AddCallBacks(Action action, int cardCost)
     {
         if (selected.Count == 0)
         {

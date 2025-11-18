@@ -1,13 +1,13 @@
 using System;
-using EventBus;
+using EventBus.Cost;
 using R3;
 using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
     [SerializeField] protected StatusAsset statusAsset;
+    [SerializeField] protected AutoIncreaseEvent AutoIncrease;
     protected Status status;
-    public ReactiveProperty<int> magicPoint;
     protected float power;
     protected float handPower;
     [NonSerialized] public Entity target;
@@ -15,13 +15,9 @@ public class Entity : MonoBehaviour
     void Awake()
     {
         status = new(statusAsset);
-        magicPoint = new()
-        {
-            Value = 10
-        };
         power = 1;
         handPower = 1;
-        Cost.autoIncrease.Subscribe(delta=>CostIncrease(delta)).AddTo(this);
+        AutoIncrease.Event.Subscribe(delta => CostIncrease(delta)).AddTo(this);
     }
 
     public void Attack(float skillPower)
@@ -39,6 +35,6 @@ public class Entity : MonoBehaviour
     }
     void CostIncrease(int delta)
     {
-        magicPoint.Value+=delta;
+        statusAsset.magicPoint.Value += delta;
     }
 }

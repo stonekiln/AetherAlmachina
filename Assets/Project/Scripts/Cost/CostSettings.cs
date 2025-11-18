@@ -1,10 +1,11 @@
+using EventBus.Cost;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "CostSettings", menuName = "GameSettings/CostSettings")]
-public class CostSettings : ScriptableObject
+public class CostSettings : AutoIncreaseEvent
 {
-    [SerializeField] int costDelta;
+    [SerializeField] int delta;
     [SerializeField] float timeSpan;
-    public int CostDelta => costDelta;
+    public int Delta => delta;
     public float TimeSpan => timeSpan;
 }

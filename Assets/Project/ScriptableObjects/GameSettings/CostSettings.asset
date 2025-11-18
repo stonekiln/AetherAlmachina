@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d847d030a4cf8a4ab49e911a35d9ba6, type: 3}
   m_Name: CostSettings
   m_EditorClassIdentifier: Assembly-CSharp::CostSettings
-  costDelta: 1
+  delta: 1
   timeSpan: 1

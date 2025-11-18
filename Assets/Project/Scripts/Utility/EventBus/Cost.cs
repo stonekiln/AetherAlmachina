@@ -1,10 +1,14 @@
 using R3;
+using UnityEngine;
 
-namespace EventBus
+namespace EventBus.Cost
 {
-    public static class Cost
+    public class AutoIncreaseEvent : ScriptableObject
     {
-        public static readonly Subject<int> autoIncrease=new();
-        public static readonly Subject<int> bonusIncrease=new();
+        public readonly Subject<int> Event = new();
+    }
+    public class BonusIncreaseEvent : ScriptableObject
+    {
+        public readonly Subject<int> Event = new();
     }
 }

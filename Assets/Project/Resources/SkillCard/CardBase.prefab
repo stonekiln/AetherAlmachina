@@ -176,8 +176,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dea3358106cd804a8315c816339b4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardSelecter
-  isHover: 0
-  isSelect: 0
 --- !u!1 &8404121699289616142
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,3 +226,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1955e7db689df614d82a8cd1cbf55387, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardManager
+  cardActive: {fileID: 11400000, guid: 05daa8df592c1f94fb26787ca48bb68a, type: 2}

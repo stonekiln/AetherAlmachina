@@ -1,27 +1,35 @@
 using System;
+using EventBus.Card;
+using R3;
 using UnityEngine;
 
 public class CardManager : MonoBehaviour
 {
-    public GameObject CardObject { get; private set; }
-    public GameObject HitBox { get; private set; }
+    [SerializeField] CardActiveEvent cardActive;
     public CardDesign Design { get; private set; }
     public CardSelecter Selecter { get; private set; }
     public int Cost { get; private set; }
-    public HandController callBacks;
+    [NonSerialized] public RectTransform rectTransform;
+    [NonSerialized] public Vector2 initialSize;
 
     void Awake()
     {
-        CardObject = transform.GetChild(0).gameObject;
-        HitBox = transform.GetChild(1).gameObject;
-        Design = CardObject.GetComponent<CardDesign>();
-        Selecter = HitBox.GetComponent<CardSelecter>();
+        Design = transform.GetChild(0).GetComponent<CardDesign>();
+        Selecter = transform.GetChild(1).GetComponent<CardSelecter>();
+        rectTransform = gameObject.GetComponent<RectTransform>();
+        initialSize = rectTransform.rect.size;
+        Selecter.isSelect.Where(flag=>flag).Subscribe(_=>cardActive.Add.OnNext((Selecter.onClickCallback+(()=>Destroy(gameObject)),Cost)));
     }
 
     public void Initialize(int cardCost, Sprite icon, Action callBack)
     {
         Cost = cardCost;
-        Design.Initialize(this, icon);
         Selecter.Initialize(this, callBack);
+        Design.Initialize(this, icon);
+    }
+
+    public void Invoke()
+    {
+        cardActive.Event.OnNext(true);
     }
 }

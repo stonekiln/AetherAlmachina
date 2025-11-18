@@ -1,7 +1,9 @@
+using System;
+using R3;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Status", menuName = "Status")]
-public class StatusAsset : ScriptableObject
+public class StatusAsset : MonitoredEntity
 {
     [SerializeField] private float hitPoint;
     [SerializeField] private float attack;
@@ -9,4 +11,9 @@ public class StatusAsset : ScriptableObject
     public float HitPoint => hitPoint;
     public float Attack => attack;
     public float Defence => defence;
+}
+
+public class MonitoredEntity : ScriptableObject
+{
+    [NonSerialized] public ReactiveProperty<int> magicPoint = new();
 }

@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class CostDisplay : MonoBehaviour
 {
-    [SerializeField] GameObject monitored;
+    [SerializeField] MonitoredEntity monitoredEntity;
     TextMeshProUGUI textMeshPro;
     void Start()
     {
         textMeshPro = gameObject.GetComponent<TextMeshProUGUI>();
-        monitored.GetComponent<Entity>().magicPoint.Subscribe(mp => SetDisplay(mp)).AddTo(this);
+        monitoredEntity.magicPoint.Subscribe(mp => SetDisplay(mp)).AddTo(this);
     }
 
     void SetDisplay(int mp)
