@@ -7,83 +7,114 @@ using UnityEngine;
 
 public abstract class HandExecutor : MonoBehaviour
 {
-    [SerializeField] CardActiveEvent cardActive;
+    class NumberingAction
+    {
+        public int HandIndex { get; private set; }
+        public Action CallBack { get; private set; }
+        public NumberingAction(Action action, int index)
+        {
+            CallBack = action;
+            HandIndex = index;
+        }
+    }
+    [SerializeField] CardSelectEvent cardSelectEvent;
+    [SerializeField] protected MonitoredEntity handMonitoringEntity;
     const int Stack = 1;
     const int Chain = 2;
-    Action callBacks;
-    LinkedList<int> selected;
-    int type;
-
+    List<NumberingAction> SelectedCard;
+    int Type => GetHandType();
+    [NonSerialized] public List<SkillData> deck;
+    protected List<CardManager> hand;
     protected abstract void Draw(int count);
-
     protected abstract void SetHandPower(int type, int count);
 
     void Awake()
     {
-        cardActive.Add.Subscribe(element=>AddCallBacks(element.action,element.cost)).AddTo(this);
-        cardActive.Event.Subscribe(_=>Invoke());
+        cardSelectEvent.Add.Subscribe(index => hand[index].Selecter.isSelect = AddCallBacks(() => hand[index].Data.Activate(), index)).AddTo(this);
+        cardSelectEvent.Remove.Subscribe(index => hand[index].Selecter.isSelect = RemoveCallBack(index)).AddTo(this);
+        cardSelectEvent.Invoke.Subscribe(_ => Invoke()).AddTo(this);
+        SelectedCard = new();
     }
-    protected void Initialize()
+    public void Invoke()
     {
-        callBacks = null;
-        selected = new();
-        type = Stack;
-    }
-    bool AddCallBacks(Action action, int cardCost)
-    {
-        if (selected.Count == 0)
+        int costSum = (int)MathF.Ceiling(SelectedCard.Aggregate(0, (previous, current) => previous + hand[current.HandIndex].Data.Cost) / SelectedCard.Count);
+        if (costSum <= handMonitoringEntity.magicPoint.Value)
         {
-            selected.AddFirst(cardCost);
-            callBacks += action;
-            return true;
+            SetHandPower(Type, SelectedCard.Count);
+            SelectedCard.ForEach(card => card.CallBack.Invoke());
+            SelectedCard.ForEach(card =>
+            {
+                Destroy(hand[card.HandIndex].gameObject);
+                hand[card.HandIndex] = null;
+            });
+            Draw(SelectedCard.Count);
+            handMonitoringEntity.magicPoint.Value -= costSum;
+            SelectedCard.Clear();
         }
-        switch (SetSelectType(cardCost))
+        else
+        {
+            Debug.Log("コストが足りません");
+        }
+    }
+    bool AddCallBacks(Action action, int index)
+    {
+        switch (SetSelectType(index))
         {
             case 0:
                 return false;
             case 1:
-                selected.AddLast(cardCost);
-                callBacks += action;
+                SelectedCard.Add(new(action, index));
                 break;
             case 2:
-                selected.AddFirst(cardCost);
-                callBacks = callBacks.GetInvocationList().Aggregate(action, (previous, current) => previous + (Action)current);
+                SelectedCard.Insert(0, new(action, index));
                 break;
         }
         return true;
     }
-    public void Invoke()
+    bool RemoveCallBack(int index)
     {
-        SetHandPower(type, selected.Count);
-        callBacks.Invoke();
-        Draw(selected.Count);
-        Initialize();
+        if (Type == Chain && SelectedCard.First().HandIndex != index && SelectedCard.Last().HandIndex != index)
+        {
+            return true;
+        }
+        SelectedCard = SelectedCard.Where(card => card.HandIndex != index).ToList();
+        return false;
     }
-    //2番目に選択されたコストの連結方法を設定し、どのように連結できるかを返す
-    int SetSelectType(int value)
+    //選択されたコストの連結方法を設定し、どのように連結できるかを返す
+    int SetSelectType(int index)
     {
-        //先頭よりも一つ大きい数ならば2(先頭)を返す
-        if (selected.First.Value == (value + 1))
+        //まだ何も選択されていないなら
+        if (SelectedCard.Count == 0)
         {
-            type = Chain;
-            return 2;
-        }
-        //末尾よりも一つ小さい数ならば1(末尾)を返す
-        else if (selected.Last.Value == (value - 1))
-        {
-            type = Chain;
             return 1;
         }
-        //末尾と同じかつStackならば1(末尾)を返す
-        else if (selected.Last.Value == value && type == Stack)
+        //先頭と同じかつStackならば1(末尾)を返す
+        if (hand[SelectedCard.Last().HandIndex].Data.Cost == hand[index].Data.Cost && Type == Stack)
         {
-            type = Stack;
             return 1;
+        }
+        if (SelectedCard.Count == 1 || Type == Chain)
+        {
+            //末尾よりも一つ大きいコストならば1(末尾)を返す
+            if (hand[SelectedCard.Last().HandIndex].Data.Cost + 1 == hand[index].Data.Cost)
+            {
+                return 1;
+            }
+            //先頭よりも一つ小さいコストならば2(先頭)を返す
+            if (hand[SelectedCard.First().HandIndex].Data.Cost - 1 == hand[index].Data.Cost)
+            {
+                return 2;
+            }
         }
         //いずれも該当しないならば連結不可(0)を返す
-        else
+        return 0;
+    }
+    int GetHandType()
+    {
+        if (SelectedCard.Count <= 1)
         {
-            return 0;
+            return Stack;
         }
+        return SelectedCard.GroupBy(card => hand[card.HandIndex].Data.Cost).Count() == 1 ? Stack : Chain;
     }
 }

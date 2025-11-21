@@ -8,6 +8,6 @@ public class CostManager : MonoBehaviour
     void Start()
     {
         Observable.Interval(TimeSpan.FromSeconds(costSettings.TimeSpan))
-            .Subscribe(_ => costSettings.Event.OnNext(costSettings.Delta)).AddTo(this);
+            .Subscribe(_ => costSettings.Channel.OnNext(costSettings.Delta)).AddTo(this);
     }
 }

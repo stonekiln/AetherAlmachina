@@ -5,14 +5,8 @@ using R3.Triggers;
 public abstract class ButtonBase : ObservableEventTrigger
 {
     public Action onClickCallback;
-    public ReactiveProperty<bool> isHover = new()
-    {
-        Value = false
-    };
-    public ReactiveProperty<bool> isSelect = new()
-    {
-        Value = false
-    };
+    public bool isHover;
+    public bool isSelect;
 
     public abstract void SetActive();
     public abstract void SetInActive();

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "HealSkill", menuName = "Skills/Heal Skill")]
-public class HealSkill : SkillBase
+public class HealSkill : SkillData
 {
     public override void Activate()
     {

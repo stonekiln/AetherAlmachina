@@ -16,4 +16,6 @@ public class StatusAsset : MonitoredEntity
 public class MonitoredEntity : ScriptableObject
 {
     [NonSerialized] public ReactiveProperty<int> magicPoint = new();
+    [NonSerialized] public readonly Subject<SkillData> SetOwnerEvent = new();
+    [NonSerialized] public readonly Subject<float> SetHandPowerEvent = new();
 }

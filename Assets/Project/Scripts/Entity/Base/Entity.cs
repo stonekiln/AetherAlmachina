@@ -6,7 +6,7 @@ using UnityEngine;
 public class Entity : MonoBehaviour
 {
     [SerializeField] protected StatusAsset statusAsset;
-    [SerializeField] protected AutoIncreaseEvent AutoIncrease;
+    [SerializeField] protected AutoIncreaseEvent AutoIncreaseEvent;
     protected Status status;
     protected float power;
     protected float handPower;
@@ -17,7 +17,9 @@ public class Entity : MonoBehaviour
         status = new(statusAsset);
         power = 1;
         handPower = 1;
-        AutoIncrease.Event.Subscribe(delta => CostIncrease(delta)).AddTo(this);
+        AutoIncreaseEvent.Channel.Subscribe(delta => CostIncrease(delta)).AddTo(this);
+        statusAsset.SetOwnerEvent.Subscribe(cardData=>cardData.SetOwner(this)).AddTo(this);
+        statusAsset.SetHandPowerEvent.Subscribe(power => SetHandPower(power)).AddTo(this);
     }
 
     public void Attack(float skillPower)

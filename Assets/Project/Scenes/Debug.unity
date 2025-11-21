@@ -168,9 +168,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67b295f90bbe9ae4b9af5c30487981d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandController
-  cardActive: {fileID: 11400000, guid: 05daa8df592c1f94fb26787ca48bb68a, type: 2}
-  playerObject: {fileID: 2065083159}
+  cardSelectEvent: {fileID: 11400000, guid: 05daa8df592c1f94fb26787ca48bb68a, type: 2}
+  handMonitoringEntity: {fileID: 11400000, guid: e27ed0df1bb44ec47a71dfba5b5d49d8, type: 2}
   handPowerTable: {fileID: 11400000, guid: 4a0a141e688773f4a938e7ea083c4fc9, type: 2}
+  deck: []
 --- !u!114 &47268807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,7 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   statusAsset: {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
-  AutoIncrease: {fileID: 11400000, guid: 7f78fa94575dece4e86c9b99b49fbd1e, type: 2}
+  AutoIncreaseEvent: {fileID: 11400000, guid: 7f78fa94575dece4e86c9b99b49fbd1e, type: 2}
   playerObject: {fileID: 2065083159}
 --- !u!136 &67899037
 CapsuleCollider:
@@ -1300,7 +1301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9de250c959e2764448beff1dae77c550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CostDisplay
-  monitoredEntity: {fileID: 11400000, guid: e27ed0df1bb44ec47a71dfba5b5d49d8, type: 2}
+  mpMonitoringEntity: {fileID: 11400000, guid: e27ed0df1bb44ec47a71dfba5b5d49d8, type: 2}
 --- !u!1 &1984344771
 GameObject:
   m_ObjectHideFlags: 0
@@ -1460,7 +1461,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   statusAsset: {fileID: 11400000, guid: e27ed0df1bb44ec47a71dfba5b5d49d8, type: 2}
-  AutoIncrease: {fileID: 11400000, guid: 7f78fa94575dece4e86c9b99b49fbd1e, type: 2}
+  AutoIncreaseEvent: {fileID: 11400000, guid: 7f78fa94575dece4e86c9b99b49fbd1e, type: 2}
 --- !u!136 &2065083162
 CapsuleCollider:
   m_ObjectHideFlags: 0

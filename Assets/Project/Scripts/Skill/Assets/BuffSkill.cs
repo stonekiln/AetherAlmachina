@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "BuffSkill", menuName = "Skills/Buff Skill")]
-public class BuffSkill : SkillBase
+public class BuffSkill : SkillData
 {
     public override void Activate()
     {

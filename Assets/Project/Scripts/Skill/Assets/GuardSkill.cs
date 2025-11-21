@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "GuardSkill", menuName = "Skills/Guard Skill")]
-public class GuardSkill : SkillBase
+public class GuardSkill : SkillData
 {
     public override void Activate()
     {
