@@ -1,20 +1,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-static class ArrayLog
+namespace Utility
 {
-    static public void Show(this List<int> list)
+    static class ArrayLog
     {
-        Debug.Log(string.Join(",", list));
-    }
+        static public void Show(this List<int> list)
+        {
+            Debug.Log(string.Join(",", list));
+        }
 
-    static public void Show(this int[] list)
-    {
-        Debug.Log(string.Join(",", list));
-    }
+        static public void Show(this int[] list)
+        {
+            Debug.Log(string.Join(",", list));
+        }
 
-    static public void Show(this float[] list)
-    {
-        Debug.Log(string.Join(",", list));
+        static public void Show(this float[] list)
+        {
+            Debug.Log(string.Join(",", list));
+        }
     }
 }

@@ -1,39 +1,70 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EventBus.Card;
-using R3;
 using UnityEngine;
+using R3;
+using LSES.Battle.Event;
+using VContainer;
 
-public abstract class HandExecutor : MonoBehaviour
+public class HandVisualizer : MonoBehaviour
 {
-    class NumberingAction
-    {
-        public int HandIndex { get; private set; }
-        public Action CallBack { get; private set; }
-        public NumberingAction(Action action, int index)
-        {
-            CallBack = action;
-            HandIndex = index;
-        }
-    }
-    [SerializeField] CardSelectEvent cardSelectEvent;
-    [SerializeField] protected MonitoredEntity handMonitoringEntity;
+    record NumberingAction(Action CallBack, int HandIndex);
+    const int HandLimit = 5;
     const int Stack = 1;
     const int Chain = 2;
+
+    [Inject] DeckDrawEventBundle DeckDraw;
+    [Inject] CardActiveEventBundle CardActive;
+    
+    [SerializeField] HandPowerTable handPowerTable;
+    [SerializeField] protected MonitoredEntity handMonitoringEntity;
+    
     List<NumberingAction> SelectedCard;
     int Type => GetHandType();
-    [NonSerialized] public List<SkillData> deck;
-    protected List<CardManager> hand;
-    protected abstract void Draw(int count);
-    protected abstract void SetHandPower(int type, int count);
+    List<CardManager> hand;
 
     void Awake()
     {
-        cardSelectEvent.Add.Subscribe(index => hand[index].Selecter.isSelect = AddCallBacks(() => hand[index].Data.Activate(), index)).AddTo(this);
-        cardSelectEvent.Remove.Subscribe(index => hand[index].Selecter.isSelect = RemoveCallBack(index)).AddTo(this);
-        cardSelectEvent.Invoke.Subscribe(_ => Invoke()).AddTo(this);
         SelectedCard = new();
+    }
+
+    void OnEnable()
+    {
+        DeckDraw.Response.Subscribe(response => AddHand(response.DrawCard)).AddTo(this);
+        CardActive.Select.Subscribe(log => hand[log.Index].Selecter.isSelect = AddCallBacks(() => hand[log.Index].Data.Activate(), log.Index)).AddTo(this);
+        CardActive.Cancel.Subscribe(log => hand[log.Index].Selecter.isSelect = RemoveCallBack(log.Index)).AddTo(this);
+        CardActive.Invoke.Subscribe(_ => Invoke()).AddTo(this);
+    }
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        Debug.Log("カードをドローします");
+        hand = new();
+        Draw(HandLimit);
+    }
+
+    void Draw(int count)
+    {
+        DeckDraw.Request.Publish(new(count));
+    }
+
+    void AddHand(List<SkillData> drawCard)
+    {
+        CardManager SetCard(CardManager child)
+        {
+            child.transform.SetParent(transform, false);
+            return child;
+        }
+        CardManager SetHand(CardManager child, int index)
+        {
+            child.transform.SetSiblingIndex(index);
+            return child;
+        }
+
+        hand = hand.Where(card => card != null)
+                   .Concat(drawCard.Select(card => SetCard(card.CreateObject().GetComponent<CardManager>())))
+                   .OrderBy(card => card.Data.Cost).Select((card, index) => SetHand(card, index)).ToList();
     }
     public void Invoke()
     {
@@ -116,5 +147,10 @@ public abstract class HandExecutor : MonoBehaviour
             return Stack;
         }
         return SelectedCard.GroupBy(card => hand[card.HandIndex].Data.Cost).Count() == 1 ? Stack : Chain;
+    }
+
+    void SetHandPower(int type, int count)
+    {
+        handMonitoringEntity.SetHandPowerEvent.OnNext(handPowerTable.Get(type, count));
     }
 }

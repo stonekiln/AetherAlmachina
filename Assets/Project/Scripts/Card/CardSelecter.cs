@@ -1,19 +1,21 @@
 using DG.Tweening;
-using EventBus.Card;
+using LSES.Battle.Event;
 using R3;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Utility;
+using VContainer;
 
 public class CardSelecter : ButtonBase
 {
-    [SerializeField] CardSelectEvent cardSelectEvent;
+    [Inject] CardActiveEventBundle CardActive;
     CardManager parent;
     RectTransform rectTransform;
     Vector2 initialPosition;
     readonly Vector2 ExtraSpacing = new(40f, 0);
     readonly Vector2 Offset = new(0, 20f);
 
-    void Awake()
+    void OnEnable()
     {
         OnPointerClickAsObservable().Subscribe(eventData => MyPointerClick(eventData)).AddTo(this);
         OnPointerDownAsObservable().Subscribe(eventData => Push()).AddTo(this);
@@ -76,17 +78,17 @@ public class CardSelecter : ButtonBase
         {
             if (!isSelect)
             {
-                cardSelectEvent.Add.OnNext(parent.transform.GetSiblingIndex());
+                CardActive.Select.Publish(new(parent.transform.GetSiblingIndex()));
                 rectTransform.anchoredPosition = initialPosition + Offset;
             }
             else
             {
-                cardSelectEvent.Invoke.OnNext(true);
+                CardActive.Invoke.Publish(new());
             }
         }
         if (eventData.button == PointerEventData.InputButton.Right && isSelect)
         {
-            cardSelectEvent.Remove.OnNext(parent.transform.GetSiblingIndex());
+            CardActive.Cancel.Publish(new(parent.transform.GetSiblingIndex()));
             rectTransform.anchoredPosition = initialPosition;
         }
 

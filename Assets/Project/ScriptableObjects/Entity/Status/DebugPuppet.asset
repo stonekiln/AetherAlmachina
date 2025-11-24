@@ -15,3 +15,4 @@ MonoBehaviour:
   hitPoint: 1000
   attack: 100
   defence: 50
+  deck: {fileID: 11400000, guid: 87f140fcce6b46c46a2fa592e6f161e9, type: 2}

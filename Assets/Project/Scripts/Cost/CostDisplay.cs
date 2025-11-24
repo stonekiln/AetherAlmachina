@@ -6,9 +6,13 @@ public class CostDisplay : MonoBehaviour
 {
     [SerializeField] MonitoredEntity mpMonitoringEntity;
     TextMeshProUGUI textMeshPro;
-    void Start()
+
+    void Awake()
     {
         textMeshPro = gameObject.GetComponent<TextMeshProUGUI>();
+    }
+    void OnEnable()
+    {
         mpMonitoringEntity.magicPoint.Subscribe(mp => SetDisplay(mp)).AddTo(this);
     }
 

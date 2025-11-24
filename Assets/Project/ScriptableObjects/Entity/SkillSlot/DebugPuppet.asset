@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c647810b85cdb2f41ad72931d3180d1a, type: 3}
+  m_Name: DebugPuppet
+  m_EditorClassIdentifier: Assembly-CSharp::SkillSlot
+  Skills:
+  - number: 3
+    skill: {fileID: 11400000, guid: 3e0cdb508d702d64b9f92a74c7696b4f, type: 2}
+  - number: 3
+    skill: {fileID: 11400000, guid: f1f32121add38b24ba5c0e8b96548adb, type: 2}
+  - number: 3
+    skill: {fileID: 11400000, guid: 44e631790cb2144499a45e0621663f35, type: 2}
+  - number: 3
+    skill: {fileID: 11400000, guid: dd0401d996fe3cd47b439d34b79677b2, type: 2}
+  - number: 3
+    skill: {fileID: 11400000, guid: 500951ccccecc424387411b9a9dc0f15, type: 2}
+  - number: 3
+    skill: {fileID: 11400000, guid: 09bd27f823d1b7543a7e7d691b345bd9, type: 2}
+  - number: 3
+    skill: {fileID: 11400000, guid: 73d53da5157448d499165facbde9ab90, type: 2}
+  - number: 3
+    skill: {fileID: 11400000, guid: bc8ef5780d6951b45a566eb07d90bcc3, type: 2}
+  - number: 3
+    skill: {fileID: 11400000, guid: 2ae4123efb945204aa8b425fc766cd27, type: 2}
+  - number: 3
+    skill: {fileID: 11400000, guid: b1966e416e39d76409764a2c53271bac, type: 2}
+  - number: 3
+    skill: {fileID: 11400000, guid: 99ddd0aeca34cb241996325b355eb964, type: 2}
+  - number: 3
+    skill: {fileID: 11400000, guid: a976c8b90da6f954892db17955b67de1, type: 2}
+  - number: 3
+    skill: {fileID: 11400000, guid: 20bbea7a670d8674aa7adaa8f53774ec, type: 2}
+  - number: 1
+    skill: {fileID: 11400000, guid: 812da2d97876f65499e70635c0b3c838, type: 2}
+  - number: 1
+    skill: {fileID: 11400000, guid: 900471589014f184ea7fc2b3e0044658, type: 2}
+  - number: 1
+    skill: {fileID: 11400000, guid: 3f677f4c45334f04bb93dd9442f2201c, type: 2}
+  - number: 1
+    skill: {fileID: 11400000, guid: 2c63e4b077860124ebec2b30a9940a58, type: 2}
+  - number: 1
+    skill: {fileID: 11400000, guid: efc7187f1289ca04390b147c9f3825f8, type: 2}
+  - number: 1
+    skill: {fileID: 11400000, guid: bfb10252bae107e44b7918535253a873, type: 2}
+  - number: 1
+    skill: {fileID: 11400000, guid: 9667769857bd8f845b29faea093efd84, type: 2}
+  - number: 1
+    skill: {fileID: 11400000, guid: 3dd4f01c2353848429dfc6af61e5b2ff, type: 2}
+  - number: 1
+    skill: {fileID: 11400000, guid: 795e0bebb8317ba4bb2e274b72879544, type: 2}
+  - number: 1
+    skill: {fileID: 11400000, guid: c8b8bbb66caa4154ea6e7d7408c9d96a, type: 2}
+  - number: 1
+    skill: {fileID: 11400000, guid: 1b360474debb79346b6c42d51ce3b8a6, type: 2}
+  - number: 1
+    skill: {fileID: 11400000, guid: 3a6c96e2a1524e44daea9b023eaf9e20, type: 2}
+  - number: 1
+    skill: {fileID: 11400000, guid: d6089dc3da4dfaf4bbde22e25567c38b, type: 2}
