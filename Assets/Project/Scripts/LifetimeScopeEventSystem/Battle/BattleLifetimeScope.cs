@@ -14,9 +14,10 @@ namespace LSES.Battle
 
             builder.RegisterComponentInHierarchy<DeckManager>();
             builder.RegisterComponentInHierarchy<HandVisualizer>();
-            builder.RegisterComponentInHierarchy<CardSelecter>();
-            builder.RegisterComponentInHierarchy<CostManager>();
-            builder.RegisterComponentInHierarchy<Entity>();
+            //builder.RegisterComponentInHierarchy<CardSelecter>();
+            //builder.RegisterComponentInHierarchy<CostManager>();
+            builder.RegisterComponentInHierarchy<Player>();
+            builder.RegisterComponentInHierarchy<Enemy>();
         }
     }
 }

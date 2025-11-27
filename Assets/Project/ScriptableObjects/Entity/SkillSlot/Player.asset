@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c647810b85cdb2f41ad72931d3180d1a, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: Assembly-CSharp::SkillSlot
-  Skills:
+  skills:
   - number: 3
     skill: {fileID: 11400000, guid: 3e0cdb508d702d64b9f92a74c7696b4f, type: 2}
   - number: 3
@@ -63,5 +63,5 @@ MonoBehaviour:
     skill: {fileID: 11400000, guid: 1b360474debb79346b6c42d51ce3b8a6, type: 2}
   - number: 1
     skill: {fileID: 11400000, guid: 3a6c96e2a1524e44daea9b023eaf9e20, type: 2}
-  - number: 1
+  - number: 0
     skill: {fileID: 11400000, guid: d6089dc3da4dfaf4bbde22e25567c38b, type: 2}

@@ -8,7 +8,7 @@ using VContainer;
 
 public class CardSelecter : ButtonBase
 {
-    [Inject] CardActiveEventBundle CardActive;
+    [Inject] CardActivateEventBundle CardActive;
     CardManager parent;
     RectTransform rectTransform;
     Vector2 initialPosition;

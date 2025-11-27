@@ -20,7 +20,7 @@ namespace LSES.Battle.Installer
             builder.Register<EventBus<CardCancelEvent>>(Lifetime.Singleton);
             builder.Register<EventBus<CardInvokeEvent>>(Lifetime.Singleton);
 
-            builder.Register<CardActiveEventBundle>(Lifetime.Singleton);
+            builder.Register<CardActivateEventBundle>(Lifetime.Singleton);
         }
     }
     public class DeckEventInstaller : IInstaller
@@ -29,8 +29,10 @@ namespace LSES.Battle.Installer
         {
             builder.Register<EventBus<DeckGetEvent>>(Lifetime.Singleton);
             builder.Register<EventBus<DeckDrawRequestEvent>>(Lifetime.Singleton);
+            builder.Register<EventBus<DeckDrawResponseEvent>>(Lifetime.Singleton);
             
             builder.Register<DeckDrawEventBundle>(Lifetime.Singleton);
+            builder.Register<DeckEventBundle>(Lifetime.Transient);
         }
     }
 }

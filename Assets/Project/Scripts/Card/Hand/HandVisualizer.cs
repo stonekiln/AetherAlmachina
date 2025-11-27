@@ -14,7 +14,7 @@ public class HandVisualizer : MonoBehaviour
     const int Chain = 2;
 
     [Inject] DeckDrawEventBundle DeckDraw;
-    [Inject] CardActiveEventBundle CardActive;
+    [Inject] CardActivateEventBundle CardActive;
     
     [SerializeField] HandPowerTable handPowerTable;
     [SerializeField] protected MonitoredEntity handMonitoringEntity;
