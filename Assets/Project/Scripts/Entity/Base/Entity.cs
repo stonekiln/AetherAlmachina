@@ -1,14 +1,15 @@
 using System;
 using LSES;
 using LSES.Battle.Event;
+using LSES.EntryPoint;
 using R3;
 using UnityEngine;
-using VContainer;
 
-public class Entity : MonoBehaviour
+public abstract class Entity : MonoBehaviour
 {
-    [Inject] protected EventBus<AutoIncreaseEvent> AutoIncrease;
-    [Inject] protected EventBus<DeckGetEvent> DeckGet;
+    protected EventBus<AutoIncreaseEvent> AutoIncrease;
+    protected EventBus<DeckGetEvent> DeckGet;
+    protected EventBus<PreStartEvent> PreStart;
     [SerializeField] protected StatusAsset statusAsset;
     protected Status status;
     protected float power;
@@ -24,14 +25,10 @@ public class Entity : MonoBehaviour
 
     void OnEnable()
     {
+        PreStart.Subscribe(_=>Get()).AddTo(this);
         AutoIncrease.Subscribe(log => CostIncrease(log.Delta)).AddTo(this);
         statusAsset.SetOwnerEvent.Subscribe(cardData => cardData.SetOwner(this)).AddTo(this);
         statusAsset.SetHandPowerEvent.Subscribe(power => SetHandPower(power)).AddTo(this);
-    }
-
-    void Start()
-    {
-        Get();
     }
 
     public void Attack(float skillPower)

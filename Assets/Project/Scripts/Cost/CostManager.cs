@@ -7,8 +7,13 @@ using VContainer;
 
 public class CostManager : MonoBehaviour
 {
-    [Inject] EventBus<AutoIncreaseEvent> AutoIncrease;
-    
+    EventBus<AutoIncreaseEvent> AutoIncrease;
+    [Inject]
+    void Construct(EventBus<AutoIncreaseEvent> autoIncrease)
+    {
+        AutoIncrease=autoIncrease;        
+    }
+
     [SerializeField] CostSettings costSettings;
 
     void OnEnable()

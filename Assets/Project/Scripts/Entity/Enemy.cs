@@ -1,11 +1,19 @@
+using LSES;
+using LSES.Battle.Event;
+using LSES.EntryPoint;
 using UnityEngine;
+using VContainer;
 
 public class Enemy : Entity
 {
     [SerializeField] GameObject playerObject;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    [Inject]
+    public void Construct(EventBus<AutoIncreaseEvent> autoIncrease, EventBus<DeckGetEvent> deckGet,EventBus<PreStartEvent> preStart)
     {
+        PreStart=preStart;
+        AutoIncrease = autoIncrease;
+        DeckGet = deckGet;
         target = playerObject.GetComponent<Player>();
         Encount();
     }

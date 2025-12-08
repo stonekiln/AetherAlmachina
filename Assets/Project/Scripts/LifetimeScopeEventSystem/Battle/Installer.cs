@@ -32,7 +32,7 @@ namespace LSES.Battle.Installer
             builder.Register<EventBus<DeckDrawResponseEvent>>(Lifetime.Singleton);
             
             builder.Register<DeckDrawEventBundle>(Lifetime.Singleton);
-            builder.Register<DeckEventBundle>(Lifetime.Transient);
+            builder.Register<DeckEventBundle>(Lifetime.Singleton);
         }
     }
 }
