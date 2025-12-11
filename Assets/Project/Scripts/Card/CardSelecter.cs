@@ -5,11 +5,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Utility;
 using VContainer;
+using DivFacter.Injectable;
 
 /// <summary>
 /// カードを画面から選択するためのクラス
 /// </summary>
-public class CardSelecter : ButtonBase
+public class CardSelecter : ButtonBase,IInjectable
 {
     [Inject] CardActivateEventBundle CardActive;
     CardBase parent;
@@ -17,7 +18,18 @@ public class CardSelecter : ButtonBase
     Vector2 initialPosition;
     readonly Vector2 ExtraSpacing = new(40f, 0);
     readonly Vector2 Offset = new(0, 20f);
-
+    
+    public void InjectDependencies(InjectableResolver resolver)
+    {
+        resolver.Inject(out CardActive);
+    }
+    public void Initialize(CardBase cardBase)
+    {
+        parent = cardBase;
+        rectTransform = gameObject.GetComponent<RectTransform>();
+        initialPosition = rectTransform.anchoredPosition;
+        onClickCallback = () => cardBase.Data.Activate();
+    }
     void OnEnable()
     {
         OnPointerClickAsObservable().Subscribe(eventData => MyPointerClick(eventData)).AddTo(this);
@@ -27,33 +39,20 @@ public class CardSelecter : ButtonBase
         OnPointerExitAsObservable().Subscribe(eventData => UnHover()).AddTo(this);
     }
 
-    public void Initialize(CardBase cardBase)
-    {
-        Debug.Log(cardBase);
-        parent = cardBase;
-        rectTransform = gameObject.GetComponent<RectTransform>();
-        initialPosition = rectTransform.anchoredPosition;
-        onClickCallback = () => cardBase.Data.Activate();
-    }
-
     public override void SetActive()
     {
 
     }
-
     public override void SetInActive()
     {
         transform.localScale = Vector3.zero;
     }
-
     protected override void Hover()
     {
         isHover = true;
-        Debug.Log(parent);
         parent.rectTransform.sizeDelta = parent.initialSize + ExtraSpacing;
         parent.Design.rectTransform.anchoredPosition = parent.Design.initialPosition + Offset;
     }
-
     protected override void UnHover()
     {
         if (!isSelect)
@@ -63,12 +62,10 @@ public class CardSelecter : ButtonBase
             parent.Design.rectTransform.anchoredPosition = parent.Design.initialPosition;
         }
     }
-
     protected override void Push()
     {
 
     }
-
     protected override void Release()
     {
         if (isHover)
@@ -76,7 +73,6 @@ public class CardSelecter : ButtonBase
 
         }
     }
-
     public void MyPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)

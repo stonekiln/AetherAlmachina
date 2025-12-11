@@ -1,29 +1,33 @@
 using System;
+using DivFacter.Injectable;
 using UnityEngine;
 using VContainer;
 
 /// <summary>
 /// カードのオブジェクトの親オブジェクトとなるクラス
 /// </summary>
-public class CardBase : MonoBehaviour
+public class CardBase : MonoBehaviour, IInjectable
 {
-    public CardDesign Design { get; private set; }
-    public CardSelecter Selecter { get; private set; }
+    CardDesign design;
+    CardSelecter selecter;
+    public CardDesign Design => design;
+    public CardSelecter Selecter => selecter;
     public SkillData Data { get; private set; }
     [NonSerialized] public RectTransform rectTransform;
     [NonSerialized] public Vector2 initialSize;
 
-    [Inject]
-    void Construct(CardDesign cardDesign, CardSelecter cardSelecter)
+    public void InjectDependencies(InjectableResolver resolver)
     {
-        Design = cardDesign;
-        Selecter = cardSelecter;
-        rectTransform = gameObject.GetComponent<RectTransform>();
-        initialSize = rectTransform.rect.size;
+        resolver.Inject(out design);
+        resolver.Inject(out selecter);
     }
 
-    public void SetSkilldata(SkillData data)
+    public void Initialize(SkillData data)
     {
         Data = data;
+        rectTransform = gameObject.GetComponent<RectTransform>();
+        initialSize = rectTransform.rect.size;
+        design.Initialize(this);
+        selecter.Initialize(this);
     }
 }

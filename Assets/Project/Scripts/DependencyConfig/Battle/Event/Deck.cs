@@ -36,7 +36,7 @@ namespace DConfig.Battle.Event
     /// <param name="Request"></param>
     /// <param name="Response"></param>
     public record DeckDrawEventBundle(EventBus<DeckDrawRequestEvent> Request, EventBus<DeckDrawResponseEvent> Response);
-
+    
     /// <summary>
     /// カードを引く宣言をするためのイベントメッセージ
     /// </summary>

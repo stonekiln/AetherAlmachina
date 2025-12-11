@@ -51,21 +51,10 @@ namespace DConfig.Battle.Installer
     {
         public void Install(IContainerBuilder builder)
         {
-            GameObject prefab = Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase"));
-            builder.RegisterComponentInNewPrefab(prefab.GetComponent<CardBase>(), Lifetime.Singleton);
-            builder.UseComponents(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")).transform, builder =>
-            {
-                builder.AddInHierarchy<CardDesign>();
-                builder.AddInHierarchy<CardSelecter>();
-            });
             builder.RegisterFactory<SkillData, GameObject>(container => skilldata =>
             {
-                GameObject CreatedCard = container.Instantiate(prefab);
-                CardBase cardBase = CreatedCard.GetComponent<CardBase>();
-                cardBase.SetSkilldata(skilldata);
-                container.InjectGameObject(prefab);
-                cardBase.Design.Initialize(cardBase);
-                cardBase.Selecter.Initialize(cardBase);
+                GameObject CreatedCard = container.Instantiate(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")));
+                CreatedCard.GetComponent<CardBase>().Initialize(skilldata);
                 return CreatedCard;
             }, Lifetime.Singleton);
         }
