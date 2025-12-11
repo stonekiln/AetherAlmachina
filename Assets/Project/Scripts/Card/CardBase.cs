@@ -1,7 +1,11 @@
 using System;
 using UnityEngine;
+using VContainer;
 
-public class CardManager : MonoBehaviour
+/// <summary>
+/// カードのオブジェクトの親オブジェクトとなるクラス
+/// </summary>
+public class CardBase : MonoBehaviour
 {
     public CardDesign Design { get; private set; }
     public CardSelecter Selecter { get; private set; }
@@ -9,18 +13,17 @@ public class CardManager : MonoBehaviour
     [NonSerialized] public RectTransform rectTransform;
     [NonSerialized] public Vector2 initialSize;
 
-    void Awake()
+    [Inject]
+    void Construct(CardDesign cardDesign, CardSelecter cardSelecter)
     {
-        Design = transform.GetChild(0).GetComponent<CardDesign>();
-        Selecter = transform.GetChild(1).GetComponent<CardSelecter>();
+        Design = cardDesign;
+        Selecter = cardSelecter;
         rectTransform = gameObject.GetComponent<RectTransform>();
         initialSize = rectTransform.rect.size;
     }
 
-    public void Initialize(SkillData skillData)
+    public void SetSkilldata(SkillData data)
     {
-        Data = skillData;
-        Selecter.Initialize(this);
-        Design.Initialize(this);
+        Data = data;
     }
 }

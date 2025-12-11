@@ -1,16 +1,15 @@
-using LSES;
-using LSES.Battle.Event;
-using LSES.EntryPoint;
-using VContainer;
+using DivFacter.Injectable;
 
-public class Player : Entity
+/// <summary>
+/// プレイヤーのMonoBehaviour
+/// </summary>
+public class Player : Entity, IInjectable
 {
-    [Inject]
-    public void Construct(EventBus<AutoIncreaseEvent> autoIncrease, EventBus<DeckGetEvent> playerDeckGet,EventBus<PreStartEvent> preStart)
+    public void InjectDependencies(InjectableResolver resolver)
     {
-        PreStart=preStart;
-        AutoIncrease = autoIncrease;
-        DeckGet = playerDeckGet;
+        resolver.Inject(out PreStart);
+        resolver.Inject(out AutoIncrease);
+        resolver.Inject(out DeckGet);
     }
 
     // Update is called once per frame

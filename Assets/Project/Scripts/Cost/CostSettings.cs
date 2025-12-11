@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// ステージ毎のコストの設定を設定するためのパラメータ
+/// </summary>
 [CreateAssetMenu(fileName = "CostSettings", menuName = "GameSettings/CostSettings")]
 public class CostSettings : ScriptableObject
 {

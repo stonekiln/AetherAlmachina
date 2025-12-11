@@ -1,20 +1,22 @@
 using System;
-using LSES;
-using LSES.Battle.Event;
+using DConfig.Battle.Event;
+using DivFacter.Event;
+using DivFacter.Injectable;
 using R3;
 using UnityEngine;
-using VContainer;
 
-public class CostManager : MonoBehaviour
+/// <summary>
+/// 各エンティティにコストを設定するためのクラス
+/// </summary>
+public class CostManager : MonoBehaviour, IInjectable
 {
     EventBus<AutoIncreaseEvent> AutoIncrease;
-    [Inject]
-    void Construct(EventBus<AutoIncreaseEvent> autoIncrease)
-    {
-        AutoIncrease=autoIncrease;        
-    }
-
     [SerializeField] CostSettings costSettings;
+
+    public void InjectDependencies(InjectableResolver resolver)
+    {
+        resolver.Inject(out AutoIncrease);
+    }
 
     void OnEnable()
     {

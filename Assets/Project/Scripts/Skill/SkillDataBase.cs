@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+/// <summary>
+/// 全スキル一覧を管理する
+/// </summary>
 class SkillDataBase : MonoBehaviour
 {
     public List<SkillData>[,] Skills { get; private set; }
@@ -10,6 +13,9 @@ class SkillDataBase : MonoBehaviour
     const int Heal = 2;
     const int Buff = 3;
 
+    /// <summary>
+    /// 全スキル一覧を読み込む
+    /// </summary>
     public void ReadDataBase()
     {
         Skills = new List<SkillData>[4, 14];

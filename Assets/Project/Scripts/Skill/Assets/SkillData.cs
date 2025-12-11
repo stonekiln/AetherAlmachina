@@ -9,12 +9,11 @@ public abstract class SkillData : ScriptableObject
     [SerializeField] Sprite icon;
     protected Entity owner;
     public int Cost => cost;
-    public Sprite Icon=>icon;
+    public Sprite Icon => icon;
 
     public GameObject CreateObject()
     {
         GameObject cardObject = Instantiate(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")));
-        cardObject.GetComponent<CardManager>().Initialize(this);
         return cardObject;
     }
     public void SetOwner(Entity ownerEntity)

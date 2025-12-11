@@ -2,6 +2,9 @@ using System;
 using R3;
 using UnityEngine;
 
+/// <summary>
+/// エンティティのパラメータ
+/// </summary>
 [CreateAssetMenu(fileName = "Status", menuName = "Entity/Status")]
 public class StatusAsset : MonitoredEntity
 {

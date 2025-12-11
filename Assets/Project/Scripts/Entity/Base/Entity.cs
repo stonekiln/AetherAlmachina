@@ -1,10 +1,13 @@
 using System;
-using LSES;
-using LSES.Battle.Event;
-using LSES.EntryPoint;
+using DivFacter.Event;
+using DConfig.Battle.Event;
+using DivFacter.EntryPoint;
 using R3;
 using UnityEngine;
 
+/// <summary>
+/// エンティティのMonoBehaviour
+/// </summary>
 public abstract class Entity : MonoBehaviour
 {
     protected EventBus<AutoIncreaseEvent> AutoIncrease;
@@ -25,7 +28,7 @@ public abstract class Entity : MonoBehaviour
 
     void OnEnable()
     {
-        PreStart.Subscribe(_=>Get()).AddTo(this);
+        PreStart.Subscribe(_ => Get()).AddTo(this);
         AutoIncrease.Subscribe(log => CostIncrease(log.Delta)).AddTo(this);
         statusAsset.SetOwnerEvent.Subscribe(cardData => cardData.SetOwner(this)).AddTo(this);
         statusAsset.SetHandPowerEvent.Subscribe(power => SetHandPower(power)).AddTo(this);

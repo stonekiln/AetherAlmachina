@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// 回復スキル
+/// </summary>
 [CreateAssetMenu(fileName = "HealSkill", menuName = "Skills/Heal Skill")]
 public class HealSkill : SkillData
 {

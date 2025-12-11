@@ -2,6 +2,9 @@ using R3;
 using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// あるエンティティのコストを表示するためのクラス
+/// </summary>
 public class CostDisplay : MonoBehaviour
 {
     [SerializeField] MonitoredEntity mpMonitoringEntity;

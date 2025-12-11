@@ -1,19 +1,18 @@
-using LSES;
-using LSES.Battle.Event;
-using LSES.EntryPoint;
+using DivFacter.Injectable;
 using UnityEngine;
-using VContainer;
 
-public class Enemy : Entity
+/// <summary>
+/// エネミーのMonoBehaviour
+/// </summary>
+public class Enemy : Entity, IInjectable
 {
     [SerializeField] GameObject playerObject;
 
-    [Inject]
-    public void Construct(EventBus<AutoIncreaseEvent> autoIncrease, EventBus<DeckGetEvent> deckGet,EventBus<PreStartEvent> preStart)
+    public void InjectDependencies(InjectableResolver resolver)
     {
-        PreStart=preStart;
-        AutoIncrease = autoIncrease;
-        DeckGet = deckGet;
+        resolver.Inject(out PreStart);
+        resolver.Inject(out AutoIncrease);
+        resolver.Inject(out DeckGet);
         target = playerObject.GetComponent<Player>();
         Encount();
     }

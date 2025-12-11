@@ -1,17 +1,19 @@
-using LSES.Battle.Event;
+using DConfig.Battle.Event;
+using DivFacter.Injectable;
 using UnityEngine;
-using VContainer;
 
-public class DeckManager : MonoBehaviour
+/// <summary>
+/// それぞれのエンティティのデッキを管理するクラス
+/// </summary>
+public class DeckManager : MonoBehaviour,IInjectable
 {
     DeckEventBundle PlayerDeck;
     DeckEventBundle EnemyDeck;
 
-    [Inject]
-    void Construct(DeckEventBundle deckEvents)
+    public void InjectDependencies(InjectableResolver resolver)
     {
-        PlayerDeck = deckEvents;
-        EnemyDeck = deckEvents;
+        resolver.Inject(out PlayerDeck);
+        resolver.Inject(out EnemyDeck);
     }
 
     void OnEnable()

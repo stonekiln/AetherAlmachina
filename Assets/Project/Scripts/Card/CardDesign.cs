@@ -2,14 +2,17 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// カードの外見を設定するためのクラス
+/// </summary>
 public class CardDesign : MonoBehaviour
 {
-    CardManager parent;
+    CardBase parent;
     [NonSerialized] public RectTransform rectTransform;
     [NonSerialized] public Vector2 initialPosition;
     Image image;
-
-    public void Initialize(CardManager cardManager)
+    
+    public void Initialize(CardBase cardManager)
     {
         parent = cardManager;
         rectTransform = gameObject.GetComponent<RectTransform>();

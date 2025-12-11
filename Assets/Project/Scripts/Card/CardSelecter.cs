@@ -1,15 +1,18 @@
 using DG.Tweening;
-using LSES.Battle.Event;
+using DConfig.Battle.Event;
 using R3;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Utility;
 using VContainer;
 
+/// <summary>
+/// カードを画面から選択するためのクラス
+/// </summary>
 public class CardSelecter : ButtonBase
 {
     [Inject] CardActivateEventBundle CardActive;
-    CardManager parent;
+    CardBase parent;
     RectTransform rectTransform;
     Vector2 initialPosition;
     readonly Vector2 ExtraSpacing = new(40f, 0);
@@ -24,12 +27,13 @@ public class CardSelecter : ButtonBase
         OnPointerExitAsObservable().Subscribe(eventData => UnHover()).AddTo(this);
     }
 
-    public void Initialize(CardManager cardManager)
+    public void Initialize(CardBase cardBase)
     {
-        parent = cardManager;
+        Debug.Log(cardBase);
+        parent = cardBase;
         rectTransform = gameObject.GetComponent<RectTransform>();
         initialPosition = rectTransform.anchoredPosition;
-        onClickCallback = () => cardManager.Data.Activate();
+        onClickCallback = () => cardBase.Data.Activate();
     }
 
     public override void SetActive()
@@ -45,6 +49,7 @@ public class CardSelecter : ButtonBase
     protected override void Hover()
     {
         isHover = true;
+        Debug.Log(parent);
         parent.rectTransform.sizeDelta = parent.initialSize + ExtraSpacing;
         parent.Design.rectTransform.anchoredPosition = parent.Design.initialPosition + Offset;
     }

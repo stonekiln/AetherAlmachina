@@ -1,3 +1,6 @@
+/// <summary>
+/// ステータスのパラメータをコピーして変更可能にするためのクラス
+/// </summary>
 public class Status
 {
     public float hitPoint;

@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// デッキを装備するためのパラメータ
+/// </summary>
 [CreateAssetMenu(fileName = "DeckList", menuName = "Entity/DeckList")]
 public class DeckList : ScriptableObject
 {
+    /// <summary>
+    /// 同じスキルは数値で枚数を指定できる
+    /// </summary>
     [Serializable]
     public class SkillSlot
     {
@@ -17,7 +23,7 @@ public class DeckList : ScriptableObject
 
     const int DeckLimit = 52;
     [SerializeField] List<SkillSlot> skills;
-    public List<SkillSlot> Skills=>skills;
+    public List<SkillSlot> Skills => skills;
 
     private void OnValidate()
     {
@@ -38,7 +44,7 @@ public class DeckList : ScriptableObject
 
     public List<SkillData> ReadDeck()
     {
-        return Skills.Select(element=>Enumerable.Range(0,element.number).Select(_=>element.Skill))
-                     .SelectMany(skill=>skill).ToList();
+        return Skills.Select(element => Enumerable.Range(0, element.number).Select(_ => element.Skill))
+                     .SelectMany(skill => skill).ToList();
     }
 }

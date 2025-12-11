@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// 補助スキル
+/// </summary>
 [CreateAssetMenu(fileName = "BuffSkill", menuName = "Skills/Buff Skill")]
 public class BuffSkill : SkillData
 {

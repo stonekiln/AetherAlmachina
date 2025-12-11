@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// 防御スキル
+/// </summary>
 [CreateAssetMenu(fileName = "GuardSkill", menuName = "Skills/Guard Skill")]
 public class GuardSkill : SkillData
 {

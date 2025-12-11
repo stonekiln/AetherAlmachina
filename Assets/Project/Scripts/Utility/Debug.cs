@@ -5,17 +5,22 @@ namespace Utility
 {
     static class ArrayLog
     {
-        static public void Show(this List<int> list)
+        /// <summary>
+        /// リストの中身を表示する
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        static public void Show<T>(this List<T> list)
         {
             Debug.Log(string.Join(",", list));
         }
 
-        static public void Show(this int[] list)
-        {
-            Debug.Log(string.Join(",", list));
-        }
-
-        static public void Show(this float[] list)
+        /// <summary>
+        /// 配列の中身を表示する
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        static public void Show<T>(this T[] list)
         {
             Debug.Log(string.Join(",", list));
         }
