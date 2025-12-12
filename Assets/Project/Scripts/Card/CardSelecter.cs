@@ -4,7 +4,6 @@ using R3;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Utility;
-using VContainer;
 using DivFacter.Injectable;
 
 /// <summary>
@@ -12,7 +11,7 @@ using DivFacter.Injectable;
 /// </summary>
 public class CardSelecter : ButtonBase,IInjectable
 {
-    [Inject] CardActivateEventBundle CardActive;
+    CardActivateEventBundle CardActive;
     CardBase parent;
     RectTransform rectTransform;
     Vector2 initialPosition;

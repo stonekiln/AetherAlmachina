@@ -1,4 +1,3 @@
-using System.IO;
 using UnityEngine;
 
 public abstract class SkillData : ScriptableObject
@@ -11,11 +10,6 @@ public abstract class SkillData : ScriptableObject
     public int Cost => cost;
     public Sprite Icon => icon;
 
-    public GameObject CreateObject()
-    {
-        GameObject cardObject = Instantiate(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")));
-        return cardObject;
-    }
     public void SetOwner(Entity ownerEntity)
     {
         owner = ownerEntity;

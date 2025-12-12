@@ -66,6 +66,7 @@ public class HandVisualizer : MonoBehaviour, IInjectable
     /// <param name="count">引く枚数</param>
     void Draw(int count)
     {
+        Debug.Log(count);
         hand = hand.Where(card => card != null).ToList();
         DeckDraw.Request.Publish(new(count));
     }
@@ -98,9 +99,10 @@ public class HandVisualizer : MonoBehaviour, IInjectable
         if (costSum <= handMonitoringEntity.magicPoint.Value)
         {
             SetHandPower(Type, SelectedCard.Count);
-            SelectedCard.ForEach(card => card.CallBack.Invoke());
             SelectedCard.ForEach(card =>
             {
+                handMonitoringEntity.SetOwnerEvent.OnNext(hand[card.HandIndex].Data);
+                card.CallBack.Invoke();
                 Destroy(hand[card.HandIndex].gameObject);
                 hand[card.HandIndex] = null;
             });
