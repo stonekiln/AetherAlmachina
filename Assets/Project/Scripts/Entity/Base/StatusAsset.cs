@@ -6,7 +6,7 @@ using UnityEngine;
 /// エンティティのパラメータ
 /// </summary>
 [CreateAssetMenu(fileName = "Status", menuName = "Entity/Status")]
-public class StatusAsset : MonitoredEntity
+public class StatusAsset : ScriptableObject
 {
     [SerializeField] private float hitPoint;
     [SerializeField] private float attack;

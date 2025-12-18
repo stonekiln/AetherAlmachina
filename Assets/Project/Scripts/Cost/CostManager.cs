@@ -1,5 +1,5 @@
 using System;
-using DConfig.Battle.Event;
+using DConfig.BattleLife.Event;
 using DivFacter.Event;
 using DivFacter.Injectable;
 using R3;

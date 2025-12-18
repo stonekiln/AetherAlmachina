@@ -7,8 +7,8 @@ using UnityEngine;
 /// </summary>
 public class CostDisplay : MonoBehaviour
 {
-    [SerializeField] MonitoredEntity mpMonitoringEntity;
     TextMeshProUGUI textMeshPro;
+    Entity owner;
 
     void Awake()
     {
@@ -16,7 +16,7 @@ public class CostDisplay : MonoBehaviour
     }
     void OnEnable()
     {
-        mpMonitoringEntity.magicPoint.Subscribe(mp => SetDisplay(mp)).AddTo(this);
+        owner.Status.MPfluctuation.Subscribe(log => SetDisplay(owner.Status.magicPoint)).AddTo(this);
     }
 
     void SetDisplay(int mp)
