@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DConfig.PalyerLife.Event;
+using DConfig.PlayerLife.Event;
 using DivFacter.Event;
 using R3;
 using UnityEngine;

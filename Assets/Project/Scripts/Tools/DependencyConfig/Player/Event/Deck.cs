@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using DivFacter.Event;
 
-namespace DConfig.PalyerLife.Event
+namespace DConfig.PlayerLife.Event
 {
     /// <summary>
     /// カードを引くイベントをまとめたもの

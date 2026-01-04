@@ -1,3 +1,5 @@
+using DivFacter.Binder;
+using UnityEngine;
 using VContainer;
 
 namespace DivFacter.Injectable
@@ -7,11 +9,11 @@ namespace DivFacter.Injectable
     /// </summary>
     public class InjectableResolver
     {
-        public readonly IObjectResolver Self;
+        IObjectResolver Resolver { get; init; }
 
         public InjectableResolver(IObjectResolver resolver)
         {
-            Self = resolver;
+            Resolver = resolver;
         }
 
         /// <summary>
@@ -21,7 +23,25 @@ namespace DivFacter.Injectable
         /// <param name="value">注入する変数</param>
         public void Inject<T>(out T value)
         {
-            value = Self.Resolve<T>();
+            value = Resolver.Resolve<T>();
+        }
+        /// <summary>
+        /// DI登録されたTのインスタンスを返す
+        /// </summary>
+        /// <typeparam name="T">取得するインスタンスの種類</typeparam>
+        /// <returns>依存解決済みのインスタンス</returns>
+        public T GetComponent<T>()
+        {
+            return Resolver.Resolve<T>();
+        }
+        /// <summary>
+        /// DI登録されたTの種類のBinderに自身を登録する
+        /// </summary>
+        /// <typeparam name="T">Binderの種類</typeparam>
+        /// <param name="element">登録対象</param>
+        public void RegisterBinder<T>(T element) where T : MonoBehaviour
+        {
+            Resolver.Resolve<IObjectBinder<T>>().Register(element);
         }
     }
 }

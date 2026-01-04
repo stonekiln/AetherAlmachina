@@ -1,8 +1,8 @@
 using DConfig.BattleLife.Installer;
-using DivFacter.Injectable;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+using DivFacter.Extensions;
 
 namespace DConfig.BattleLife
 {
@@ -12,8 +12,12 @@ namespace DConfig.BattleLife
         {
             new CostEventInstaller().Install(builder);
 
+            builder.Register<DeckController>(Lifetime.Scoped);
             builder.RegisterComponentInHierarchy<CostManager>();
-            builder.InjectMonoBehaviors(FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None));
+            builder.RegisterBinderInHierarchy<PlayerUIBinder>();
+            builder.RegisterBinderInHierarchy<EntityObjectBinder>();
+            
+            builder.ReserveInjection(gameObject.scene.FindInjectable());
         }
     }
 }

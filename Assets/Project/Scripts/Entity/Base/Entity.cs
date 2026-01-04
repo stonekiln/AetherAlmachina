@@ -1,16 +1,17 @@
 using System;
 using DivFacter.Event;
 using DConfig.BattleLife.Event;
-using DConfig.PalyerLife.Event;
+using DConfig.PlayerLife.Event;
 using DivFacter.EntryPoint;
 using R3;
 using UnityEngine;
 using System.Linq;
+using DivFacter.Injectable;
 
 /// <summary>
 /// エンティティのMonoBehaviour
 /// </summary>
-public abstract class Entity : MonoBehaviour
+public abstract class Entity : MonoBehaviour,IInjectable
 {
     protected EventBus<AutoIncreaseEvent> AutoIncrease;
     protected EventBus<DeckGetEvent> DeckGet;
@@ -22,11 +23,16 @@ public abstract class Entity : MonoBehaviour
     protected float handPower;
     [NonSerialized] public Entity target;
 
-    void Awake()
+    public virtual void InjectDependencies(InjectableResolver resolver)
     {
         Status = new(statusAsset);
         power = 1;
         handPower = 1;
+        resolver.Inject(out PreStart);
+        resolver.Inject(out AutoIncrease);
+        resolver.Inject(out DeckGet);
+        resolver.Inject(out deckController);
+        resolver.RegisterBinder(this);
     }
 
     void OnEnable()

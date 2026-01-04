@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Utility;
 using DivFacter.Injectable;
-using DConfig.PalyerLife.Event;
+using DConfig.PlayerLife.Event;
 
 /// <summary>
 /// カードを画面から選択するためのクラス
 /// </summary>
-public class CardSelecter : ButtonBase,IInjectable
+public class CardSelecter : ButtonBase, IInjectable
 {
     CardActivateEventBundle CardActive;
     CardBase parent;
@@ -17,7 +17,7 @@ public class CardSelecter : ButtonBase,IInjectable
     Vector2 initialPosition;
     readonly Vector2 ExtraSpacing = new(40f, 0);
     readonly Vector2 Offset = new(0, 20f);
-    
+
     public void InjectDependencies(InjectableResolver resolver)
     {
         resolver.Inject(out CardActive);
@@ -78,7 +78,7 @@ public class CardSelecter : ButtonBase,IInjectable
         {
             if (!isSelect)
             {
-                CardActive.Select.Publish(new(parent,parent.transform.GetSiblingIndex()));
+                CardActive.Select.Publish(new(parent, parent.transform.GetSiblingIndex()));
                 rectTransform.anchoredPosition = initialPosition + Offset;
             }
             else
@@ -88,7 +88,7 @@ public class CardSelecter : ButtonBase,IInjectable
         }
         if (eventData.button == PointerEventData.InputButton.Right && isSelect)
         {
-            CardActive.Cancel.Publish(new(parent,parent.transform.GetSiblingIndex()));
+            CardActive.Cancel.Publish(new(parent, parent.transform.GetSiblingIndex()));
             rectTransform.anchoredPosition = initialPosition;
         }
 

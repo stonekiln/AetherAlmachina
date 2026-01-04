@@ -1,3 +1,4 @@
+using DivFacter.Extensions;
 using VContainer;
 using VContainer.Unity;
 
@@ -7,8 +8,10 @@ namespace DConfig.EnemyLife
     {
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.RegisterComponentInHierarchy<Enemy>().UnderTransform(transform.parent);
-            builder.RegisterComponentInHierarchy<HandVisualizer>().UnderTransform(transform.parent);
+            builder.RegisterComponentInHierarchy<Enemy>().UnderTransform(transform);
+
+            builder.ReserveInjection(transform.FindInjectable());
+            builder.ReserveBinding(Parent.Parent.transform.FindBinder());
         }
     }
 }

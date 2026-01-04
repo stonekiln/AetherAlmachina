@@ -4,17 +4,14 @@ using UnityEngine;
 /// <summary>
 /// エネミーのMonoBehaviour
 /// </summary>
-public class Enemy : Entity, IInjectable
+public class Enemy : Entity
 {
-    [SerializeField] GameObject playerObject;
+    Player playerObject;
+    BrainBase brain;
 
-    public void InjectDependencies(InjectableResolver resolver)
+    public override void InjectDependencies(InjectableResolver resolver)
     {
-        resolver.Inject(out PreStart);
-        resolver.Inject(out AutoIncrease);
-        resolver.Inject(out DeckGet);
-        target = playerObject.GetComponent<Player>();
-        Encount();
+        base.InjectDependencies(resolver);
     }
 
     // Update is called once per frame
@@ -23,8 +20,5 @@ public class Enemy : Entity, IInjectable
 
     }
 
-    void Encount()
-    {
-        playerObject.GetComponent<Player>().target = this;
-    }
+
 }

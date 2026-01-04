@@ -1,6 +1,6 @@
 using DivFacter.Event;
 
-namespace DConfig.PalyerLife.Event
+namespace DConfig.PlayerLife.Event
 {
     public record CardActivateEventBundle(EventBus<CardSelectEvent> Select, EventBus<CardCancelEvent> Cancel, EventBus<CardInvokeEvent> Invoke);
 

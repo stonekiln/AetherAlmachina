@@ -1,11 +1,12 @@
 using System.IO;
-using DConfig.PalyerLife.Event;
+using DConfig.CardLife;
+using DConfig.PlayerLife.Event;
 using DivFacter.Event;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace DConfig.PalyerLife.Installer
+namespace DConfig.PlayerLife.Installer
 {
     /// <summary>
     /// デッキに関するイベントのDI登録
@@ -36,10 +37,10 @@ namespace DConfig.PalyerLife.Installer
     {
         public void Install(IContainerBuilder builder)
         {
-            builder.RegisterFactory<SkillData, Transform, CardBase>(container => (skilldata, transform) =>
+            builder.RegisterFactory<SkillData, CardBase>(container => skilldata =>
             {
-                GameObject CreatedCard = container.Instantiate(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")), transform);
-                return CreatedCard.GetComponent<CardBase>().Initialize(skilldata);
+                GameObject cardLifetime = container.Instantiate(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardLifetime")));
+                return cardLifetime.GetComponent<CardLifetimeScope>().Container.Resolve<CardBase>().Initialize(skilldata);
             }, Lifetime.Singleton);
         }
     }

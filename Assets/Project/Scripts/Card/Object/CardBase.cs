@@ -13,7 +13,7 @@ public class CardBase : MonoBehaviour, ICardData, IInjectable
     public CardSelecter Selecter => selecter;
     SkillData skillData;
     public SkillData SkillData => skillData;
-    public bool IsSelect { get; set; }
+    public bool IsSelect => Selecter.isSelect;
 
     [NonSerialized] public RectTransform rectTransform;
     [NonSerialized] public Vector2 initialSize;
@@ -22,6 +22,7 @@ public class CardBase : MonoBehaviour, ICardData, IInjectable
     {
         resolver.Inject(out design);
         resolver.Inject(out selecter);
+        resolver.RegisterBinder(this);
     }
 
     public CardBase Initialize(SkillData data)
@@ -43,5 +44,10 @@ public class CardBase : MonoBehaviour, ICardData, IInjectable
     {
         Destroy(this);
         return this;
+    }
+
+    public void SetSelect(bool flag)
+    {
+        Selecter.isSelect = flag;
     }
 }

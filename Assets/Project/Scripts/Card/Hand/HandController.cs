@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using R3;
-using DConfig.PalyerLife.Event;
+using DConfig.PlayerLife.Event;
 using DivFacter.Injectable;
 
 public class HandController : MonoBehaviour, IInjectable
@@ -23,18 +23,15 @@ public class HandController : MonoBehaviour, IInjectable
     {
         resolver.Inject(out DeckDraw);
         resolver.Inject(out CardActivate);
-    }
-
-    void Awake()
-    {
+        owner = resolver.GetComponent<Player>();
         selectedIndex = new();
     }
 
     void OnEnable()
     {
         DeckDraw.Response.Subscribe(response => Hand = AddHand(response.DrawCard)).AddTo(this);
-        CardActivate.Select.Subscribe(log => log.Data.IsSelect = Select(log.Index)).AddTo(this);
-        CardActivate.Cancel.Subscribe(log => log.Data.IsSelect = !SelectCancel(log.Index)).AddTo(this);
+        CardActivate.Select.Subscribe(log => log.Data.SetSelect(Select(log.Index))).AddTo(this);
+        CardActivate.Cancel.Subscribe(log => log.Data.SetSelect(!SelectCancel(log.Index))).AddTo(this);
         CardActivate.Invoke.Subscribe(_ => Invoke()).AddTo(this);
     }
 

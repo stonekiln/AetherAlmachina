@@ -1,10 +1,12 @@
-using DConfig.PalyerLife.Installer;
+using DConfig.PlayerLife.Installer;
 using DivFacter.EntryPoint;
 using DivFacter.Event;
+using DivFacter.Extensions;
+using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace DConfig.PalyerLife
+namespace DConfig.PlayerLife
 {
     public class PlayerLifetimeScope : LifetimeScope
     {
@@ -14,12 +16,13 @@ namespace DConfig.PalyerLife
             new DeckEventInstaller().Install(builder);
             new CardPrefabInstaller().Install(builder);
 
-            builder.Register<EventBus<PreStartEvent>>(Lifetime.Singleton);
-            builder.RegisterEntryPoint<PreStartable>(Lifetime.Singleton);
+            builder.RegisterComponentInHierarchy<Player>().UnderTransform(transform);
+            builder.RegisterComponentInHierarchy<HandVisualizer>().UnderTransform(transform);
+            builder.RegisterComponentInHierarchy<CostDisplay>().UnderTransform(transform);
+            builder.RegisterBinderInHierarchy<CardBinder>();
 
-            builder.RegisterComponentInHierarchy<Player>().UnderTransform(transform.parent);
-            builder.RegisterComponentInHierarchy<HandVisualizer>().UnderTransform(transform.parent);
-            builder.RegisterComponentInHierarchy<CostDisplay>().UnderTransform(transform.parent);
+            builder.ReserveInjection(transform.FindInjectable());
+            builder.ReserveBinding(Parent.transform.FindBinder());
         }
     }
 }

@@ -10,7 +10,7 @@ using DivFacter.Injectable;
 /// </summary>
 public class HandVisualizer : HandController
 {
-    Func<SkillData, Transform, CardBase> Create;
+    Func<SkillData, CardBase> Create;
 
     public override void InjectDependencies(InjectableResolver resolver)
     {
@@ -20,10 +20,10 @@ public class HandVisualizer : HandController
 
     protected override List<ICardData> AddHand(List<SkillData> skills)
     {
-        return Hand.Concat(skills.Select(skill => Create(skill, transform))).OrderBy(card => card.SkillData.Cost).Select((card,index) =>card.SetCard(index)).ToList();
+        return Hand.Concat(skills.Select(skill => Create(skill))).OrderBy(card => card.SkillData.Cost).Select((card, index) => card.SetCard(index)).ToList();
     }
     protected override List<ICardData> RemoveHand()
     {
-        return Hand.Select(card=>card.IsSelect?card.RemomveCard():card).Where(card=>!card.IsSelect).ToList();
+        return Hand.Select(card => card.IsSelect ? card.RemomveCard() : card).Where(card => !card.IsSelect).ToList();
     }
 }

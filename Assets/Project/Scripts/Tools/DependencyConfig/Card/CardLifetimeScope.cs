@@ -1,5 +1,4 @@
-using DivFacter.Injectable;
-using UnityEngine;
+using DivFacter.Extensions;
 using VContainer;
 using VContainer.Unity;
 
@@ -9,10 +8,12 @@ namespace DConfig.CardLife
     {
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.RegisterComponentInHierarchy<CardBase>().UnderTransform(transform.parent);
-            builder.RegisterComponentInHierarchy<CardSelecter>().UnderTransform(transform.parent);
-            builder.RegisterComponentInHierarchy<CardDesign>().UnderTransform(transform.parent);
-            builder.InjectMonoBehaviors(transform.parent.GetComponentsInChildren<MonoBehaviour>());
+            builder.RegisterComponentInHierarchy<CardBase>().UnderTransform(transform);
+            builder.RegisterComponentInHierarchy<CardSelecter>().UnderTransform(transform);
+            builder.RegisterComponentInHierarchy<CardDesign>().UnderTransform(transform);
+            
+            builder.ReserveInjection(transform.FindInjectable());
+            builder.ReserveBinding(Parent.Parent.transform.FindBinder());
         }
     }
 }

@@ -1,3 +1,4 @@
+using DivFacter.Injectable;
 using R3;
 using TMPro;
 using UnityEngine;
@@ -5,10 +6,15 @@ using UnityEngine;
 /// <summary>
 /// あるエンティティのコストを表示するためのクラス
 /// </summary>
-public class CostDisplay : MonoBehaviour
+public class CostDisplay : MonoBehaviour,IInjectable
 {
     TextMeshProUGUI textMeshPro;
-    Entity owner;
+    Player owner;
+
+    public void InjectDependencies(InjectableResolver resolver)
+    {
+        resolver.Inject(out owner);
+    }
 
     void Awake()
     {

@@ -1,30 +1,29 @@
 using System;
 using System.Collections.Generic;
-using DConfig.PalyerLife.Event;
+using DConfig.PlayerLife.Event;
 using DivFacter.Injectable;
 using UnityEngine;
 
-public class EnemyAI : MonoBehaviour, IInjectable
+public abstract class BrainBase : MonoBehaviour, IInjectable
 {
     CardActivateEventBundle CardActivate;
     Func<List<ICardData>> GetHand;
     List<ICardData> Hand => GetHand();
-    public void InjectDependencies(InjectableResolver resolver)
+    public virtual void InjectDependencies(InjectableResolver resolver)
     {
         resolver.Inject(out CardActivate);
-        resolver.Inject(out HandController handController);
-        GetHand = () => handController.Hand;
+        GetHand = () => resolver.GetComponent<HandController>().Hand;
     }
 
-    void Select(int index)
+    protected void Select(int index)
     {
         CardActivate.Select.Publish(new(Hand[index], index));
     }
-    void Cancel(int index)
+    protected void Cancel(int index)
     {
         CardActivate.Cancel.Publish(new(Hand[index], index));
     }
-    void Activate()
+    protected void Activate()
     {
         CardActivate.Invoke.Publish(new());
     }

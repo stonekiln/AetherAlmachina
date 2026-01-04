@@ -18,4 +18,15 @@ namespace DConfig.BattleLife.Installer
             builder.Register<EventBus<BonusIncreaseEvent>>(Lifetime.Singleton);
         }
     }
+    public class EntityPrefabInstaller
+    {/*
+        public void Install(IContainerBuilder builder)
+        {
+            builder.RegisterFactory<GameObject, GameObject>(container => gameObject =>
+            {
+                GameObject CreatedEntity = container.Instantiate(gameObject, lifetimeScope.transform);
+                return CreatedEntity;
+            }, Lifetime.Singleton);
+        }*/
+    }
 }
