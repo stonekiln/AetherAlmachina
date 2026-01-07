@@ -12,7 +12,7 @@ namespace Utility
         /// </description>
         /// <param name="array"></param>
         /// <returns></returns>
-        public static List<T> Shaffle<T>(this List<T> array)
+        public static List<T> Shuffle<T>(this List<T> array)
         {
             for (int i = array.Count - 1; i > 0; i--)
             {

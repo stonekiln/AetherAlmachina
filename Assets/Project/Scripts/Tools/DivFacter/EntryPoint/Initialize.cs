@@ -10,16 +10,16 @@ namespace DivFacter.EntryPoint
     /// </summary>
     public class Initializable : IInitializable
     {
-        readonly EventBus<InitializeEvent> Prestart;
+        readonly EventBus<InitializeEvent> InitializeEvent;
 
-        public Initializable(EventBus<InitializeEvent> preStart)
+        public Initializable(EventBus<InitializeEvent> initializeEvent)
         {
-            Prestart = preStart;
+            InitializeEvent = initializeEvent;
         }
 
         public void Initialize()
         {
-            Prestart.Publish(new());
+            InitializeEvent.Publish(new());
         }
     }
 }

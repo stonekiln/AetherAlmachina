@@ -9,9 +9,9 @@ using DConfig.PlayerLife.Event;
 /// <summary>
 /// カードを画面から選択するためのクラス
 /// </summary>
-public class CardSelecter : ButtonBase, IInjectable
+public class CardSelector : ButtonBase, IInjectable
 {
-    CardActivateEventBundle CardActive;
+    CardActivateEventBundle CardActivate;
     CardBase parent;
     RectTransform rectTransform;
     Vector2 initialPosition;
@@ -20,7 +20,7 @@ public class CardSelecter : ButtonBase, IInjectable
 
     public void InjectDependencies(InjectableResolver resolver)
     {
-        resolver.Inject(out CardActive);
+        resolver.Inject(out CardActivate);
     }
     public void Initialize(CardBase cardBase)
     {
@@ -78,17 +78,17 @@ public class CardSelecter : ButtonBase, IInjectable
         {
             if (!isSelect)
             {
-                CardActive.Select.Publish(new(parent, parent.transform.GetSiblingIndex()));
+                CardActivate.Select.Publish(new(parent, parent.transform.GetSiblingIndex()));
                 rectTransform.anchoredPosition = initialPosition + Offset;
             }
             else
             {
-                CardActive.Invoke.Publish(new());
+                CardActivate.Invoke.Publish(new());
             }
         }
         if (eventData.button == PointerEventData.InputButton.Right && isSelect)
         {
-            CardActive.Cancel.Publish(new(parent, parent.transform.GetSiblingIndex()));
+            CardActivate.Cancel.Publish(new(parent, parent.transform.GetSiblingIndex()));
             rectTransform.anchoredPosition = initialPosition;
         }
 

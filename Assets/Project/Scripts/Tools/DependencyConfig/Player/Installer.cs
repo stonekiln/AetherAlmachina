@@ -37,10 +37,10 @@ namespace DConfig.PlayerLife.Installer
     {
         public void Install(IContainerBuilder builder)
         {
-            builder.RegisterFactory<SkillData, CardBase>(container => skilldata =>
+            builder.RegisterFactory<SkillData, CardBase>(container => skillData =>
             {
                 GameObject cardLifetime = container.Instantiate(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardLifetime")));
-                return cardLifetime.GetComponent<CardLifetimeScope>().Container.Resolve<CardBase>().Initialize(skilldata);
+                return cardLifetime.GetComponent<CardLifetimeScope>().Container.Resolve<CardBase>().Initialize(skillData);
             }, Lifetime.Singleton);
         }
     }

@@ -4,5 +4,5 @@ public interface ICardData
     public bool IsSelect { get; }
     public void SetSelect(bool flag);
     public ICardData SetCard(int index);
-    public ICardData RemomveCard();
+    public ICardData RemoveCard();
 }

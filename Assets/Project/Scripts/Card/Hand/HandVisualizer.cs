@@ -24,6 +24,6 @@ public class HandVisualizer : HandController
     }
     protected override List<ICardData> RemoveHand()
     {
-        return Hand.Select(card => card.IsSelect ? card.RemomveCard() : card).Where(card => !card.IsSelect).ToList();
+        return Hand.Select(card => card.IsSelect ? card.RemoveCard() : card).Where(card => !card.IsSelect).ToList();
     }
 }

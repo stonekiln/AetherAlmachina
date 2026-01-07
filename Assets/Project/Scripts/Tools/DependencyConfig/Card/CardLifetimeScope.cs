@@ -9,7 +9,7 @@ namespace DConfig.CardLife
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponentInHierarchy<CardBase>().UnderTransform(transform);
-            builder.RegisterComponentInHierarchy<CardSelecter>().UnderTransform(transform);
+            builder.RegisterComponentInHierarchy<CardSelector>().UnderTransform(transform);
             builder.RegisterComponentInHierarchy<CardDesign>().UnderTransform(transform);
             
             builder.ReserveInjection(transform.FindInjectable());

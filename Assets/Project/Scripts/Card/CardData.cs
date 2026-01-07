@@ -15,7 +15,7 @@ public class CardData : ICardData
     {
         return this;
     }
-    public ICardData RemomveCard()
+    public ICardData RemoveCard()
     {
         return this;
     }

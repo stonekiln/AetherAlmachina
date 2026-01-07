@@ -8,12 +8,12 @@ using UnityEngine;
 public class CardBase : MonoBehaviour, ICardData, IInjectable
 {
     CardDesign design;
-    CardSelecter selecter;
+    CardSelector selector;
     public CardDesign Design => design;
-    public CardSelecter Selecter => selecter;
+    public CardSelector Selector => selector;
     SkillData skillData;
     public SkillData SkillData => skillData;
-    public bool IsSelect => Selecter.isSelect;
+    public bool IsSelect => Selector.isSelect;
 
     [NonSerialized] public RectTransform rectTransform;
     [NonSerialized] public Vector2 initialSize;
@@ -21,7 +21,7 @@ public class CardBase : MonoBehaviour, ICardData, IInjectable
     public void InjectDependencies(InjectableResolver resolver)
     {
         resolver.Inject(out design);
-        resolver.Inject(out selecter);
+        resolver.Inject(out selector);
         resolver.RegisterBinder(this);
     }
 
@@ -31,7 +31,7 @@ public class CardBase : MonoBehaviour, ICardData, IInjectable
         rectTransform = gameObject.GetComponent<RectTransform>();
         initialSize = rectTransform.rect.size;
         design.Initialize(this);
-        selecter.Initialize(this);
+        selector.Initialize(this);
         return this;
     }
 
@@ -40,7 +40,7 @@ public class CardBase : MonoBehaviour, ICardData, IInjectable
         transform.SetSiblingIndex(index);
         return this;
     }
-    public ICardData RemomveCard()
+    public ICardData RemoveCard()
     {
         Destroy(this);
         return this;
@@ -48,6 +48,6 @@ public class CardBase : MonoBehaviour, ICardData, IInjectable
 
     public void SetSelect(bool flag)
     {
-        Selecter.isSelect = flag;
+        Selector.isSelect = flag;
     }
 }
