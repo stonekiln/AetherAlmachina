@@ -1,12 +1,12 @@
 using System.IO;
 using DConfig.CardLife;
-using DConfig.PlayerLife.Event;
+using DConfig.EntityLife.Event;
 using DivFacter.Event;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace DConfig.PlayerLife.Installer
+namespace DConfig.EntityLife.Installer
 {
     /// <summary>
     /// デッキに関するイベントのDI登録

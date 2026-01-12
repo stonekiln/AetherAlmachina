@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using R3;
-using DConfig.PlayerLife.Event;
+using DConfig.EntityLife.Event;
 using DivFacter.Injectable;
 
 public class HandController : MonoBehaviour, IInjectable

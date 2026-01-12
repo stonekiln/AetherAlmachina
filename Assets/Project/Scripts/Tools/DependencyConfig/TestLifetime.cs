@@ -1,13 +1,14 @@
+using DivFacter;
+using DivFacter.Lifetime;
 using VContainer;
-
-class TestLifetime : LifetimeSpawner
+public class TestLifetime : FacterLifetimeScope
 {
-    protected override void ChildConfigure(IContainerBuilder builder)
+    protected override void Install(InstallBuilder builder)
     {
         
     }
 
-    protected override void ParentConfigure(IContainerBuilder builder)
+    protected override void Register(IContainerBuilder builder)
     {
         
     }

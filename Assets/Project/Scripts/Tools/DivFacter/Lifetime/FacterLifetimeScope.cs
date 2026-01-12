@@ -1,19 +1,22 @@
+using DivFacter.Lifetime;
+using DivFacter.Extensions;
 using VContainer;
 using VContainer.Unity;
+using UnityEngine;
+using System.Linq;
 
 namespace DivFacter
 {
-    public abstract class FactorLifetimeScope : LifetimeScope
+    public abstract class FacterLifetimeScope : LifetimeScope
     {
-        protected abstract void Install(IContainerBuilder builder);
+        protected abstract void Install(InstallBuilder builder);
         protected abstract void Register(IContainerBuilder builder);
-        protected abstract void Reserve(IContainerBuilder builder);
 
-        protected override void Configure(IContainerBuilder builder)
+        protected sealed override void Configure(IContainerBuilder builder)
         {
-            Install(builder);
+            Install(new(builder));
             Register(builder);
-            Reserve(builder);
+            builder.ReserveInjection(transform.FindInjectable());
         }
     }
 }

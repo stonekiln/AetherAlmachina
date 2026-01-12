@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Utility;
 using DivFacter.Injectable;
-using DConfig.PlayerLife.Event;
+using DConfig.EntityLife.Event;
 
 /// <summary>
 /// カードを画面から選択するためのクラス

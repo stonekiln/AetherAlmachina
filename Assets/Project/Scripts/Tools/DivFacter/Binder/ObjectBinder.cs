@@ -4,8 +4,6 @@ using DivFacter.EntryPoint;
 using DivFacter.Event;
 using DivFacter.Injectable;
 using UnityEngine;
-using VContainer;
-using VContainer.Unity;
 
 namespace DivFacter.Binder
 {

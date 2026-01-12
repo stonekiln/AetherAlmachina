@@ -1,3 +1,4 @@
+using DConfig.EntityLife.Installer;
 using DivFacter.Extensions;
 using VContainer;
 using VContainer.Unity;
@@ -8,6 +9,9 @@ namespace DConfig.EnemyLife
     {
         protected override void Configure(IContainerBuilder builder)
         {
+            new CardEventInstaller().Install(builder);
+            new DeckEventInstaller().Install(builder);
+
             builder.RegisterComponentInHierarchy<Enemy>().UnderTransform(transform);
 
             builder.ReserveInjection(transform.FindInjectable());

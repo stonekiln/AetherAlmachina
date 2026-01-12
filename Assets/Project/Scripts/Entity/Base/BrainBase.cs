@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DConfig.PlayerLife.Event;
+using DConfig.EntityLife.Event;
 using DivFacter.Injectable;
 using UnityEngine;
 

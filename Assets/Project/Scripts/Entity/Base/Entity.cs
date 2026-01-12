@@ -1,7 +1,7 @@
 using System;
 using DivFacter.Event;
 using DConfig.BattleLife.Event;
-using DConfig.PlayerLife.Event;
+using DConfig.EntityLife.Event;
 using DivFacter.EntryPoint;
 using R3;
 using UnityEngine;
