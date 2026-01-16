@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -19,28 +21,30 @@ namespace DivFacter.Lifetime
     }
     public class ObjectBuilder
     {
-        FacterLifetimeScope Parent { get; init; }
+        Transform ParentTransform { get; init; }
+        LifetimeObject Parent { get; init; }
 
-        public ObjectBuilder(FacterLifetimeScope parent)
+        public ObjectBuilder(Transform transform, LifetimeObject scope)
         {
-            Debug.Log(parent.name);
-            Parent = parent;
+            ParentTransform = transform;
+            Parent = scope;
         }
         public void Set<TScope, TParam, TReturn>(out Func<TParam, TReturn> spawner, GameObject prefabObject, Action<TParam, IObjectResolver> callBack)
-        where TScope : FacterLifetimeScope
+        where TScope : LifetimeObject
         where TReturn : MonoBehaviour
         {
             spawner = (param) =>
             {
-                TScope scope = new GameObject(typeof(TScope).Name).AddComponent<TScope>();
-                prefabObject.transform.SetParent(scope.transform);
-                Debug.Log(Parent.name);
-                foreach (ILifetimeSpawner spawner in scope.transform.GetComponentsInChildren<ILifetimeSpawner>())
+                LifetimeSeed seed = new GameObject(typeof(TScope).Name).AddComponent<LifetimeSeed>();
+                seed.transform.SetParent(ParentTransform);
+                seed.Create(Parent, prefabObject, (resolver) => callBack(param, resolver));
+                TScope scope = seed.AddComponent<TScope>();
+                foreach (Component spawner in scope.transform.GetComponentsInChildren<MonoBehaviour>().Where(mono => mono is ILifetimeSpawner))
                 {
-                    spawner.SpawnConfigure(new ObjectBuilder(scope));
+                    ((ILifetimeSpawner)spawner).SpawnConfigure(new ObjectBuilder(spawner.transform, scope));
                 }
-                scope = Parent.CreateChildFromPrefab(scope);
-                callBack(param, scope.Container);
+                scope.transform.SetParent(scope.Parent.transform);
+                scope.transform.GetChild(0).SetParent(ParentTransform);
                 return scope.Container.Resolve<TReturn>();
             };
         }

@@ -33,15 +33,4 @@ namespace DConfig.EntityLife.Installer
             builder.Register<CardActivateEventBundle>(Lifetime.Singleton);
         }
     }
-    public class CardPrefabInstaller : IInstaller
-    {
-        public void Install(IContainerBuilder builder)
-        {
-            builder.RegisterFactory<SkillData, CardBase>(container => skillData =>
-            {
-                GameObject cardLifetime = container.Instantiate(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardLifetime")));
-                return cardLifetime.GetComponent<CardLifetimeScope>().Container.Resolve<CardBase>().Initialize(skillData);
-            }, Lifetime.Singleton);
-        }
-    }
 }

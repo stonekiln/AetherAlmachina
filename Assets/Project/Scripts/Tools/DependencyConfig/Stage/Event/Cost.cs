@@ -1,6 +1,6 @@
 using DivFacter.Event;
 
-namespace DConfig.BattleLife.Event
+namespace DConfig.StageLife.Event
 {
     /// <summary>
     /// コストの自動回復を宣言するイベントメッセージ

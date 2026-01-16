@@ -57,7 +57,8 @@
         "Temp/": true
     },
     "cSpell.words": [
-        "Facter"
+        "Facter",
+        "Tickable"
     ],
     "dotnet.defaultSolution": "AetherAlmachina.slnx"
 }

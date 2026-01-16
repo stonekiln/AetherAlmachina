@@ -22,7 +22,7 @@ public class DeckController
 
     public void Subscribe(MonoBehaviour monoBehaviour)
     {
-        DeckGet.Subscribe(deckData=>Deck=deckData.List.Shuffle()).AddTo(monoBehaviour);
+        DeckGet.Subscribe(deckData => Deck = deckData.List.Shuffle()).AddTo(monoBehaviour);
         DeckDraw.Request.Subscribe(log => DeckDraw.Response.Publish(new(Draw(log.Count)))).AddTo(monoBehaviour);
     }
     List<SkillData> Draw(int count)

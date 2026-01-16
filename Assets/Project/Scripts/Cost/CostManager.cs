@@ -1,5 +1,5 @@
 using System;
-using DConfig.BattleLife.Event;
+using DConfig.StageLife.Event;
 using DivFacter.Event;
 using DivFacter.Injectable;
 using R3;
@@ -22,5 +22,10 @@ public class CostManager : MonoBehaviour, IInjectable
     {
         Observable.Interval(TimeSpan.FromSeconds(costSettings.TimeSpan))
             .Subscribe(_ => AutoIncrease.Publish(new(costSettings.Delta))).AddTo(this);
+    }
+
+    public void Initialize(CostSettings settings)
+    {
+        costSettings = settings;
     }
 }

@@ -11,8 +11,8 @@ public class StageSettings : ScriptableObject
     [SerializeField] private GameObject[] friendly;
     [SerializeField] private GameObject[] hostile;
 
-    public CostSettings CostSettings=>costSettings;
-    public GameObject Player=>player;
-    public GameObject[] Friendly=>friendly;
-    public GameObject[] Hostile=>hostile;
+    public CostSettings CostSettings => costSettings;
+    public GameObject Player => player;
+    public GameObject[] Friendly => friendly;
+    public GameObject[] Hostile => hostile;
 }

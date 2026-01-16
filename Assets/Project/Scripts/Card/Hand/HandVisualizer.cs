@@ -14,7 +14,7 @@ using DConfig.CardLife;
 /// </summary>
 public class HandVisualizer : HandController, ILifetimeSpawner
 {
-    Func<SkillData, CardBase> Create;
+    Func<SkillData, CardBase> spawner;
 
     public override void InjectDependencies(InjectableResolver resolver)
     {
@@ -23,7 +23,7 @@ public class HandVisualizer : HandController, ILifetimeSpawner
 
     public void SpawnConfigure(ObjectBuilder builder)
     {
-        builder.Set<CardLifetimeScope, SkillData, CardBase>(out Create, Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")),
+        builder.Set<CardLifetimeScope, SkillData, CardBase>(out spawner, Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")),
         (data, resolver) =>
         {
             CardBase cardBase = resolver.Resolve<CardBase>().Initialize(data);
@@ -32,7 +32,7 @@ public class HandVisualizer : HandController, ILifetimeSpawner
 
     protected override List<ICardData> AddHand(List<SkillData> skills)
     {
-        return Hand.Concat(skills.Select(skill => Create(skill))).OrderBy(card => card.SkillData.Cost).Select((card, index) => card.SetCard(index)).ToList();
+        return Hand.Concat(skills.Select(skill => spawner(skill))).OrderBy(card => card.SkillData.Cost).Select((card, index) => card.SetCard(index)).ToList();
     }
     protected override List<ICardData> RemoveHand()
     {

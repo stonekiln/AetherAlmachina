@@ -8,11 +8,11 @@ using VContainer.Unity;
 
 namespace DConfig.CardLife
 {
-    public class CardLifetimeScope : FacterLifetimeScope
+    public class CardLifetimeScope : LifetimeObject
     {
         protected override void Install(InstallBuilder builder)
         {
-            
+
         }
 
         protected override void Register(IContainerBuilder builder)
@@ -21,7 +21,7 @@ namespace DConfig.CardLife
             builder.RegisterComponentInHierarchy<CardSelector>().UnderTransform(transform);
             builder.RegisterComponentInHierarchy<CardDesign>().UnderTransform(transform);
 
-            //builder.ReserveBinding(Parent.Parent.transform.FindBinder());
+            builder.ReserveBinding(Parent.Parent.transform.FindBinder());
         }
     }
 }

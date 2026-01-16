@@ -1,23 +1,24 @@
-using DConfig.BattleLife.Installer;
-using UnityEngine;
+using DConfig.StageLife.Installer;
 using VContainer;
 using VContainer.Unity;
 using DivFacter.Extensions;
+using DivFacter.Lifetime;
 
-namespace DConfig.BattleLife
+namespace DConfig.StageLife
 {
-    public class BattleLifetimeScope : LifetimeScope
+    public class StageLifetime : LifetimeObject
     {
-        protected override void Configure(IContainerBuilder builder)
+        protected override void Install(InstallBuilder builder)
         {
-            new CostEventInstaller().Install(builder);
+            builder.Install<CostEventInstaller>();
+        }
 
+        protected override void Register(IContainerBuilder builder)
+        {
             builder.Register<DeckController>(Lifetime.Scoped);
             builder.RegisterComponentInHierarchy<CostManager>();
             builder.RegisterBinderInHierarchy<PlayerUIBinder>();
             builder.RegisterBinderInHierarchy<EntityObjectBinder>();
-            
-            builder.ReserveInjection(gameObject.scene.FindInjectable());
         }
     }
 }

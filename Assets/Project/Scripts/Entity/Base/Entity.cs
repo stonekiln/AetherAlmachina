@@ -1,6 +1,6 @@
 using System;
 using DivFacter.Event;
-using DConfig.BattleLife.Event;
+using DConfig.StageLife.Event;
 using DConfig.EntityLife.Event;
 using DivFacter.EntryPoint;
 using R3;
@@ -11,7 +11,7 @@ using DivFacter.Injectable;
 /// <summary>
 /// エンティティのMonoBehaviour
 /// </summary>
-public abstract class Entity : MonoBehaviour,IInjectable
+public abstract class Entity : MonoBehaviour, IInjectable
 {
     protected EventBus<AutoIncreaseEvent> AutoIncrease;
     protected EventBus<DeckGetEvent> DeckGet;

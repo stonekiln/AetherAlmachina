@@ -10,7 +10,7 @@ namespace DivFacter.EntryPoint
     /// </summary>
     public class Initializable : IInitializable
     {
-        readonly EventBus<InitializeEvent> InitializeEvent;
+        EventBus<InitializeEvent> InitializeEvent { get; init; }
 
         public Initializable(EventBus<InitializeEvent> initializeEvent)
         {
