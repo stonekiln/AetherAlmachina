@@ -20,19 +20,14 @@ public class CardBase : MonoBehaviour, ICardData, IInjectable
 
     public void InjectDependencies(InjectableResolver resolver)
     {
+        resolver.Inject(out skillData);
         resolver.Inject(out design);
         resolver.Inject(out selector);
-        resolver.RegisterBinder(this);
-    }
 
-    public CardBase Initialize(SkillData data)
-    {
-        skillData = data;
         rectTransform = gameObject.GetComponent<RectTransform>();
         initialSize = rectTransform.rect.size;
         design.Initialize(this);
         selector.Initialize(this);
-        return this;
     }
 
     public ICardData SetCard(int index)

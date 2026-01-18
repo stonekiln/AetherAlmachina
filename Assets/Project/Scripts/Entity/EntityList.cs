@@ -1,0 +1,1 @@
+public record EntityList(StatusAsset[] Friendly,StatusAsset[] Hostile);

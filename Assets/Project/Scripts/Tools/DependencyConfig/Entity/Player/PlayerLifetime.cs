@@ -1,7 +1,6 @@
 using DConfig.EntityLife.Installer;
 using DivFacter.Extensions;
 using DivFacter.Lifetime;
-using DivFacter.PlayerLife;
 using VContainer;
 using VContainer.Unity;
 
@@ -20,7 +19,6 @@ namespace DConfig.PlayerLife
             builder.RegisterComponentInHierarchy<Player>().UnderTransform(transform);
             builder.RegisterComponentInHierarchy<HandVisualizer>().UnderTransform(transform);
             builder.RegisterComponentInHierarchy<CostDisplay>().UnderTransform(transform);
-            builder.RegisterBinderInHierarchy<CardBinder>();
 
             builder.ReserveBinding(Parent.transform.FindBinder());
         }

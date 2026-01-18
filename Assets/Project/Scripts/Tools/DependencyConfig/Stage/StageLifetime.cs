@@ -17,8 +17,8 @@ namespace DConfig.StageLife
         {
             builder.Register<DeckController>(Lifetime.Scoped);
             builder.RegisterComponentInHierarchy<CostManager>();
+            builder.RegisterComponentInHierarchy<EntitySpawner>();
             builder.RegisterBinderInHierarchy<PlayerUIBinder>();
-            builder.RegisterBinderInHierarchy<EntityObjectBinder>();
         }
     }
 }

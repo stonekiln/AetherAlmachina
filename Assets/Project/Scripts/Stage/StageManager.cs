@@ -1,23 +1,20 @@
 using System;
 using System.IO;
+using System.Linq;
 using DConfig.StageLife;
 using DivFacter.Lifetime;
 using UnityEngine;
 using VContainer;
 
-public class BattleManager : MonoBehaviour, ILifetimeSpawner
+public class StageManager : MonoBehaviour, ILifetimeSpawner
 {
     [SerializeField] StageSettings stageSettings;
-    Func<StageSettings, CostManager> spawner;
+    Action<StageSettings> spawner;
 
     public void SpawnConfigure(ObjectBuilder builder)
     {
-        builder.Set<StageLifetime, StageSettings, CostManager>(out spawner, Resources.Load<GameObject>(Path.Combine("Stage", "Debug")),
-            (stageSettings, resolver) =>
-            {
-                resolver.Resolve<CostManager>().Initialize(stageSettings.CostSettings);
-            }
-        );
+        builder.MakeSpawner<StageLifetime>(Resources.Load<GameObject>(Path.Combine("Stage", "Debug")))
+                .Get(out spawner, (setting, register) => register.Asset(setting));
     }
     void Start()
     {

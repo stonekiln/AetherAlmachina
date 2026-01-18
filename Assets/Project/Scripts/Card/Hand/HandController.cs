@@ -26,7 +26,7 @@ public class HandController : MonoBehaviour, IInjectable
         owner = resolver.GetComponent<Player>();
         selectedIndex = new();
     }
-
+    
     void OnEnable()
     {
         DeckDraw.Response.Subscribe(response => Hand = AddHand(response.DrawCard)).AddTo(this);

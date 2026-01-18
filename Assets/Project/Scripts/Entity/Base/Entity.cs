@@ -16,7 +16,7 @@ public abstract class Entity : MonoBehaviour, IInjectable
     protected EventBus<AutoIncreaseEvent> AutoIncrease;
     protected EventBus<DeckGetEvent> DeckGet;
     protected EventBus<PreStartEvent> PreStart;
-    [SerializeField] protected StatusAsset statusAsset;
+    protected StatusAsset statusAsset;
     protected DeckController deckController;
     public Status Status { get; private set; }
     protected float power;
@@ -25,6 +25,7 @@ public abstract class Entity : MonoBehaviour, IInjectable
 
     public virtual void InjectDependencies(InjectableResolver resolver)
     {
+        resolver.Inject(out statusAsset);
         Status = new(statusAsset);
         power = 1;
         handPower = 1;
@@ -32,14 +33,18 @@ public abstract class Entity : MonoBehaviour, IInjectable
         resolver.Inject(out AutoIncrease);
         resolver.Inject(out DeckGet);
         resolver.Inject(out deckController);
-        resolver.RegisterBinder(this);
     }
-
+    
     void OnEnable()
     {
-        PreStart.Subscribe(_ => Get()).AddTo(this);
+        //PreStart.Subscribe(_ => Get()).AddTo(this);
         AutoIncrease.Subscribe(log => CostIncrease(log.Delta)).AddTo(this);
         deckController.Subscribe(this);
+        Get();
+    }
+    public void Set(StatusAsset asset)
+    {
+        statusAsset = asset;
     }
 
     public void Attack(float skillPower)

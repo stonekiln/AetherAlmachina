@@ -7,12 +7,12 @@ using UnityEngine;
 public class StageSettings : ScriptableObject
 {
     [SerializeField] private CostSettings costSettings;
-    [SerializeField] private GameObject player;
-    [SerializeField] private GameObject[] friendly;
-    [SerializeField] private GameObject[] hostile;
+    [SerializeField] private StatusAsset player;
+    [SerializeField] private StatusAsset[] friendly;
+    [SerializeField] private StatusAsset[] hostile;
 
     public CostSettings CostSettings => costSettings;
-    public GameObject Player => player;
-    public GameObject[] Friendly => friendly;
-    public GameObject[] Hostile => hostile;
+    public StatusAsset Player => player;
+    public StatusAsset[] Friendly => friendly;
+    public StatusAsset[] Hostile => hostile;
 }

@@ -1,5 +1,6 @@
 using System;
 using DivFacter.Extensions;
+using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
@@ -7,7 +8,7 @@ namespace DivFacter.Lifetime
 {
     public abstract class LifetimeObject : LifetimeScope
     {
-        Action<IObjectResolver> Callback;
+        Action<AssetRegister> Callback;
         protected override void Awake()
         {
             if (gameObject.TryGetComponent(out LifetimeSeed seed))
@@ -25,8 +26,8 @@ namespace DivFacter.Lifetime
         {
             Install(new(builder));
             Register(builder);
+            Callback(new(builder));
             builder.ReserveInjection(transform.FindInjectable());
-            builder.RegisterBuildCallback(container => Callback(container));
         }
     }
 }

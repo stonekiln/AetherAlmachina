@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StageSettings
   m_EditorClassIdentifier: Assembly-CSharp::StageSettings
   costSettings: {fileID: 11400000, guid: 7f78fa94575dece4e86c9b99b49fbd1e, type: 2}
-  player: {fileID: 6539803715378337721, guid: 3cd3273dcc8317246a66173cdb376199, type: 3}
+  player: {fileID: 11400000, guid: e27ed0df1bb44ec47a71dfba5b5d49d8, type: 2}
   friendly: []
   hostile:
-  - {fileID: 2597408094940846626, guid: a6f01a9ff328025488ecf262ab902d80, type: 3}
+  - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}

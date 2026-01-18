@@ -23,11 +23,8 @@ public class HandVisualizer : HandController, ILifetimeSpawner
 
     public void SpawnConfigure(ObjectBuilder builder)
     {
-        builder.Set<CardLifetimeScope, SkillData, CardBase>(out spawner, Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")),
-        (data, resolver) =>
-        {
-            CardBase cardBase = resolver.Resolve<CardBase>().Initialize(data);
-        });
+        builder.MakeSpawner<CardLifetimeScope>(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")))
+                .Get(out spawner,(data,register)=>register.Asset(data));
     }
 
     protected override List<ICardData> AddHand(List<SkillData> skills)

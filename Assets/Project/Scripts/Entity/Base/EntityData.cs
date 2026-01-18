@@ -4,7 +4,7 @@ using UnityEngine;
 /// エンティティのデータ
 /// </summary>
 [CreateAssetMenu(fileName = "Data", menuName = "Entity/Data")]
-public class StatusData : ScriptableObject
+public class EntityData : ScriptableObject
 {
     [SerializeField] StatusAsset statusAsset;
     [SerializeField] Sprite sprite;

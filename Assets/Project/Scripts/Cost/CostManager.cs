@@ -15,6 +15,7 @@ public class CostManager : MonoBehaviour, IInjectable
 
     public void InjectDependencies(InjectableResolver resolver)
     {
+        costSettings = resolver.GetComponent<StageSettings>().CostSettings;
         resolver.Inject(out AutoIncrease);
     }
 
@@ -22,10 +23,5 @@ public class CostManager : MonoBehaviour, IInjectable
     {
         Observable.Interval(TimeSpan.FromSeconds(costSettings.TimeSpan))
             .Subscribe(_ => AutoIncrease.Publish(new(costSettings.Delta))).AddTo(this);
-    }
-
-    public void Initialize(CostSettings settings)
-    {
-        costSettings = settings;
     }
 }

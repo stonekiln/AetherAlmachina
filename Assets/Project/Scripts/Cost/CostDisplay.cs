@@ -20,6 +20,7 @@ public class CostDisplay : MonoBehaviour,IInjectable
     {
         textMeshPro = gameObject.GetComponent<TextMeshProUGUI>();
     }
+    
     void OnEnable()
     {
         owner.Status.MPfluctuation.Subscribe(log => SetDisplay(owner.Status.magicPoint)).AddTo(this);

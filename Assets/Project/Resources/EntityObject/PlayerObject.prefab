@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 7497102771045880046}
   - component: {fileID: 5691585636181366722}
   m_Layer: 0
-  m_Name: PlayerObjects
+  m_Name: PlayerObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -261,7 +261,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb172c25e4023fe4099a15ee197a8542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
-  statusAsset: {fileID: 11400000, guid: e27ed0df1bb44ec47a71dfba5b5d49d8, type: 2}
 --- !u!1001 &4874953224818250844
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -354,7 +353,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerUI
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3407258680690252779, guid: 567cd779e4f41eb46af66d54ed587be7, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

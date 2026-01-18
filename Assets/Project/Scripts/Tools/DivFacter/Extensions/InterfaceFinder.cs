@@ -21,7 +21,7 @@ namespace DivFacter.Extensions
         /// </summary>
         public static IEnumerable<IInjectable> FindInjectable(this Transform transform)
         {
-            return transform.GetComponentsInChildren<MonoBehaviour>().OfType<IInjectable>();
+            return transform.GetComponentsInChildren<MonoBehaviour>(true).OfType<IInjectable>();
         }
         /// <summary>
         /// Scene内のオブジェクトからIInjectableを探す
@@ -35,7 +35,7 @@ namespace DivFacter.Extensions
         /// </summary>
         public static IEnumerable<IObjectBinderBase> FindBinder(this Transform transform)
         {
-            return transform.GetComponentsInChildren<MonoBehaviour>().OfType<IObjectBinderBase>();
+            return transform.GetComponentsInChildren<MonoBehaviour>(true).OfType<IObjectBinderBase>();
         }
     }
 }
