@@ -19,7 +19,7 @@ public class HandController : MonoBehaviour, IInjectable
     int Type => GetHandType();
     public List<ICardData> Hand { get; private set; }
 
-    public virtual void InjectDependencies(InjectableResolver resolver)
+    public virtual void Injection(InjectableResolver resolver)
     {
         resolver.Inject(out DeckDraw);
         resolver.Inject(out CardActivate);

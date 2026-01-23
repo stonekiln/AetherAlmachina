@@ -9,9 +9,9 @@ public class Enemy : Entity
     Player playerObject;
     BrainBase brain;
 
-    public override void InjectDependencies(InjectableResolver resolver)
+    public override void Injection(InjectableResolver resolver)
     {
-        base.InjectDependencies(resolver);
+        base.Injection(resolver);
     }
 
     // Update is called once per frame

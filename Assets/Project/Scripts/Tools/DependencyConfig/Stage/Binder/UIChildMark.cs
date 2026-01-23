@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class UIChildMark : MonoBehaviour, IInjectable
 {
-    public void InjectDependencies(InjectableResolver resolver)
+    public void Injection(InjectableResolver resolver)
     {
         resolver.Bind(this);
     }

@@ -13,7 +13,7 @@ public class CostManager : MonoBehaviour, IInjectable
     EventBus<AutoIncreaseEvent> AutoIncrease;
     CostSettings costSettings;
 
-    public void InjectDependencies(InjectableResolver resolver)
+    public void Injection(InjectableResolver resolver)
     {
         costSettings = resolver.GetComponent<StageSettings>().CostSettings;
         resolver.Inject(out AutoIncrease);

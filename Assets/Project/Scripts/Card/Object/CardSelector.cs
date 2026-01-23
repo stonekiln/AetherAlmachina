@@ -18,7 +18,7 @@ public class CardSelector : ButtonBase, IInjectable
     readonly Vector2 ExtraSpacing = new(40f, 0);
     readonly Vector2 Offset = new(0, 20f);
 
-    public void InjectDependencies(InjectableResolver resolver)
+    public void Injection(InjectableResolver resolver)
     {
         resolver.Inject(out CardActivate);
     }

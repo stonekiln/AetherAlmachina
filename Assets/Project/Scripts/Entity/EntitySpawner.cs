@@ -13,7 +13,7 @@ public class EntitySpawner : MonoBehaviour, IInjectable, ILifetimeSpawner
     Action<StatusAsset> enemyFactory;
     EntityList Data;
 
-    public void InjectDependencies(InjectableResolver resolver)
+    public void Injection(InjectableResolver resolver)
     {
         resolver.Inject(out StageSettings settings);
         Data = new(settings.Friendly.Append(settings.Player).Reverse().ToArray(), settings.Hostile);

@@ -1,8 +1,8 @@
 using DIVFactor.Injectable;
 public class EnemyBrain : BrainBase,IInjectable
 {
-    public override void InjectDependencies(InjectableResolver resolver)
+    public override void Injection(InjectableResolver resolver)
     {
-        base.InjectDependencies(resolver);
+        base.Injection(resolver);
     }
 }

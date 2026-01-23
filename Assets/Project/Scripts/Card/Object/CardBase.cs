@@ -18,7 +18,7 @@ public class CardBase : MonoBehaviour, ICardData, IInjectable
     [NonSerialized] public RectTransform rectTransform;
     [NonSerialized] public Vector2 initialSize;
 
-    public void InjectDependencies(InjectableResolver resolver)
+    public void Injection(InjectableResolver resolver)
     {
         resolver.Inject(out skillData);
         resolver.Inject(out design);

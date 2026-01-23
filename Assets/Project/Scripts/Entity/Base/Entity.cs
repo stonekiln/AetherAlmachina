@@ -21,7 +21,7 @@ public abstract class Entity : MonoBehaviour, IInjectable
     protected float handPower;
     [NonSerialized] public Entity target;
 
-    public virtual void InjectDependencies(InjectableResolver resolver)
+    public virtual void Injection(InjectableResolver resolver)
     {
         resolver.Inject(out statusAsset);
         Status = new(statusAsset);

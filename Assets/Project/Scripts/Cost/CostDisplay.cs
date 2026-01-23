@@ -11,7 +11,7 @@ public class CostDisplay : MonoBehaviour,IInjectable
     TextMeshProUGUI textMeshPro;
     Player owner;
 
-    public void InjectDependencies(InjectableResolver resolver)
+    public void Injection(InjectableResolver resolver)
     {
         resolver.Inject(out owner);
         

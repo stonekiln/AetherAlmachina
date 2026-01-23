@@ -4,5 +4,8 @@ namespace DIVFactor.Event
     /// 全てのイベントメッセージはこれを継承すること
     /// </summary>
     public abstract record EventObject;
+    /// <summary>
+    /// MonoBehaviourのライフサイクルが始まる直前に発行されるイベント
+    /// </summary>
     public record ActivateEvent : EventObject;
 }

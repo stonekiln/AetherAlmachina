@@ -12,13 +12,13 @@ namespace DIVFactor.Injectable
     public interface IInjectable
     {
         /// <summary>
-        /// ここに注入する変数を宣言する
+        /// ここでフィールドのインジェクトを行う
         /// </summary>
         /// <param name="resolver">使用するcontainer</param>
-        public void InjectDependencies(InjectableResolver resolver);
+        public void Injection(InjectableResolver resolver);
     }
     /// <summary>
-    /// 拡張メソッドだとoutを使用できないのでこのクラスでラップする
+    /// インジェクトを行うためのコンテナ
     /// </summary>
     public class InjectableResolver
     {
@@ -38,12 +38,17 @@ namespace DIVFactor.Injectable
         {
             value = Resolver.Resolve<T>();
         }
+        /// <summary>
+        /// DI登録された種類のEventObjectのイベントを取得する
+        /// </summary>
+        /// <typeparam name="T">EveObjectの種類</typeparam>
+        /// <returns>指定した種類のイベント</returns>
         public EventBus<T> GetEvent<T>() where T : EventObject
         {
             return Resolver.Resolve<EventBus<T>>();
         }
         /// <summary>
-        /// DI登録されたTのインスタンスを返す
+        /// DI登録された種類のインスタンスを取得する
         /// </summary>
         /// <typeparam name="T">取得するインスタンスの種類</typeparam>
         /// <returns>依存解決済みのインスタンス</returns>
@@ -51,6 +56,11 @@ namespace DIVFactor.Injectable
         {
             return Resolver.Resolve<T>();
         }
+        /// <summary>
+        /// 指定したMonoBehaviourの種類のBinderにそのMonoBehaviourをバインドする
+        /// </summary>
+        /// <typeparam name="T">バインドするMonoBehaviourの種類</typeparam>
+        /// <param name="monoBehaviour">バインドするMonoBehaviour</param>
         public void Bind<T>(T monoBehaviour) where T : MonoBehaviour
         {
             GetEvent<ActivateEvent>().Subscribe(_ => GetComponent<IObjectBinder<T>>().Bind(monoBehaviour)).AddTo(monoBehaviour);

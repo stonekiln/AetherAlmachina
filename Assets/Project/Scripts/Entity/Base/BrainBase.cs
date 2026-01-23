@@ -9,7 +9,7 @@ public abstract class BrainBase : MonoBehaviour, IInjectable
     CardActivateEventBundle CardActivate;
     Func<List<ICardData>> GetHand;
     List<ICardData> Hand => GetHand();
-    public virtual void InjectDependencies(InjectableResolver resolver)
+    public virtual void Injection(InjectableResolver resolver)
     {
         resolver.Inject(out CardActivate);
         GetHand = () => resolver.GetComponent<HandController>().Hand;
