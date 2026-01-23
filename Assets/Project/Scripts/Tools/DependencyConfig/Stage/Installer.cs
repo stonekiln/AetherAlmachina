@@ -1,5 +1,5 @@
 using DConfig.StageLife.Event;
-using DivFacter.Event;
+using DIVFactor.Event;
 using VContainer;
 using VContainer.Unity;
 
@@ -14,6 +14,16 @@ namespace DConfig.StageLife.Installer
         {
             builder.Register<EventBus<AutoIncreaseEvent>>(Lifetime.Singleton);
             builder.Register<EventBus<BonusIncreaseEvent>>(Lifetime.Singleton);
+        }
+    }
+    /// <summary>
+    /// デッキに関するDI登録
+    /// </summary>
+    public class DeckInstaller : IInstaller
+    {
+        public void Install(IContainerBuilder builder)
+        {
+            builder.Register<DeckController>(Lifetime.Scoped);
         }
     }
 }

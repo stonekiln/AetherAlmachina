@@ -1,4 +1,4 @@
-using DivFacter.Injectable;
+using DIVFactor.Injectable;
 public class EnemyBrain : BrainBase,IInjectable
 {
     public override void InjectDependencies(InjectableResolver resolver)

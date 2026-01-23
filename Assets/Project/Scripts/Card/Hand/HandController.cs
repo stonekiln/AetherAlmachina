@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using R3;
 using DConfig.EntityLife.Event;
-using DivFacter.Injectable;
+using DIVFactor.Injectable;
 
 public class HandController : MonoBehaviour, IInjectable
 {
@@ -25,10 +25,7 @@ public class HandController : MonoBehaviour, IInjectable
         resolver.Inject(out CardActivate);
         owner = resolver.GetComponent<Player>();
         selectedIndex = new();
-    }
-    
-    void OnEnable()
-    {
+
         DeckDraw.Response.Subscribe(response => Hand = AddHand(response.DrawCard)).AddTo(this);
         CardActivate.Select.Subscribe(log => log.Data.SetSelect(Select(log.Index))).AddTo(this);
         CardActivate.Cancel.Subscribe(log => log.Data.SetSelect(!SelectCancel(log.Index))).AddTo(this);

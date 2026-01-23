@@ -1,7 +1,7 @@
 using System;
 using DConfig.StageLife.Event;
-using DivFacter.Event;
-using DivFacter.Injectable;
+using DIVFactor.Event;
+using DIVFactor.Injectable;
 using R3;
 using UnityEngine;
 
@@ -11,16 +11,13 @@ using UnityEngine;
 public class CostManager : MonoBehaviour, IInjectable
 {
     EventBus<AutoIncreaseEvent> AutoIncrease;
-    [SerializeField] CostSettings costSettings;
+    CostSettings costSettings;
 
     public void InjectDependencies(InjectableResolver resolver)
     {
         costSettings = resolver.GetComponent<StageSettings>().CostSettings;
         resolver.Inject(out AutoIncrease);
-    }
 
-    void OnEnable()
-    {
         Observable.Interval(TimeSpan.FromSeconds(costSettings.TimeSpan))
             .Subscribe(_ => AutoIncrease.Publish(new(costSettings.Delta))).AddTo(this);
     }

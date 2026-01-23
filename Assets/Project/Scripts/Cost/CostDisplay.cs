@@ -1,4 +1,4 @@
-using DivFacter.Injectable;
+using DIVFactor.Injectable;
 using R3;
 using TMPro;
 using UnityEngine;
@@ -14,16 +14,13 @@ public class CostDisplay : MonoBehaviour,IInjectable
     public void InjectDependencies(InjectableResolver resolver)
     {
         resolver.Inject(out owner);
+        
+        owner.Status.MPfluctuation.Subscribe(log => SetDisplay(owner.Status.magicPoint)).AddTo(this);
     }
 
     void Awake()
     {
         textMeshPro = gameObject.GetComponent<TextMeshProUGUI>();
-    }
-    
-    void OnEnable()
-    {
-        owner.Status.MPfluctuation.Subscribe(log => SetDisplay(owner.Status.magicPoint)).AddTo(this);
     }
 
     void SetDisplay(int mp)

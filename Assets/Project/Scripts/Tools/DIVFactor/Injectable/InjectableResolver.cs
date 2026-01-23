@@ -1,9 +1,22 @@
-using DivFacter.Binder;
+using DIVFactor.Binder;
+using DIVFactor.Event;
+using R3;
 using UnityEngine;
 using VContainer;
 
-namespace DivFacter.Injectable
+namespace DIVFactor.Injectable
 {
+    /// <summary>
+    /// 依存関係をInject可能なクラスを実装する
+    /// </summary>
+    public interface IInjectable
+    {
+        /// <summary>
+        /// ここに注入する変数を宣言する
+        /// </summary>
+        /// <param name="resolver">使用するcontainer</param>
+        public void InjectDependencies(InjectableResolver resolver);
+    }
     /// <summary>
     /// 拡張メソッドだとoutを使用できないのでこのクラスでラップする
     /// </summary>
@@ -25,6 +38,10 @@ namespace DivFacter.Injectable
         {
             value = Resolver.Resolve<T>();
         }
+        public EventBus<T> GetEvent<T>() where T : EventObject
+        {
+            return Resolver.Resolve<EventBus<T>>();
+        }
         /// <summary>
         /// DI登録されたTのインスタンスを返す
         /// </summary>
@@ -34,14 +51,9 @@ namespace DivFacter.Injectable
         {
             return Resolver.Resolve<T>();
         }
-        /// <summary>
-        /// DI登録されたTの種類のBinderに自身を登録する
-        /// </summary>
-        /// <typeparam name="T">Binderの種類</typeparam>
-        /// <param name="element">登録対象</param>
-        public void RegisterBinder<T>(T element) where T : MonoBehaviour
+        public void Bind<T>(T monoBehaviour) where T : MonoBehaviour
         {
-            Resolver.Resolve<IObjectBinder<T>>().Register(element);
+            GetEvent<ActivateEvent>().Subscribe(_ => GetComponent<IObjectBinder<T>>().Bind(monoBehaviour)).AddTo(monoBehaviour);
         }
     }
 }

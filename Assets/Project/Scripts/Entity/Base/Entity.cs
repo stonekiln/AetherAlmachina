@@ -1,12 +1,11 @@
 using System;
-using DivFacter.Event;
-using DConfig.StageLife.Event;
-using DConfig.EntityLife.Event;
-using DivFacter.EntryPoint;
 using R3;
 using UnityEngine;
 using System.Linq;
-using DivFacter.Injectable;
+using DConfig.StageLife.Event;
+using DConfig.EntityLife.Event;
+using DIVFactor.Event;
+using DIVFactor.Injectable;
 
 /// <summary>
 /// エンティティのMonoBehaviour
@@ -15,7 +14,6 @@ public abstract class Entity : MonoBehaviour, IInjectable
 {
     protected EventBus<AutoIncreaseEvent> AutoIncrease;
     protected EventBus<DeckGetEvent> DeckGet;
-    protected EventBus<PreStartEvent> PreStart;
     protected StatusAsset statusAsset;
     protected DeckController deckController;
     public Status Status { get; private set; }
@@ -29,19 +27,15 @@ public abstract class Entity : MonoBehaviour, IInjectable
         Status = new(statusAsset);
         power = 1;
         handPower = 1;
-        resolver.Inject(out PreStart);
         resolver.Inject(out AutoIncrease);
         resolver.Inject(out DeckGet);
         resolver.Inject(out deckController);
-    }
-    
-    void OnEnable()
-    {
-        //PreStart.Subscribe(_ => Get()).AddTo(this);
+
         AutoIncrease.Subscribe(log => CostIncrease(log.Delta)).AddTo(this);
         deckController.Subscribe(this);
-        Get();
+        resolver.GetEvent<ActivateEvent>().Subscribe(_ => Get()).AddTo(this);
     }
+
     public void Set(StatusAsset asset)
     {
         statusAsset = asset;

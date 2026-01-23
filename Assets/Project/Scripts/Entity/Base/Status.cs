@@ -1,4 +1,4 @@
-using DivFacter.Event;
+using DIVFactor.Event;
 
 /// <summary>
 /// ステータスのパラメータをコピーして変更可能にするためのクラス

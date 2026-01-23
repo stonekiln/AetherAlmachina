@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using UnityEngine;
 using R3;
-using DivFacter.Injectable;
-using DivFacter.Lifetime;
-using System.IO;
-using VContainer;
 using DConfig.CardLife;
+using DIVFactor.Injectable;
+using DIVFactor.Spawner;
 
 /// <summary>
 /// カードを画面に表示するためのクラス
@@ -21,10 +20,10 @@ public class HandVisualizer : HandController, ILifetimeSpawner
         base.InjectDependencies(resolver);
     }
 
-    public void SpawnConfigure(ObjectBuilder builder)
+    public void SpawnConfigure(SpawnerBuilder builder)
     {
-        builder.MakeSpawner<CardLifetimeScope>(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")))
-                .Get(out spawner,(data,register)=>register.Asset(data));
+        builder.Register<CardLifetime>(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")))
+                .Inject(out spawner);
     }
 
     protected override List<ICardData> AddHand(List<SkillData> skills)

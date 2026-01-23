@@ -1,24 +1,21 @@
 using DConfig.StageLife.Installer;
-using VContainer;
-using VContainer.Unity;
-using DivFacter.Extensions;
-using DivFacter.Lifetime;
+using DIVFactor.Lifetime;
 
 namespace DConfig.StageLife
 {
     public class StageLifetime : LifetimeObject
     {
-        protected override void Install(InstallBuilder builder)
+        protected override void Install(ContainerInstaller installer)
         {
-            builder.Install<CostEventInstaller>();
+            installer.Install<CostEventInstaller>();
+            installer.Install<DeckInstaller>();
         }
 
-        protected override void Register(IContainerBuilder builder)
+        protected override void Register(ComponentRegister register)
         {
-            builder.Register<DeckController>(Lifetime.Scoped);
-            builder.RegisterComponentInHierarchy<CostManager>();
-            builder.RegisterComponentInHierarchy<EntitySpawner>();
-            builder.RegisterBinderInHierarchy<PlayerUIBinder>();
+            register.ComponentInChild<CostManager>();
+            register.ComponentInChild<EntitySpawner>();
+            register.BinderInChild<PlayerUIBinder>();
         }
     }
 }

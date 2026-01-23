@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DConfig.EntityLife.Event;
-using DivFacter.Injectable;
+using DIVFactor.Injectable;
 using UnityEngine;
 
 public abstract class BrainBase : MonoBehaviour, IInjectable

@@ -1,25 +1,19 @@
 using DConfig.EntityLife.Installer;
-using DivFacter;
-using DivFacter.Extensions;
-using DivFacter.Lifetime;
-using VContainer;
-using VContainer.Unity;
+using DIVFactor.Lifetime;
 
 namespace DConfig.EnemyLife
 {
     public class EnemyLifetime : LifetimeObject
     {
-        protected override void Install(InstallBuilder builder)
+        protected override void Install(ContainerInstaller installer)
         {
-            builder.Install<CardEventInstaller>();
-            builder.Install<DeckEventInstaller>();
+            installer.Install<CardEventInstaller>();
+            installer.Install<DeckEventInstaller>();
         }
 
-        protected override void Register(IContainerBuilder builder)
+        protected override void Register(ComponentRegister register)
         {
-            builder.RegisterComponentInHierarchy<Enemy>().UnderTransform(transform);
-
-            builder.ReserveBinding(Parent.Parent.transform.FindBinder());
+            register.ComponentInChild<Enemy>();
         }
     }
 }

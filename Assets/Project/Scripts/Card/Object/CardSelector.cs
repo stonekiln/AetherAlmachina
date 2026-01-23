@@ -3,7 +3,7 @@ using R3;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Utility;
-using DivFacter.Injectable;
+using DIVFactor.Injectable;
 using DConfig.EntityLife.Event;
 
 /// <summary>

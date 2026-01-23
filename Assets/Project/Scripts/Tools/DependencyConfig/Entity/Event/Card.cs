@@ -1,4 +1,4 @@
-using DivFacter.Event;
+using DIVFactor.Event;
 
 namespace DConfig.EntityLife.Event
 {

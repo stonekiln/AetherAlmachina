@@ -1,4 +1,4 @@
-using DivFacter.Injectable;
+using DIVFactor.Injectable;
 
 /// <summary>
 /// プレイヤーのMonoBehaviour

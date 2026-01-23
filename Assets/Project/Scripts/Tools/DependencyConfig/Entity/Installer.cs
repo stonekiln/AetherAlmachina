@@ -1,8 +1,5 @@
-using System.IO;
-using DConfig.CardLife;
 using DConfig.EntityLife.Event;
-using DivFacter.Event;
-using UnityEngine;
+using DIVFactor.Event;
 using VContainer;
 using VContainer.Unity;
 

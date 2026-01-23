@@ -1,7 +1,7 @@
 using System;
 using R3;
 
-namespace DivFacter.Event
+namespace DIVFactor.Event
 {
     /// <summary>
     /// イベントを発行するためのクラス
@@ -25,9 +25,4 @@ namespace DivFacter.Event
         /// <param name="value">イベントメッセージ</param>
         public void Publish(T value) => Event.OnNext(value);
     }
-
-    /// <summary>
-    /// 全てのイベントメッセージはこれを継承すること
-    /// </summary>
-    public abstract record EventObject;
 }

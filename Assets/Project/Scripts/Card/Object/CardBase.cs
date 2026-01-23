@@ -1,5 +1,5 @@
 using System;
-using DivFacter.Injectable;
+using DIVFactor.Injectable;
 using UnityEngine;
 
 /// <summary>

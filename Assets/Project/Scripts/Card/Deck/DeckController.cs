@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using DConfig.EntityLife.Event;
-using DivFacter.Event;
+using DIVFactor.Event;
 using R3;
 using UnityEngine;
 using Utility;

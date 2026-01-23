@@ -1,10 +1,10 @@
-using DivFacter.Injectable;
+using DIVFactor.Injectable;
 using UnityEngine;
 
 public class UIChildMark : MonoBehaviour, IInjectable
 {
     public void InjectDependencies(InjectableResolver resolver)
     {
-        resolver.RegisterBinder(this);
+        resolver.Bind(this);
     }
 }

@@ -1,26 +1,21 @@
 using DConfig.EntityLife.Installer;
-using DivFacter.Extensions;
-using DivFacter.Lifetime;
-using VContainer;
-using VContainer.Unity;
+using DIVFactor.Lifetime;
 
 namespace DConfig.PlayerLife
 {
     public class PlayerLifetime : LifetimeObject
     {
-        protected override void Install(InstallBuilder builder)
+        protected override void Install(ContainerInstaller installer)
         {
-            builder.Install<CardEventInstaller>();
-            builder.Install<DeckEventInstaller>();
+            installer.Install<CardEventInstaller>();
+            installer.Install<DeckEventInstaller>();
         }
 
-        protected override void Register(IContainerBuilder builder)
+        protected override void Register(ComponentRegister register)
         {
-            builder.RegisterComponentInHierarchy<Player>().UnderTransform(transform);
-            builder.RegisterComponentInHierarchy<HandVisualizer>().UnderTransform(transform);
-            builder.RegisterComponentInHierarchy<CostDisplay>().UnderTransform(transform);
-
-            builder.ReserveBinding(Parent.transform.FindBinder());
+            register.ComponentInChild<Player>();
+            register.ComponentInChild<HandVisualizer>();
+            register.ComponentInChild<CostDisplay>();
         }
     }
 }
