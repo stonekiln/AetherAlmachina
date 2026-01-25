@@ -39,15 +39,6 @@ namespace DIVFactor.Injectable
             value = Resolver.Resolve<T>();
         }
         /// <summary>
-        /// DI登録された種類のEventObjectのイベントを取得する
-        /// </summary>
-        /// <typeparam name="T">EveObjectの種類</typeparam>
-        /// <returns>指定した種類のイベント</returns>
-        public EventBus<T> GetEvent<T>() where T : EventObject
-        {
-            return Resolver.Resolve<EventBus<T>>();
-        }
-        /// <summary>
         /// DI登録された種類のインスタンスを取得する
         /// </summary>
         /// <typeparam name="T">取得するインスタンスの種類</typeparam>
@@ -63,7 +54,7 @@ namespace DIVFactor.Injectable
         /// <param name="monoBehaviour">バインドするMonoBehaviour</param>
         public void Bind<T>(T monoBehaviour) where T : MonoBehaviour
         {
-            GetEvent<ActivateEvent>().Subscribe(_ => GetComponent<IObjectBinder<T>>().Bind(monoBehaviour)).AddTo(monoBehaviour);
+            GetComponent<EventBus<ActivateEvent>>().Subscribe(_ => GetComponent<IObjectBinder<T>>().Bind(monoBehaviour)).AddTo(monoBehaviour);
         }
     }
 }
