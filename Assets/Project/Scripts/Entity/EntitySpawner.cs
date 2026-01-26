@@ -9,6 +9,7 @@ using UnityEngine;
 
 public class EntitySpawner : MonoBehaviour, IInjectable, ILifetimeSpawner
 {
+    public record EntityList(StatusAsset[] Friendly,StatusAsset[] Hostile);
     Action<StatusAsset> playerFactory;
     Action<StatusAsset> enemyFactory;
     EntityList Data;

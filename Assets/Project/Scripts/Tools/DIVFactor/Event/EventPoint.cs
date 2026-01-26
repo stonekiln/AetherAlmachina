@@ -10,7 +10,7 @@ namespace DIVFactor.Event
     /// <summary>
     /// MonoBehaviourのライフサイクルが始まる直前に発行されるイベント
     /// </summary>
-    public record ActiveEvent() : EventObject;
+    public record ActiveEvent : EventObject;
     /// <summary>
     /// LifetimeScopeがDestroyされるときに発行されるイベント
     /// </summary>
