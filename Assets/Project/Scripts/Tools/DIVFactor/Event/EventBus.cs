@@ -9,10 +9,14 @@ namespace DIVFactor.Event
     /// <typeparam name="T">イベントメッセージ</typeparam>
     public class EventBus<T> where T : EventObject
     {
+        public EventBus()
+        {
+            Event = new();
+        }
         /// <summary>
         /// イベント本体
         /// </summary>
-        readonly Subject<T> Event = new();
+        public Subject<T> Event { get; private set; }
         /// <summary>
         /// Tのイベントを監視する
         /// </summary>

@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DIVFactor.Event;
 using DIVFactor.Injectable;
 using DIVFactor.Spawner;
+using NUnit.Framework;
+using R3;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -14,10 +17,15 @@ namespace DIVFactor.Lifetime
     /// </summary>
     public abstract class LifetimeObject : LifetimeScope
     {
+        public List<GameObject> ChildObjects { get; private set; }
         /// <summary>
         /// Spawnerから受け取った追加のDI登録をするためのコールバック
         /// </summary>
         Action<IContainerBuilder> Callback;
+        /// <summary>
+        /// LifetimeScopeがDestroyされるときに呼び出される
+        /// </summary>
+        EventBus<DestroyEvent> DestroyEvent;
         protected override void Awake()
         {
             //初期化情報を受け取る
@@ -29,6 +37,11 @@ namespace DIVFactor.Lifetime
             //必要ないので初期化情報を削除する
             Destroy(seed);
             base.Awake();
+        }
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            DestroyEvent.Publish(new());
         }
         /// <summary>
         /// ここでIInstallerが実装されたコンテナクラスをインストールする
@@ -68,15 +81,25 @@ namespace DIVFactor.Lifetime
                 injectable.Injection(new(container));
             }
             //LifetimeObjectの直下のオブジェクトは生成したGameObjectのルートである
-            GameObject child = transform.GetChild(0).gameObject;
+            ChildObjects = new() { transform.GetChild(0).gameObject };
             //LifetimeObjectを親のLifetimeObjectのTransformの子に配置する
-            child.transform.SetParent(transform.parent, false);
+            ChildObjects[0].transform.SetParent(transform.parent, false);
             //生成したオブジェクトをスポナーの子に配置する
             transform.SetParent(Parent.transform, false);
+            DestroyEvent = container.Resolve<EventBus<DestroyEvent>>();
+            DestroyEvent.Subscribe(_ => ChildObjects.ForEach(obj => Destroy(obj))).AddTo(this);
             //Enable直前のイベントを発行する
-            container.Resolve<EventBus<ActivateEvent>>().Publish(new());
+            EventBus<BindEvent> bind = container.Resolve<EventBus<BindEvent>>();
+            bind.Event.Take(1).Do(onCompleted: _ =>
+            {
+                EventBus<ActivateEvent> activate = container.Resolve<EventBus<ActivateEvent>>();
+                activate.Publish(new());
+                activate.Event.OnCompleted();
+            }).Subscribe();
+            bind.Publish(new(this));
+            bind.Event.OnCompleted();
             //オブジェクトを有効化し、本来のMonoBehaviourのライフサイクルに入る
-            child.SetActive(true);
+            ChildObjects.ForEach(obj => obj.SetActive(true));
         }
     }
 }

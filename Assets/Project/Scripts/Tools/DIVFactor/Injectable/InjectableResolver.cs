@@ -54,7 +54,12 @@ namespace DIVFactor.Injectable
         /// <param name="monoBehaviour">バインドするMonoBehaviour</param>
         public void Bind<T>(T monoBehaviour) where T : MonoBehaviour
         {
-            GetComponent<EventBus<ActivateEvent>>().Subscribe(_ => GetComponent<IObjectBinder<T>>().Bind(monoBehaviour)).AddTo(monoBehaviour);
+            GetComponent<EventBus<BindEvent>>().Subscribe(data =>
+            {
+                monoBehaviour.gameObject.SetActive(false);
+                data.Lifetime.ChildObjects.Add(monoBehaviour.gameObject);
+                GetComponent<IObjectBinder<T>>().Bind(monoBehaviour);
+            });
         }
     }
 }

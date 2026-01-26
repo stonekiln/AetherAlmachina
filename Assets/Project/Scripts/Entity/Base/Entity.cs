@@ -33,7 +33,7 @@ public abstract class Entity : MonoBehaviour, IInjectable
 
         AutoIncrease.Subscribe(log => CostIncrease(log.Delta)).AddTo(this);
         deckController.Subscribe(this);
-        resolver.GetComponent<EventBus<ActivateEvent>>().Subscribe(_ => Get()).AddTo(this);
+        resolver.GetComponent<EventBus<ActivateEvent>>().Subscribe(_ => Get());
     }
 
     public void Set(StatusAsset asset)
