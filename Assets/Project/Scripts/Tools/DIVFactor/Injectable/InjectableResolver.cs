@@ -23,10 +23,12 @@ namespace DIVFactor.Injectable
     public class InjectableResolver
     {
         IObjectResolver Resolver { get; init; }
+        EventPoint EventPoint { get; init; }
 
-        public InjectableResolver(IObjectResolver resolver)
+        public InjectableResolver(IObjectResolver resolver, EventPoint eventPoint)
         {
             Resolver = resolver;
+            EventPoint = eventPoint;
         }
 
         /// <summary>
@@ -54,12 +56,27 @@ namespace DIVFactor.Injectable
         /// <param name="monoBehaviour">バインドするMonoBehaviour</param>
         public void Bind<T>(T monoBehaviour) where T : MonoBehaviour
         {
-            GetComponent<EventBus<BindEvent>>().Subscribe(data =>
+            EventPoint.BindPoint.Subscribe(data =>
             {
                 monoBehaviour.gameObject.SetActive(false);
                 data.Lifetime.ChildObjects.Add(monoBehaviour.gameObject);
                 GetComponent<IObjectBinder<T>>().Bind(monoBehaviour);
             });
+        }
+        /// <summary>
+        /// ActivePointのObservableを返す
+        /// </summary>
+        /// <returns>ActivePointのObservable</returns>
+        public Observable<ActiveEvent> ActivePointAsObservable()
+        {
+            return EventPoint.ActivePoint.Event.AsObservable();
+        }
+        /// <summary>
+        /// EndPointを発行する
+        /// </summary>
+        public void EntryEndPoint()
+        {
+            EventPoint.EndPoint.Publish(new());
         }
     }
 }

@@ -14,9 +14,6 @@ namespace DIVFactor.Lifetime.Root
     {
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.Register<EventBus<ActivateEvent>>(VContainer.Lifetime.Scoped);
-            builder.Register<EventBus<BindEvent>>(VContainer.Lifetime.Scoped);
-            builder.Register<EventBus<DestroyEvent>>(VContainer.Lifetime.Scoped);
             foreach (Component spawner in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Where(mono => mono is ILifetimeSpawner))
             {
                 ((ILifetimeSpawner)spawner).SpawnConfigure(new(spawner.transform, null));

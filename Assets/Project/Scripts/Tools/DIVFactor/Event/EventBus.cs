@@ -4,6 +4,10 @@ using R3;
 namespace DIVFactor.Event
 {
     /// <summary>
+    /// 全てのイベントメッセージはこれを継承すること
+    /// </summary>
+    public abstract record EventObject;
+    /// <summary>
     /// イベントを発行するためのクラス
     /// </summary>
     /// <typeparam name="T">イベントメッセージ</typeparam>
