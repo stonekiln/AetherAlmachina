@@ -5,6 +5,7 @@ using UnityEngine;
 using R3;
 using DConfig.EntityLife.Event;
 using DIVFactor.Injectable;
+using DIVFactor.Event;
 
 public class HandController : MonoBehaviour, IInjectable
 {
@@ -12,7 +13,7 @@ public class HandController : MonoBehaviour, IInjectable
     const int Stack = 1;
     const int Chain = 2;
     [SerializeField] HandPowerTable handPowerTable;
-    DeckDrawEventBundle DeckDraw;
+    EventChannel<DeckDrawRequestEvent, DeckDrawResponseEvent> DeckDraw;
     CardActivateEventBundle CardActivate;
     Entity owner;
     List<int> selectedIndex;
@@ -26,7 +27,7 @@ public class HandController : MonoBehaviour, IInjectable
         owner = resolver.GetComponent<Player>();
         selectedIndex = new();
 
-        DeckDraw.Response.Subscribe(response => Hand = AddHand(response.DrawCard)).AddTo(this);
+        DeckDraw.Response(response => Hand = AddHand(response.DrawCard)).AddTo(this);
         CardActivate.Select.Subscribe(log => log.Data.SetSelect(Select(log.Index))).AddTo(this);
         CardActivate.Cancel.Subscribe(log => log.Data.SetSelect(!SelectCancel(log.Index))).AddTo(this);
         CardActivate.Invoke.Subscribe(_ => Invoke()).AddTo(this);
@@ -46,7 +47,7 @@ public class HandController : MonoBehaviour, IInjectable
     /// <param name="count">引く枚数</param>
     void Draw(int count)
     {
-        DeckDraw.Request.Publish(new(count));
+        DeckDraw.Call(new(count));
     }
     /// <summary>
     /// カードを手札に追加する

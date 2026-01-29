@@ -81,17 +81,17 @@ namespace DIVFactor.Lifetime
             //生成したオブジェクトをスポナーの子に配置する
             transform.SetParent(Parent.transform, false);
             //EndPointを購買する
-            EndPoint.Event.Take(1).Subscribe(_ => Destroy(gameObject));
+            EndPoint.Take(1).Subscribe(_ => Destroy(gameObject));
             //BindPointの実行後にActivePointをフックして実行
-            BindPoint.Event.Take(1).Do(onCompleted: _ =>
+            BindPoint.Take(1).Do(onCompleted: _ =>
             {
                 //ActivePointを発行する
-                ActivePoint.Publish(new());
-                ActivePoint.Event.OnCompleted();
+                ActivePoint.OnNext(new());
+                ActivePoint.OnCompleted();
             }).Subscribe();
             //BindPointを発行する
-            BindPoint.Publish(new(this));
-            BindPoint.Event.OnCompleted();
+            BindPoint.OnNext(new(this));
+            BindPoint.OnCompleted();
             //配下のコンポーネントを有効化し、本来のMonoBehaviourのライフサイクルに入る
             ChildObjects.ForEach(obj => obj.SetActive(true));
         }
@@ -100,7 +100,7 @@ namespace DIVFactor.Lifetime
         /// </summary>
         public void EntryEndPoint()
         {
-            EndPoint.Publish(new());
+            EndPoint.OnNext(new());
         }
     }
 }

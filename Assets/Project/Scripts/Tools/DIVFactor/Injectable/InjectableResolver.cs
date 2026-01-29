@@ -69,14 +69,14 @@ namespace DIVFactor.Injectable
         /// <returns>ActivePointのObservable</returns>
         public Observable<ActiveEvent> ActivePointAsObservable()
         {
-            return EventPoint.ActivePoint.Event.AsObservable();
+            return EventPoint.ActivePoint.AsObservable();
         }
         /// <summary>
         /// EndPointを発行する
         /// </summary>
         public void EntryEndPoint()
         {
-            EventPoint.EndPoint.Publish(new());
+            EventPoint.EndPoint.OnNext(new());
         }
     }
 }

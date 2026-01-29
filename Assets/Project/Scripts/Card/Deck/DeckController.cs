@@ -11,10 +11,10 @@ using Utility;
 public class DeckController
 {
     readonly EventBus<DeckGetEvent> DeckGet;
-    readonly DeckDrawEventBundle DeckDraw;
+    readonly EventChannel<DeckDrawRequestEvent, DeckDrawResponseEvent> DeckDraw;
     public List<SkillData> Deck { get; private set; }
 
-    public DeckController(EventBus<DeckGetEvent> deckGet, DeckDrawEventBundle deckDraw)
+    public DeckController(EventBus<DeckGetEvent> deckGet, EventChannel<DeckDrawRequestEvent, DeckDrawResponseEvent> deckDraw)
     {
         DeckGet = deckGet;
         DeckDraw = deckDraw;
@@ -23,7 +23,7 @@ public class DeckController
     public void Subscribe(MonoBehaviour monoBehaviour)
     {
         DeckGet.Subscribe(deckData => Deck = deckData.List.Shuffle()).AddTo(monoBehaviour);
-        DeckDraw.Request.Subscribe(log => DeckDraw.Response.Publish(new(Draw(log.Count)))).AddTo(monoBehaviour);
+        DeckDraw.Reply(log => new(Draw(log.Count))).AddTo(monoBehaviour);
     }
     List<SkillData> Draw(int count)
     {

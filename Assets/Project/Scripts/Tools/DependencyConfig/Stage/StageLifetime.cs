@@ -8,7 +8,6 @@ namespace DConfig.StageLife
         protected override void Install(ContainerInstaller installer)
         {
             installer.Install<CostEventInstaller>();
-            installer.Install<DeckInstaller>();
         }
 
         protected override void Register(ComponentRegister register)

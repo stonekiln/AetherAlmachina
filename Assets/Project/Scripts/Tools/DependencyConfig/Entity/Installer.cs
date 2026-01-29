@@ -1,5 +1,5 @@
 using DConfig.EntityLife.Event;
-using DIVFactor.Event;
+using DIVFactor.Extensions;
 using VContainer;
 using VContainer.Unity;
 
@@ -12,20 +12,18 @@ namespace DConfig.EntityLife.Installer
     {
         public void Install(IContainerBuilder builder)
         {
-            builder.Register<EventBus<DeckGetEvent>>(Lifetime.Singleton);
-            builder.Register<EventBus<DeckDrawRequestEvent>>(Lifetime.Singleton);
-            builder.Register<EventBus<DeckDrawResponseEvent>>(Lifetime.Singleton);
-
-            builder.Register<DeckDrawEventBundle>(Lifetime.Singleton);
+            builder.RegisterEvent<DeckGetEvent>(Lifetime.Singleton);
+            builder.RegisterEvent<DeckDrawRequestEvent, DeckDrawResponseEvent>(Lifetime.Singleton);
+            builder.Register<DeckController>(Lifetime.Singleton);
         }
     }
     public class CardEventInstaller : IInstaller
     {
         public void Install(IContainerBuilder builder)
         {
-            builder.Register<EventBus<CardSelectEvent>>(Lifetime.Singleton);
-            builder.Register<EventBus<CardCancelEvent>>(Lifetime.Singleton);
-            builder.Register<EventBus<CardInvokeEvent>>(Lifetime.Singleton);
+            builder.RegisterEvent<CardSelectEvent>(Lifetime.Singleton);
+            builder.RegisterEvent<CardCancelEvent>(Lifetime.Singleton);
+            builder.RegisterEvent<CardInvokeEvent>(Lifetime.Singleton);
 
             builder.Register<CardActivateEventBundle>(Lifetime.Singleton);
         }

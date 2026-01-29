@@ -17,14 +17,14 @@ public abstract class BrainBase : MonoBehaviour, IInjectable
 
     protected void Select(int index)
     {
-        CardActivate.Select.Publish(new(Hand[index], index));
+        CardActivate.Select.OnNext(new(Hand[index], index));
     }
     protected void Cancel(int index)
     {
-        CardActivate.Cancel.Publish(new(Hand[index], index));
+        CardActivate.Cancel.OnNext(new(Hand[index], index));
     }
     protected void Activate()
     {
-        CardActivate.Invoke.Publish(new());
+        CardActivate.Invoke.OnNext(new());
     }
 }

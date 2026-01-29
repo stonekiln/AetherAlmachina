@@ -19,6 +19,6 @@ public class CostManager : MonoBehaviour, IInjectable
         resolver.Inject(out AutoIncrease);
 
         Observable.Interval(TimeSpan.FromSeconds(costSettings.TimeSpan))
-            .Subscribe(_ => AutoIncrease.Publish(new(costSettings.Delta))).AddTo(this);
+            .Subscribe(_ => AutoIncrease.OnNext(new(costSettings.Delta))).AddTo(this);
     }
 }

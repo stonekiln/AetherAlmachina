@@ -78,17 +78,17 @@ public class CardSelector : ButtonBase, IInjectable
         {
             if (!isSelect)
             {
-                CardActivate.Select.Publish(new(parent, parent.transform.GetSiblingIndex()));
+                CardActivate.Select.OnNext(new(parent, parent.transform.GetSiblingIndex()));
                 rectTransform.anchoredPosition = initialPosition + Offset;
             }
             else
             {
-                CardActivate.Invoke.Publish(new());
+                CardActivate.Invoke.OnNext(new());
             }
         }
         if (eventData.button == PointerEventData.InputButton.Right && isSelect)
         {
-            CardActivate.Cancel.Publish(new(parent, parent.transform.GetSiblingIndex()));
+            CardActivate.Cancel.OnNext(new(parent, parent.transform.GetSiblingIndex()));
             rectTransform.anchoredPosition = initialPosition;
         }
 

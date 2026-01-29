@@ -11,26 +11,20 @@ namespace DIVFactor.Event
     /// イベントを発行するためのクラス
     /// </summary>
     /// <typeparam name="T">イベントメッセージ</typeparam>
-    public class EventBus<T> where T : EventObject
+    public class EventBus<T> : Subject<T> where T : EventObject { }
+    public class EventChannel<TReq, TRes>
+    where TReq : EventObject
+    where TRes : EventObject
     {
-        public EventBus()
+        EventBus<TReq> RequestEvent { get; init; }
+        EventBus<TRes> ResponseEvent { get; init; }
+        public EventChannel(EventBus<TReq> request, EventBus<TRes> response)
         {
-            Event = new();
+            RequestEvent = request;
+            ResponseEvent = response;
         }
-        /// <summary>
-        /// イベント本体
-        /// </summary>
-        public Subject<T> Event { get; private set; }
-        /// <summary>
-        /// Tのイベントを監視する
-        /// </summary>
-        /// <param name="action">イベントが発行されたときに実行する関数</param>
-        /// <returns></returns>
-        public IDisposable Subscribe(Action<T> action) => Event.Subscribe(action);
-        /// <summary>
-        /// Tのイベントを発行する
-        /// </summary>
-        /// <param name="value">イベントメッセージ</param>
-        public void Publish(T value) => Event.OnNext(value);
+        public void Call(TReq req) => RequestEvent.OnNext(req);
+        public IDisposable Response(Action<TRes> response) => ResponseEvent.Subscribe(response);
+        public IDisposable Reply(Func<TReq, TRes> reply) => RequestEvent.Subscribe(request => ResponseEvent.OnNext(reply(request)));
     }
 }

@@ -53,7 +53,7 @@ public abstract class Entity : MonoBehaviour, IInjectable
     public void Get()
     {
         Debug.Log("デッキをセットしました");
-        DeckGet.Publish(new(statusAsset.Deck.ReadDeck().Select(card => card.SetOwner(this)).ToList()));
+        DeckGet.OnNext(new(statusAsset.Deck.ReadDeck().Select(card => card.SetOwner(this)).ToList()));
     }
     public void SetHandPower(float power)
     {
@@ -61,7 +61,7 @@ public abstract class Entity : MonoBehaviour, IInjectable
     }
     void CostIncrease(int delta)
     {
-        Status.MPfluctuation.Publish(new());
+        Status.MPfluctuation.OnNext(new());
         Status.magicPoint += delta;
     }
 }
