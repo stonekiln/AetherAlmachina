@@ -69,16 +69,10 @@ namespace DIVFactor.Lifetime
             foreach (Component component in GetComponentsInChildren<MonoBehaviour>(true))
             {
                 //Injectableを探してそれにコンテナを渡す
-                if (component is IInjectable injectable)
-                {
-                    injectable.Injection(new(container, new(BindPoint, ActivePoint, EndPoint)));
-                }
+                if (component is IInjectable injectable) injectable.Injection(new(container, new(BindPoint, ActivePoint, EndPoint)));
                 //スポナーを探してそれに自身のTransformとLifetimeScopeを渡す
                 //引数に渡したインスタンスがそのスポナーの親となる
-                if (component is ILifetimeSpawner spawner)
-                {
-                    spawner.SpawnConfigure(new SpawnerBuilder(component.transform, this));
-                }
+                if (component is ILifetimeSpawner spawner) spawner.SpawnConfigure(new SpawnerBuilder(component.transform, this));
             }
             //LifetimeObjectの直下のオブジェクトは生成したGameObjectのルートである
             ChildObjects = new() { transform.GetChild(0).gameObject };

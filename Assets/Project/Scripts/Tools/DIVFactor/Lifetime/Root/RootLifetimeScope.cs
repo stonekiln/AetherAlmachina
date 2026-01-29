@@ -1,5 +1,3 @@
-using System.Linq;
-using DIVFactor.Event;
 using DIVFactor.Spawner;
 using UnityEngine;
 using VContainer;
@@ -14,9 +12,9 @@ namespace DIVFactor.Lifetime.Root
     {
         protected override void Configure(IContainerBuilder builder)
         {
-            foreach (Component spawner in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).Where(mono => mono is ILifetimeSpawner))
+            foreach (Component component in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
             {
-                ((ILifetimeSpawner)spawner).SpawnConfigure(new(spawner.transform, null));
+                if (component is ILifetimeSpawner spawner) spawner.SpawnConfigure(new(component.transform, null));
             }
         }
     }
