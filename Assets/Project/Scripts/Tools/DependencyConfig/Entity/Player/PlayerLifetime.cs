@@ -9,6 +9,7 @@ namespace DConfig.PlayerLife
         {
             installer.Install<CardEventInstaller>();
             installer.Install<DeckEventInstaller>();
+            installer.Install<TargetingEventInstaller>();
         }
 
         protected override void Register(ComponentRegister register)

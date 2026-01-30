@@ -1,17 +1,21 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DConfig.EnemyLife;
+using DConfig.EntityLife.Event;
 using DConfig.PlayerLife;
+using DIVFactor.Event;
 using DIVFactor.Injectable;
 using DIVFactor.Spawner;
+using R3;
 using UnityEngine;
 
 public class EntitySpawner : MonoBehaviour, IInjectable, ILifetimeSpawner
 {
-    public record EntityList(StatusAsset[] Friendly,StatusAsset[] Hostile);
-    Action<StatusAsset> playerFactory;
-    Action<StatusAsset> enemyFactory;
+    public record EntityList(StatusAsset[] Friendly, StatusAsset[] Hostile);
+    Func<StatusAsset, EventBus<TargetingEvent>> playerFactory;
+    Func<StatusAsset, EventBus<TargetingEvent>> enemyFactory;
     EntityList Data;
 
     public void Injection(InjectableResolver resolver)
@@ -29,10 +33,11 @@ public class EntitySpawner : MonoBehaviour, IInjectable, ILifetimeSpawner
 
     void Start()
     {
-        playerFactory(Data.Friendly[0]);
-        foreach (StatusAsset asset in Data.Hostile)
+        Observable<TargetingEvent> FriendlyTargetingEvent = playerFactory(Data.Friendly[0]).AsObservable();
+        Observable<TargetingEvent> HostileTargetingEvent = Observable.Merge(Data.Hostile.Select(asset => enemyFactory(asset)));
+        FriendlyTargetingEvent.Subscribe(target =>
         {
-            enemyFactory(asset);
-        }
+
+        }).AddTo(this);
     }
 }

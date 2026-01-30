@@ -12,8 +12,8 @@ namespace DConfig.StageLife.Installer
     {
         public void Install(IContainerBuilder builder)
         {
-            builder.RegisterEvent<AutoIncreaseEvent>(Lifetime.Singleton);
-            builder.RegisterEvent<BonusIncreaseEvent>(Lifetime.Singleton);
+            builder.RegisterEvent<AutoIncreaseEvent>();
+            builder.RegisterEvent<BonusIncreaseEvent>();
         }
     }
 }

@@ -30,4 +30,11 @@ namespace DConfig.EntityLife.Installer
             builder.Register<CardActivateEventBundle>(Lifetime.Singleton);
         }
     }
+    public class TargetingEventInstaller : IInstaller
+    {
+        public void Install(IContainerBuilder builder)
+        {
+            builder.RegisterEvent<TargetingEvent>();
+        }
+    }
 }
