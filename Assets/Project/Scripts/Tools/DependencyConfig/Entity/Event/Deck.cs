@@ -4,6 +4,10 @@ using DIVFactor.Event;
 namespace DConfig.EntityLife.Event
 {
     /// <summary>
+    /// カードを引くためのイベントオブジェクト
+    /// </summary>
+    public class DeckDrawEvent : EventChannel<DeckDrawRequestEvent, DeckDrawResponseEvent> { }
+    /// <summary>
     /// カードを引く宣言をするためのイベントメッセージ
     /// </summary>
     /// <param name="Count">カードを引く枚数</param>

@@ -11,10 +11,10 @@ using Utility;
 public class DeckController
 {
     readonly EventBus<DeckGetEvent> DeckGet;
-    readonly EventChannel<DeckDrawRequestEvent, DeckDrawResponseEvent> DeckDraw;
+    readonly DeckDrawEvent DeckDraw;
     public List<SkillData> Deck { get; private set; }
 
-    public DeckController(EventBus<DeckGetEvent> deckGet, EventChannel<DeckDrawRequestEvent, DeckDrawResponseEvent> deckDraw)
+    public DeckController(EventBus<DeckGetEvent> deckGet, DeckDrawEvent deckDraw)
     {
         DeckGet = deckGet;
         DeckDraw = deckDraw;

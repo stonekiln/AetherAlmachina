@@ -5,7 +5,6 @@ using UnityEngine;
 using R3;
 using DConfig.EntityLife.Event;
 using DIVFactor.Injectable;
-using DIVFactor.Event;
 
 public class HandController : MonoBehaviour, IInjectable
 {
@@ -13,7 +12,7 @@ public class HandController : MonoBehaviour, IInjectable
     const int Stack = 1;
     const int Chain = 2;
     [SerializeField] HandPowerTable handPowerTable;
-    EventChannel<DeckDrawRequestEvent, DeckDrawResponseEvent> DeckDraw;
+    DeckDrawEvent DeckDraw;
     CardActivateEventBundle CardActivate;
     Entity owner;
     List<int> selectedIndex;

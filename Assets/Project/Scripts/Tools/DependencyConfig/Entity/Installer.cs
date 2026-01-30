@@ -12,8 +12,10 @@ namespace DConfig.EntityLife.Installer
     {
         public void Install(IContainerBuilder builder)
         {
-            builder.RegisterEvent<DeckGetEvent>(Lifetime.Singleton);
-            builder.RegisterEvent<DeckDrawRequestEvent, DeckDrawResponseEvent>(Lifetime.Singleton);
+            builder.RegisterEvent<DeckGetEvent>();
+            builder.RegisterEvent<DeckDrawRequestEvent>();
+            builder.RegisterEvent<DeckDrawResponseEvent>();
+            builder.Register<DeckDrawEvent>(Lifetime.Singleton);
             builder.Register<DeckController>(Lifetime.Singleton);
         }
     }
@@ -21,9 +23,9 @@ namespace DConfig.EntityLife.Installer
     {
         public void Install(IContainerBuilder builder)
         {
-            builder.RegisterEvent<CardSelectEvent>(Lifetime.Singleton);
-            builder.RegisterEvent<CardCancelEvent>(Lifetime.Singleton);
-            builder.RegisterEvent<CardInvokeEvent>(Lifetime.Singleton);
+            builder.RegisterEvent<CardSelectEvent>();
+            builder.RegisterEvent<CardCancelEvent>();
+            builder.RegisterEvent<CardInvokeEvent>();
 
             builder.Register<CardActivateEventBundle>(Lifetime.Singleton);
         }
