@@ -14,12 +14,13 @@ public abstract class Entity : MonoBehaviour, IInjectable
 {
     protected EventBus<AutoIncreaseEvent> AutoIncrease;
     protected EventBus<DeckGetEvent> DeckGet;
+    protected EventBus<SkillActiveEvent> SkillActive;
+    protected AttackEventBundle AttackEvent;
     protected StatusAsset statusAsset;
     protected DeckController deckController;
     public Status Status { get; private set; }
     protected float power;
     protected float handPower;
-    [NonSerialized] public Entity target;
 
     public virtual void Injection(InjectableResolver resolver)
     {
@@ -30,9 +31,13 @@ public abstract class Entity : MonoBehaviour, IInjectable
         resolver.Inject(out AutoIncrease);
         resolver.Inject(out DeckGet);
         resolver.Inject(out deckController);
+        resolver.Inject(out SkillActive);
+        resolver.Inject(out AttackEvent);
 
         AutoIncrease.Subscribe(log => CostIncrease(log.Delta)).AddTo(this);
         deckController.Subscribe(this);
+        SkillActive.Subscribe(log => AttackEvent.Targeting.OnNext(new(log.Data))).AddTo(this);
+        AttackEvent.Hit.Subscribe(log => log.Activate(this)).AddTo(this);
         resolver.ActivePointAsObservable().Subscribe(_ => Get());
     }
 
@@ -41,7 +46,7 @@ public abstract class Entity : MonoBehaviour, IInjectable
         statusAsset = asset;
     }
 
-    public void Attack(float skillPower)
+    public void Attack(Entity target, float skillPower)
     {
         target.Hit(Status.attack, power * handPower * skillPower);
     }
@@ -53,7 +58,7 @@ public abstract class Entity : MonoBehaviour, IInjectable
     public void Get()
     {
         Debug.Log("デッキをセットしました");
-        DeckGet.OnNext(new(statusAsset.Deck.ReadDeck().Select(card => card.SetOwner(this)).ToList()));
+        DeckGet.OnNext(new(statusAsset.Deck.ReadDeck(this).ToList()));
     }
     public void SetHandPower(float power)
     {

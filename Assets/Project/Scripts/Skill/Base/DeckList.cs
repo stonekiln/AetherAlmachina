@@ -17,8 +17,8 @@ public class DeckList : ScriptableObject
     {
         [Range(1, 4)]
         public int number;
-        [SerializeField] SkillData skill;
-        public SkillData Skill => skill;
+        [SerializeField] SkillBase skill;
+        public SkillBase Skill => skill;
     }
 
     const int DeckLimit = 52;
@@ -42,8 +42,8 @@ public class DeckList : ScriptableObject
         }
     }
 
-    public IEnumerable<SkillData> ReadDeck()
+    public IEnumerable<SkillData> ReadDeck(Entity owner)
     {
-        return Skills.Select(element => Enumerable.Range(0, element.number).Select(_ => element.Skill)).SelectMany(skill => skill);
+        return Skills.Select(element => Enumerable.Range(0, element.number).Select(_ => new SkillData(element.Skill, owner))).SelectMany(skill => skill);
     }
 }

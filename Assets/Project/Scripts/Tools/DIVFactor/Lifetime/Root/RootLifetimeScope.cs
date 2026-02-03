@@ -12,6 +12,11 @@ namespace DIVFactor.Lifetime.Root
     {
         protected override void Configure(IContainerBuilder builder)
         {
+            FindSpawner();
+        }
+
+        public void FindSpawner()
+        {
             foreach (Component component in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
             {
                 if (component is ILifetimeSpawner spawner) spawner.SpawnConfigure(new(component.transform, null));

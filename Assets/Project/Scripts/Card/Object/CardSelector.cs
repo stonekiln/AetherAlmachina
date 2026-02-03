@@ -11,7 +11,7 @@ using DConfig.EntityLife.Event;
 /// </summary>
 public class CardSelector : ButtonBase, IInjectable
 {
-    CardActivateEventBundle CardActivate;
+    CardActiveEventBundle CardActive;
     CardBase parent;
     RectTransform rectTransform;
     Vector2 initialPosition;
@@ -20,14 +20,13 @@ public class CardSelector : ButtonBase, IInjectable
 
     public void Injection(InjectableResolver resolver)
     {
-        resolver.Inject(out CardActivate);
+        resolver.Inject(out CardActive);
     }
     public void Initialize(CardBase cardBase)
     {
         parent = cardBase;
         rectTransform = gameObject.GetComponent<RectTransform>();
         initialPosition = rectTransform.anchoredPosition;
-        onClickCallback = () => cardBase.SkillData.Activate();
     }
     void OnEnable()
     {
@@ -78,19 +77,18 @@ public class CardSelector : ButtonBase, IInjectable
         {
             if (!isSelect)
             {
-                CardActivate.Select.OnNext(new(parent, parent.transform.GetSiblingIndex()));
+                CardActive.Select.OnNext(new(parent, parent.transform.GetSiblingIndex()));
                 rectTransform.anchoredPosition = initialPosition + Offset;
             }
             else
             {
-                CardActivate.Invoke.OnNext(new());
+                CardActive.Invoke.OnNext(new());
             }
         }
         if (eventData.button == PointerEventData.InputButton.Right && isSelect)
         {
-            CardActivate.Cancel.OnNext(new(parent, parent.transform.GetSiblingIndex()));
+            CardActive.Cancel.OnNext(new(parent, parent.transform.GetSiblingIndex()));
             rectTransform.anchoredPosition = initialPosition;
         }
-
     }
 }

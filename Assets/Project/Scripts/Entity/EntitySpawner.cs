@@ -9,13 +9,14 @@ using DIVFactor.Event;
 using DIVFactor.Injectable;
 using DIVFactor.Spawner;
 using R3;
+using SKill;
 using UnityEngine;
 
 public class EntitySpawner : MonoBehaviour, IInjectable, ILifetimeSpawner
 {
     public record EntityList(StatusAsset[] Friendly, StatusAsset[] Hostile);
-    Func<StatusAsset, EventBus<TargetingEvent>> playerFactory;
-    Func<StatusAsset, EventBus<TargetingEvent>> enemyFactory;
+    Func<StatusAsset, AttackEventBundle> playerFactory;
+    Func<StatusAsset, AttackEventBundle> enemyFactory;
     EntityList Data;
 
     public void Injection(InjectableResolver resolver)
@@ -33,11 +34,46 @@ public class EntitySpawner : MonoBehaviour, IInjectable, ILifetimeSpawner
 
     void Start()
     {
-        Observable<TargetingEvent> FriendlyTargetingEvent = playerFactory(Data.Friendly[0]).AsObservable();
-        Observable<TargetingEvent> HostileTargetingEvent = Observable.Merge(Data.Hostile.Select(asset => enemyFactory(asset)));
-        FriendlyTargetingEvent.Subscribe(target =>
-        {
+        List<AttackEventBundle> friendlyAttackEvent = new() { playerFactory(Data.Friendly[0]) };
+        List<AttackEventBundle> hostileAttackEvent = new(Data.Hostile.Select(asset => enemyFactory(asset)));
+        Observable<TargetingEvent> friendlyTargeting = Observable.Merge(friendlyAttackEvent.Select(attack => attack.Targeting));
+        List<EventBus<HitEvent>> friendlyHit = friendlyAttackEvent.Select(attack => attack.Hit).ToList();
+        Observable<TargetingEvent> hostileTargeting = Observable.Merge(hostileAttackEvent.Select(attack => attack.Targeting));
+        List<EventBus<HitEvent>> hostileHit = hostileAttackEvent.Select(attack => attack.Hit).ToList();
 
+        friendlyTargeting.Subscribe(log =>
+        {
+            if (log.Data.Target.HasFlag(TargetFlag.Friendly))
+            {
+                foreach (EventBus<HitEvent> hit in friendlyHit.Take(log.Data.MaxTargeting))
+                {
+                    hit.OnNext(new(log.Data.Activate));
+                }
+            }
+            if (log.Data.Target.HasFlag(TargetFlag.Hostile))
+            {
+                foreach (EventBus<HitEvent> hit in hostileHit.Take(log.Data.MaxTargeting))
+                {
+                    hit.OnNext(new(log.Data.Activate));
+                }
+            }
+        }).AddTo(this);
+        hostileTargeting.Subscribe(log =>
+        {
+            if (log.Data.Target.HasFlag(TargetFlag.Friendly))
+            {
+                foreach (EventBus<HitEvent> hit in hostileHit.Take(log.Data.MaxTargeting))
+                {
+                    hit.OnNext(new(log.Data.Activate));
+                }
+            }
+            if (log.Data.Target.HasFlag(TargetFlag.Hostile))
+            {
+                foreach (EventBus<HitEvent> hit in friendlyHit.Take(log.Data.MaxTargeting))
+                {
+                    hit.OnNext(new(log.Data.Activate));
+                }
+            }
         }).AddTo(this);
     }
 }

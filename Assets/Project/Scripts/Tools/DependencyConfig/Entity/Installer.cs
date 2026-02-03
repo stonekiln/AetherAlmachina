@@ -15,6 +15,7 @@ namespace DConfig.EntityLife.Installer
             builder.RegisterEvent<DeckGetEvent>();
             builder.RegisterEvent<DeckDrawRequestEvent>();
             builder.RegisterEvent<DeckDrawResponseEvent>();
+
             builder.Register<DeckDrawEvent>(Lifetime.Singleton);
             builder.Register<DeckController>(Lifetime.Singleton);
         }
@@ -27,14 +28,18 @@ namespace DConfig.EntityLife.Installer
             builder.RegisterEvent<CardCancelEvent>();
             builder.RegisterEvent<CardInvokeEvent>();
 
-            builder.Register<CardActivateEventBundle>(Lifetime.Singleton);
+            builder.Register<CardActiveEventBundle>(Lifetime.Singleton);
         }
     }
     public class TargetingEventInstaller : IInstaller
     {
         public void Install(IContainerBuilder builder)
         {
+            builder.RegisterEvent<SkillActiveEvent>();
             builder.RegisterEvent<TargetingEvent>();
+            builder.RegisterEvent<HitEvent>();
+
+            builder.Register<AttackEventBundle>(Lifetime.Singleton);
         }
     }
 }

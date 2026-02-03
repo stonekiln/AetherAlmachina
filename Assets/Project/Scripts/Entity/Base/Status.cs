@@ -12,7 +12,6 @@ public class Status
     public readonly EventBus<MPfluctuationEvent> MPfluctuation;
     public record MPfluctuationEvent : EventObject;
 
-
     public Status(StatusAsset statusData)
     {
         MPfluctuation = new();

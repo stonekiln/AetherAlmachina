@@ -6,25 +6,25 @@ using UnityEngine;
 
 public abstract class BrainBase : MonoBehaviour, IInjectable
 {
-    CardActivateEventBundle CardActivate;
+    CardActiveEventBundle CardActive;
     Func<List<ICardData>> GetHand;
     List<ICardData> Hand => GetHand();
     public virtual void Injection(InjectableResolver resolver)
     {
-        resolver.Inject(out CardActivate);
+        resolver.Inject(out CardActive);
         GetHand = () => resolver.GetComponent<HandController>().Hand;
     }
 
     protected void Select(int index)
     {
-        CardActivate.Select.OnNext(new(Hand[index], index));
+        CardActive.Select.OnNext(new(Hand[index], index));
     }
     protected void Cancel(int index)
     {
-        CardActivate.Cancel.OnNext(new(Hand[index], index));
+        CardActive.Cancel.OnNext(new(Hand[index], index));
     }
     protected void Activate()
     {
-        CardActivate.Invoke.OnNext(new());
+        CardActive.Invoke.OnNext(new());
     }
 }

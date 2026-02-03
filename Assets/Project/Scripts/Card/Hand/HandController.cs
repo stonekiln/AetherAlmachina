@@ -5,6 +5,7 @@ using UnityEngine;
 using R3;
 using DConfig.EntityLife.Event;
 using DIVFactor.Injectable;
+using DIVFactor.Event;
 
 public class HandController : MonoBehaviour, IInjectable
 {
@@ -13,7 +14,8 @@ public class HandController : MonoBehaviour, IInjectable
     const int Chain = 2;
     [SerializeField] HandPowerTable handPowerTable;
     DeckDrawEvent DeckDraw;
-    CardActivateEventBundle CardActivate;
+    CardActiveEventBundle CardActive;
+    EventBus<SkillActiveEvent> SkillActive;
     Entity owner;
     List<int> selectedIndex;
     int Type => GetHandType();
@@ -22,14 +24,15 @@ public class HandController : MonoBehaviour, IInjectable
     public virtual void Injection(InjectableResolver resolver)
     {
         resolver.Inject(out DeckDraw);
-        resolver.Inject(out CardActivate);
+        resolver.Inject(out CardActive);
+        resolver.Inject(out SkillActive);
         owner = resolver.GetComponent<Player>();
         selectedIndex = new();
 
         DeckDraw.Response(response => Hand = AddHand(response.DrawCard)).AddTo(this);
-        CardActivate.Select.Subscribe(log => log.Data.SetSelect(Select(log.Index))).AddTo(this);
-        CardActivate.Cancel.Subscribe(log => log.Data.SetSelect(!SelectCancel(log.Index))).AddTo(this);
-        CardActivate.Invoke.Subscribe(_ => Invoke()).AddTo(this);
+        CardActive.Select.Subscribe(log => log.Data.SetSelect(Select(log.Index))).AddTo(this);
+        CardActive.Cancel.Subscribe(log => log.Data.SetSelect(!SelectCancel(log.Index))).AddTo(this);
+        CardActive.Invoke.Subscribe(_ => Invoke()).AddTo(this);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -73,7 +76,7 @@ public class HandController : MonoBehaviour, IInjectable
         {
             owner.SetHandPower(handPowerTable.Get(Type, selectedIndex.Count()));
             owner.Status.magicPoint -= costSum;
-            selectedIndex.ForEach(cardIndex => Hand[cardIndex].SkillData.Activate());
+            selectedIndex.ForEach(cardIndex => SkillActive.OnNext(new(Hand[cardIndex].SkillData)));
             Hand = RemoveHand();
             Draw(selectedIndex.Count());
             selectedIndex = new();

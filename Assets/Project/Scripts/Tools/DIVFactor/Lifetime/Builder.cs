@@ -41,9 +41,9 @@ namespace DIVFactor.Lifetime
         /// そのLifetimeObjectの配下にあるComponentを探してDI登録する
         /// </summary>
         /// <typeparam name="T">MonoBehaviourの種類</typeparam>
-        public void ComponentInChild<T>() where T : MonoBehaviour
+        public ComponentRegistrationBuilder ComponentInChild<T>() where T : MonoBehaviour
         {
-            Builder.RegisterComponentInHierarchy<T>().UnderTransform(LifetimeTransform);
+            return Builder.RegisterComponentInHierarchy<T>().UnderTransform(LifetimeTransform);
         }
         /// <summary>
         /// そのLifetimeObjectの配下にあるBinderを探してDI登録する

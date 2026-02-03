@@ -14,6 +14,7 @@ public class CardBase : MonoBehaviour, ICardData, IInjectable
     SkillData skillData;
     public SkillData SkillData => skillData;
     public bool IsSelect => Selector.isSelect;
+    Action EntryEndPoint;
 
     [NonSerialized] public RectTransform rectTransform;
     [NonSerialized] public Vector2 initialSize;
@@ -23,6 +24,7 @@ public class CardBase : MonoBehaviour, ICardData, IInjectable
         resolver.Inject(out skillData);
         resolver.Inject(out design);
         resolver.Inject(out selector);
+        EntryEndPoint = resolver.EntryEndPoint;
 
         rectTransform = gameObject.GetComponent<RectTransform>();
         initialSize = rectTransform.rect.size;
@@ -37,7 +39,7 @@ public class CardBase : MonoBehaviour, ICardData, IInjectable
     }
     public ICardData RemoveCard()
     {
-        Destroy(this);
+        EntryEndPoint();
         return this;
     }
 
