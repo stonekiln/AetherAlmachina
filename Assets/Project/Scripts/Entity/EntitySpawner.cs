@@ -5,18 +5,16 @@ using System.Linq;
 using DConfig.EnemyLife;
 using DConfig.EntityLife.Event;
 using DConfig.PlayerLife;
-using DIVFactor.Event;
 using DIVFactor.Injectable;
 using DIVFactor.Spawner;
 using R3;
-using SKill;
 using UnityEngine;
 
 public class EntitySpawner : MonoBehaviour, IInjectable, ILifetimeSpawner
 {
     public record EntityList(StatusAsset[] Friendly, StatusAsset[] Hostile);
-    Func<StatusAsset, AttackEventBundle> playerFactory;
-    Func<StatusAsset, AttackEventBundle> enemyFactory;
+    Func<StatusAsset, Player> playerFactory;
+    Func<StatusAsset, Enemy> enemyFactory;
     EntityList Data;
 
     public void Injection(InjectableResolver resolver)
@@ -34,46 +32,23 @@ public class EntitySpawner : MonoBehaviour, IInjectable, ILifetimeSpawner
 
     void Start()
     {
-        List<AttackEventBundle> friendlyAttackEvent = new() { playerFactory(Data.Friendly[0]) };
-        List<AttackEventBundle> hostileAttackEvent = new(Data.Hostile.Select(asset => enemyFactory(asset)));
-        Observable<TargetingEvent> friendlyTargeting = Observable.Merge(friendlyAttackEvent.Select(attack => attack.Targeting));
-        List<EventBus<HitEvent>> friendlyHit = friendlyAttackEvent.Select(attack => attack.Hit).ToList();
-        Observable<TargetingEvent> hostileTargeting = Observable.Merge(hostileAttackEvent.Select(attack => attack.Targeting));
-        List<EventBus<HitEvent>> hostileHit = hostileAttackEvent.Select(attack => attack.Hit).ToList();
+        IEnumerable<ICombatInteraction> friendlyEntity = new List<ICombatInteraction>() { playerFactory(Data.Friendly[0]) };
+        IEnumerable<ICombatInteraction> hostileEntity = new List<ICombatInteraction>(Data.Hostile.Select(asset => enemyFactory(asset)));
+        SetUpTargeting(friendlyEntity, hostileEntity);
+    }
+
+    void SetUpTargeting(IEnumerable<ICombatInteraction> friendlyEntity, IEnumerable<ICombatInteraction> hostileEntity)
+    {
+        Observable<TargetingEvent> friendlyTargeting = Observable.Merge(friendlyEntity.Select(entity => entity.AttackEvent.Targeting));
+        Observable<TargetingEvent> hostileTargeting = Observable.Merge(hostileEntity.Select(entity => entity.AttackEvent.Targeting));
 
         friendlyTargeting.Subscribe(log =>
         {
-            if (log.Data.Target.HasFlag(TargetFlag.Friendly))
-            {
-                foreach (EventBus<HitEvent> hit in friendlyHit.Take(log.Data.MaxTargeting))
-                {
-                    hit.OnNext(new(log.Data.Activate));
-                }
-            }
-            if (log.Data.Target.HasFlag(TargetFlag.Hostile))
-            {
-                foreach (EventBus<HitEvent> hit in hostileHit.Take(log.Data.MaxTargeting))
-                {
-                    hit.OnNext(new(log.Data.Activate));
-                }
-            }
+            log.Data.Targeting(friendlyEntity, hostileEntity);
         }).AddTo(this);
         hostileTargeting.Subscribe(log =>
         {
-            if (log.Data.Target.HasFlag(TargetFlag.Friendly))
-            {
-                foreach (EventBus<HitEvent> hit in hostileHit.Take(log.Data.MaxTargeting))
-                {
-                    hit.OnNext(new(log.Data.Activate));
-                }
-            }
-            if (log.Data.Target.HasFlag(TargetFlag.Hostile))
-            {
-                foreach (EventBus<HitEvent> hit in friendlyHit.Take(log.Data.MaxTargeting))
-                {
-                    hit.OnNext(new(log.Data.Activate));
-                }
-            }
+            log.Data.Targeting(hostileEntity, friendlyEntity);
         }).AddTo(this);
     }
 }

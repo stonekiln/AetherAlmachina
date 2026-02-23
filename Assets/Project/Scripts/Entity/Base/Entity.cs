@@ -1,4 +1,3 @@
-using System;
 using R3;
 using UnityEngine;
 using System.Linq;
@@ -10,17 +9,19 @@ using DIVFactor.Injectable;
 /// <summary>
 /// エンティティのMonoBehaviour
 /// </summary>
-public abstract class Entity : MonoBehaviour, IInjectable
+public abstract class Entity : MonoBehaviour, ICombatInteraction, IInjectable
 {
     protected EventBus<AutoIncreaseEvent> AutoIncrease;
     protected EventBus<DeckGetEvent> DeckGet;
     protected EventBus<SkillActiveEvent> SkillActive;
-    protected AttackEventBundle AttackEvent;
+    protected AttackEventBundle attackEvent;
     protected StatusAsset statusAsset;
     protected DeckController deckController;
-    public Status Status { get; private set; }
     protected float power;
     protected float handPower;
+    public Status Status { get; private set; }
+    public AttackEventBundle AttackEvent => attackEvent;
+    public int SiblingIndex => transform.GetSiblingIndex();
 
     public virtual void Injection(InjectableResolver resolver)
     {
@@ -32,11 +33,11 @@ public abstract class Entity : MonoBehaviour, IInjectable
         resolver.Inject(out DeckGet);
         resolver.Inject(out deckController);
         resolver.Inject(out SkillActive);
-        resolver.Inject(out AttackEvent);
+        resolver.Inject(out attackEvent);
 
         AutoIncrease.Subscribe(log => CostIncrease(log.Delta)).AddTo(this);
         deckController.Subscribe(this);
-        SkillActive.Subscribe(log => AttackEvent.Targeting.OnNext(new(log.Data))).AddTo(this);
+        SkillActive.Subscribe(log => AttackEvent.Targeting.OnNext(new(log.Data, SiblingIndex))).AddTo(this);
         AttackEvent.Hit.Subscribe(log => log.Activate(this)).AddTo(this);
         resolver.ActivePointAsObservable().Subscribe(_ => Get());
     }

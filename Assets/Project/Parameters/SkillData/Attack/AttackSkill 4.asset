@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackSkill
   skillName: "\u6483\u5F0F\u30D7\u30ED\u30C8\u30BF\u30A4\u30D7-\u4F0D\uFEFF-"
   cost: 5
-  power: 1
   icon: {fileID: 21300000, guid: 507256f3a50a4dc44b521765e4f10626, type: 3}
+  attackSkillParam:
+    MaxTargeting: 1
+    Power: 5
