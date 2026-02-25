@@ -6,7 +6,6 @@ using UnityEngine;
 /// </summary>
 public class Enemy : Entity
 {
-    Player playerObject;
     BrainBase brain;
 
     public override void Injection(InjectableResolver resolver)

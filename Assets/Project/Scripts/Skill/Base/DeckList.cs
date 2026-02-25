@@ -17,13 +17,11 @@ public class DeckList : ScriptableObject
     {
         [Range(1, 4)]
         public int number;
-        [SerializeField] SkillBase skill;
-        public SkillBase Skill => skill;
+        [field: SerializeField] public SkillAsset Skill { get; private set; }
     }
 
     const int DeckLimit = 52;
     [SerializeField] List<SkillSlot> skills;
-    public List<SkillSlot> Skills => skills;
 
     private void OnValidate()
     {
@@ -44,6 +42,6 @@ public class DeckList : ScriptableObject
 
     public IEnumerable<SkillData> ReadDeck(Entity owner)
     {
-        return Skills.Select(element => Enumerable.Range(0, element.number).Select(_ => new SkillData(element.Skill, owner))).SelectMany(skill => skill);
+        return skills.Select(element => Enumerable.Range(0, element.number).Select(_ => new SkillData(element.Skill, owner))).SelectMany(skill => skill);
     }
 }

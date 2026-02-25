@@ -1,14 +1,12 @@
 public class CardData : ICardData
 {
-    SkillData skillData;
-    public SkillData SkillData => skillData;
-    bool isSelect;
-    public bool IsSelect => isSelect;
+    public SkillData SkillData { get; private set; }
+    public bool IsSelect { get; private set; }
 
     public CardData(SkillData data)
     {
-        skillData = data;
-        isSelect = false;
+        SkillData = data;
+        IsSelect = false;
     }
 
     public ICardData SetCard(int index)
@@ -22,6 +20,6 @@ public class CardData : ICardData
 
     public void SetSelect(bool flag)
     {
-        isSelect = flag;
+        IsSelect = flag;
     }
 }

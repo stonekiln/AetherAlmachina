@@ -6,13 +6,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "StageSettings", menuName = "GameSettings/StageSettings")]
 public class StageSettings : ScriptableObject
 {
-    [SerializeField] private CostSettings costSettings;
-    [SerializeField] private StatusAsset player;
-    [SerializeField] private StatusAsset[] friendly;
-    [SerializeField] private StatusAsset[] hostile;
-
-    public CostSettings CostSettings => costSettings;
-    public StatusAsset Player => player;
-    public StatusAsset[] Friendly => friendly;
-    public StatusAsset[] Hostile => hostile;
+    [field: SerializeField] public CostSettings CostSettings { get; private set; }
+    [field: SerializeField] public StatusAsset Player { get; private set; }
+    [field: SerializeField] public StatusAsset[] Friendly { get; private set; }
+    [field: SerializeField] public StatusAsset[] Hostile { get; private set; }
 }

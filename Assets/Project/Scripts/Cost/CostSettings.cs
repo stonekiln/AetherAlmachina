@@ -6,8 +6,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CostSettings", menuName = "GameSettings/CostSettings")]
 public class CostSettings : ScriptableObject
 {
-    [SerializeField] int delta;
-    [SerializeField] float timeSpan;
-    public int Delta => delta;
-    public float TimeSpan => timeSpan;
+    [field: SerializeField] public int Delta { get; private set; }
+    [field: SerializeField] public float TimeSpan { get; private set; }
 }

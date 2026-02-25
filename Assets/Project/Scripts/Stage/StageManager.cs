@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class StageManager : MonoBehaviour, ILifetimeSpawner
 {
-    [SerializeField] StageSettings stageSettings;
+    [field: SerializeField] StageSettings StageSettings { get; set; }
     Action<StageSettings> spawner;
 
     public void SpawnConfigure(SpawnerBuilder builder)
@@ -16,6 +16,6 @@ public class StageManager : MonoBehaviour, ILifetimeSpawner
     }
     void Start()
     {
-        spawner(stageSettings);
+        spawner(StageSettings);
     }
 }

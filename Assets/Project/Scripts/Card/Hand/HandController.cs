@@ -12,7 +12,7 @@ public class HandController : MonoBehaviour, IInjectable
     const int HandLimit = 5;
     const int Stack = 1;
     const int Chain = 2;
-    [SerializeField] HandPowerTable handPowerTable;
+    [field: SerializeField] HandPowerTable HandPowerTable { get; set; }
     DeckDrawEvent DeckDraw;
     CardActiveEventBundle CardActive;
     EventBus<SkillActiveEvent> SkillActive;
@@ -74,7 +74,7 @@ public class HandController : MonoBehaviour, IInjectable
         int costSum = (int)MathF.Ceiling(selectedIndex.Aggregate(0, (previous, current) => previous + Hand[current].SkillData.Cost) / (float)selectedIndex.Count());
         if (costSum <= owner.Status.magicPoint)
         {
-            owner.SetHandPower(handPowerTable.Get(Type, selectedIndex.Count()));
+            owner.SetHandPower(HandPowerTable.Get(Type, selectedIndex.Count()));
             owner.Status.magicPoint -= costSum;
             selectedIndex.ForEach(cardIndex => SkillActive.OnNext(new(Hand[cardIndex].SkillData)));
             Hand = RemoveHand();

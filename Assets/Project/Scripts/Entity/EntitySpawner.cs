@@ -44,11 +44,11 @@ public class EntitySpawner : MonoBehaviour, IInjectable, ILifetimeSpawner
 
         friendlyTargeting.Subscribe(log =>
         {
-            log.Data.Targeting(friendlyEntity, hostileEntity);
+            log.Data.Targeting(friendlyEntity, hostileEntity, log.SiblingIndex);
         }).AddTo(this);
         hostileTargeting.Subscribe(log =>
         {
-            log.Data.Targeting(hostileEntity, friendlyEntity);
+            log.Data.Targeting(hostileEntity, friendlyEntity, log.SiblingIndex);
         }).AddTo(this);
     }
 }
