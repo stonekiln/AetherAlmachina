@@ -13,29 +13,15 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: Assembly-CSharp::SkillSlot
   skills:
-  - number: 3
-    skill: {fileID: 11400000, guid: 3e0cdb508d702d64b9f92a74c7696b4f, type: 2}
-  - number: 3
-    skill: {fileID: 11400000, guid: f1f32121add38b24ba5c0e8b96548adb, type: 2}
-  - number: 3
-    skill: {fileID: 11400000, guid: 44e631790cb2144499a45e0621663f35, type: 2}
-  - number: 3
-    skill: {fileID: 11400000, guid: dd0401d996fe3cd47b439d34b79677b2, type: 2}
-  - number: 3
-    skill: {fileID: 11400000, guid: 500951ccccecc424387411b9a9dc0f15, type: 2}
-  - number: 3
-    skill: {fileID: 11400000, guid: 09bd27f823d1b7543a7e7d691b345bd9, type: 2}
-  - number: 3
-    skill: {fileID: 11400000, guid: 73d53da5157448d499165facbde9ab90, type: 2}
-  - number: 3
-    skill: {fileID: 11400000, guid: bc8ef5780d6951b45a566eb07d90bcc3, type: 2}
-  - number: 3
-    skill: {fileID: 11400000, guid: 2ae4123efb945204aa8b425fc766cd27, type: 2}
-  - number: 3
-    skill: {fileID: 11400000, guid: b1966e416e39d76409764a2c53271bac, type: 2}
-  - number: 3
-    skill: {fileID: 11400000, guid: 99ddd0aeca34cb241996325b355eb964, type: 2}
-  - number: 3
-    skill: {fileID: 11400000, guid: a976c8b90da6f954892db17955b67de1, type: 2}
-  - number: 3
-    skill: {fileID: 11400000, guid: 20bbea7a670d8674aa7adaa8f53774ec, type: 2}
+  - number: 4
+    <Skill>k__BackingField: {fileID: 11400000, guid: ef03c9f777eb3ce47a5f11017c2cbfb5, type: 2}
+  - number: 4
+    <Skill>k__BackingField: {fileID: 11400000, guid: ef03c9f777eb3ce47a5f11017c2cbfb5, type: 2}
+  - number: 4
+    <Skill>k__BackingField: {fileID: 11400000, guid: ef03c9f777eb3ce47a5f11017c2cbfb5, type: 2}
+  - number: 4
+    <Skill>k__BackingField: {fileID: 11400000, guid: ef03c9f777eb3ce47a5f11017c2cbfb5, type: 2}
+  - number: 4
+    <Skill>k__BackingField: {fileID: 11400000, guid: ef03c9f777eb3ce47a5f11017c2cbfb5, type: 2}
+  - number: 4
+    <Skill>k__BackingField: {fileID: 11400000, guid: ef03c9f777eb3ce47a5f11017c2cbfb5, type: 2}

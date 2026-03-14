@@ -37,8 +37,13 @@ public abstract class Entity : MonoBehaviour, ICombatInteraction, IInjectable
 
         AutoIncrease.Subscribe(log => CostIncrease(log.Delta)).AddTo(this);
         deckController.Subscribe(this);
-        SkillActive.Subscribe(log => AttackEvent.Targeting.OnNext(new(log.Data, SiblingIndex))).AddTo(this);
-        AttackEvent.Hit.Subscribe(log => log.Activate(this)).AddTo(this);
+        SkillActive.Subscribe(log =>
+        {
+            Debug.Log(log.Data.Name + "が発動しました。");
+            while (log.Data.MoveNext()) ;
+        }).AddTo(this);
+        AttackEvent.Hit.Subscribe(log => log.Apply(this)).AddTo(this);
+
         resolver.ActivePointAsObservable().Subscribe(_ => Get());
     }
 

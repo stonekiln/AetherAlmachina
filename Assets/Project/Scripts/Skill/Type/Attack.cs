@@ -1,16 +1,19 @@
+using System;
 using UnityEngine;
 
 namespace Skill.Effects
 {
-    [CreateAssetMenu(fileName = "Attack", menuName = "Skills/Effects")]
-    public class AttackEffect : SkillEffect
+    [CreateAssetMenu(fileName = "AttackEffect", menuName = "Skills/Effects/Attack")]
+    public class AttackEffect : SkillEffect<AttackParam>
     {
-        public int MaxTargeting = 1;
-        public float Power = 1;
-
-        public override void Activate(Entity user, Entity target)
+        protected override void ApplyTyped(ICombatInteraction user, ICombatInteraction target, AttackParam parameter)
         {
-            user.Attack(target, Power);
+            user.Attack((Entity)target, parameter.Power);
         }
+    }
+    [Serializable]
+    public class AttackParam : EffectParameter
+    {
+        [field: SerializeField] public int Power { get; private set; } = 1;
     }
 }

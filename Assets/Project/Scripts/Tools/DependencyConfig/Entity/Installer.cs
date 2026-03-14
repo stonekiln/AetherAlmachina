@@ -36,9 +36,11 @@ namespace DConfig.EntityLife.Installer
         public void Install(IContainerBuilder builder)
         {
             builder.RegisterEvent<SkillActiveEvent>();
-            builder.RegisterEvent<TargetingEvent>();
+            builder.RegisterEvent<TargetingRequestEvent>();
+            builder.RegisterEvent<TargetingResponseEvent>();
             builder.RegisterEvent<HitEvent>();
 
+            builder.Register<TargetingEvent>(Lifetime.Singleton);
             builder.Register<AttackEventBundle>(Lifetime.Singleton);
         }
     }

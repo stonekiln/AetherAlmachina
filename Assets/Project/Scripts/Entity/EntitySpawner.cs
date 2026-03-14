@@ -9,6 +9,7 @@ using DIVFactor.Injectable;
 using DIVFactor.Spawner;
 using R3;
 using UnityEngine;
+using Utility;
 
 public class EntitySpawner : MonoBehaviour, IInjectable, ILifetimeSpawner
 {
@@ -16,6 +17,8 @@ public class EntitySpawner : MonoBehaviour, IInjectable, ILifetimeSpawner
     Func<StatusAsset, Player> playerFactory;
     Func<StatusAsset, Enemy> enemyFactory;
     EntityList Data;
+    List<ICombatInteraction> friendlyEntity;
+    List<ICombatInteraction> hostileEntity;
 
     public void Injection(InjectableResolver resolver)
     {
@@ -32,23 +35,14 @@ public class EntitySpawner : MonoBehaviour, IInjectable, ILifetimeSpawner
 
     void Start()
     {
-        IEnumerable<ICombatInteraction> friendlyEntity = new List<ICombatInteraction>() { playerFactory(Data.Friendly[0]) };
-        IEnumerable<ICombatInteraction> hostileEntity = new List<ICombatInteraction>(Data.Hostile.Select(asset => enemyFactory(asset)));
+        friendlyEntity = new List<ICombatInteraction>() { playerFactory(Data.Friendly[0]) };
+        hostileEntity = new List<ICombatInteraction>(Data.Hostile.Select(asset => enemyFactory(asset)));
         SetUpTargeting(friendlyEntity, hostileEntity);
     }
 
-    void SetUpTargeting(IEnumerable<ICombatInteraction> friendlyEntity, IEnumerable<ICombatInteraction> hostileEntity)
+    void SetUpTargeting(List<ICombatInteraction> friendlyEntity, List<ICombatInteraction> hostileEntity)
     {
-        Observable<TargetingEvent> friendlyTargeting = Observable.Merge(friendlyEntity.Select(entity => entity.AttackEvent.Targeting));
-        Observable<TargetingEvent> hostileTargeting = Observable.Merge(hostileEntity.Select(entity => entity.AttackEvent.Targeting));
-
-        friendlyTargeting.Subscribe(log =>
-        {
-            log.Data.Targeting(friendlyEntity, hostileEntity, log.SiblingIndex);
-        }).AddTo(this);
-        hostileTargeting.Subscribe(log =>
-        {
-            log.Data.Targeting(hostileEntity, friendlyEntity, log.SiblingIndex);
-        }).AddTo(this);
+        friendlyEntity.ForEach(friendly => friendly.AttackEvent.Targeting.Reply(req => new(req.TargetSetter(friendlyEntity, hostileEntity))).AddTo(this));
+        hostileEntity.ForEach(hostile => hostile.AttackEvent.Targeting.Reply(req => new(req.TargetSetter(hostileEntity, friendlyEntity))).AddTo(this));
     }
 }

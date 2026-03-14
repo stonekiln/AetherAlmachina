@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4122914273008283155}
   - component: {fileID: 5913854952702306310}
   - component: {fileID: 2779890640131527836}
-  - component: {fileID: 3407258680690252779}
   m_Layer: 5
   m_Name: Hand
   m_TagString: Untagged
@@ -76,19 +75,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67b295f90bbe9ae4b9af5c30487981d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandController
-  handPowerTable: {fileID: 11400000, guid: 4a0a141e688773f4a938e7ea083c4fc9, type: 2}
---- !u!114 &3407258680690252779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2388309817311305735}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f4876117d30152498f5a5df48936c3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CardBinder
+  <HandPowerTable>k__BackingField: {fileID: 11400000, guid: 4a0a141e688773f4a938e7ea083c4fc9, type: 2}
 --- !u!1 &4521393833516852809
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,6 +230,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

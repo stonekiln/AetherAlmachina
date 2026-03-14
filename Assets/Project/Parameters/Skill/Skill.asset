@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbc57203aefa2d044a67a2e488091548, type: 3}
+  m_Name: Skill
+  m_EditorClassIdentifier: Assembly-CSharp::SkillAsset
+  <SkillName>k__BackingField: "\u6483\u5F0F\u30D7\u30ED\u30C8\u30BF\u30A4\u30D7\u58F1"
+  <Cost>k__BackingField: 1
+  <Icon>k__BackingField: {fileID: 21300000, guid: 693c86cc1e9628e4c954e06ef12ed154, type: 3}
+  <InitialTargeting>k__BackingField:
+    <Selector>k__BackingField: {fileID: 11400000, guid: 0633e77052e0eb54faf66fd2d6091bfb, type: 2}
+    <MaxTargets>k__BackingField: 1
+  <EffectQue>k__BackingField:
+  - <Effect>k__BackingField: {fileID: 11400000, guid: b2ce2a6e75bf88745b60177f36fdc609, type: 2}
+    <Parameter>k__BackingField:
+      rid: 268491170296627285
+  - <Effect>k__BackingField: {fileID: 11400000, guid: 88b3db3ca4721684e81ec2ab63803fea, type: 2}
+    <Parameter>k__BackingField:
+      rid: 268491170296627286
+  - <Effect>k__BackingField: {fileID: 11400000, guid: b2ce2a6e75bf88745b60177f36fdc609, type: 2}
+    <Parameter>k__BackingField:
+      rid: 268491170296627288
+  references:
+    version: 2
+    RefIds:
+    - rid: 268491170296627285
+      type: {class: AttackParam, ns: Skill.Effects, asm: Assembly-CSharp}
+      data:
+        <Power>k__BackingField: 1
+    - rid: 268491170296627286
+      type: {class: TargetingParameter, ns: Skill.Effects, asm: Assembly-CSharp}
+      data:
+        <Selector>k__BackingField: {fileID: 11400000, guid: a895cb99762b6024795ab0c15f5f1cf2, type: 2}
+        <MaxTargets>k__BackingField: 1
+    - rid: 268491170296627288
+      type: {class: AttackParam, ns: Skill.Effects, asm: Assembly-CSharp}
+      data:
+        <Power>k__BackingField: 1

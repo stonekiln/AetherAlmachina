@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cbb43dd787df6246bc3aab0eab1d49a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleManager
-  stageSettings: {fileID: 11400000, guid: 578971bbf42fae443bacdcb1cc6629ec, type: 2}
+  <StageSettings>k__BackingField: {fileID: 11400000, guid: 578971bbf42fae443bacdcb1cc6629ec, type: 2}
 --- !u!4 &300908346
 Transform:
   m_ObjectHideFlags: 0
@@ -269,14 +269,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 12
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 2
     m_Resolution: -1

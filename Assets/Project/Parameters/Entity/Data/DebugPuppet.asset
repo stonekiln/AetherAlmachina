@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a370d70f751079e44995fe6a864a71d4, type: 3}
   m_Name: DebugPuppet
   m_EditorClassIdentifier: Assembly-CSharp::StatusData
-  statusAsset: {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
-  sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  brain: {fileID: 0}
+  <StatusAsset>k__BackingField: {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
+  <Sprite>k__BackingField: {fileID: 0}
+  <Brain>k__BackingField: {fileID: 0}

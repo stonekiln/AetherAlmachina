@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cb06ced7c8f64e45978e67e800147f9, type: 3}
   m_Name: DebugPuppet
   m_EditorClassIdentifier: Assembly-CSharp::Status
-  hitPoint: 1000
-  attack: 100
-  defence: 50
-  deck: {fileID: 11400000, guid: 87f140fcce6b46c46a2fa592e6f161e9, type: 2}
+  <HitPoint>k__BackingField: 1000
+  <Attack>k__BackingField: 10
+  <Defence>k__BackingField: 30
+  <Deck>k__BackingField: {fileID: 11400000, guid: 87f140fcce6b46c46a2fa592e6f161e9, type: 2}
