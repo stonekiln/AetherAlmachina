@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Skill.Effect;
 using R3;
@@ -13,19 +13,18 @@ namespace AetherAlmachina.Skill
         public string Name { get; init; }
         public int Cost { get; init; }
         public Sprite Icon { get; init; }
-        LockOnParameter LockOnParam { get; init; }
         List<EffectData> EffectQue { get; init; }
         Entity Owner { get; init; }
         IEnumerable<ICombatInteraction> targets;
-        int queIndex = -1;
+        int queIndex = 0;
 
         public SkillData(SkillAsset skillAsset, Entity owner)
         {
             Name = skillAsset.SkillName;
             Cost = skillAsset.Cost;
             Icon = skillAsset.Icon;
-            LockOnParam = skillAsset.InitialTargeting;
-            EffectQue = skillAsset.EffectQue;
+            EffectQue = new() { new(Activator.CreateInstance<LockOn>(), skillAsset.InitialTargeting) };
+            EffectQue.AddRange(skillAsset.EffectQue);
             Owner = owner;
 
             Owner.Targeting.LockOn.Response(res => targets = res.Targets).AddTo(Owner);
@@ -33,30 +32,21 @@ namespace AetherAlmachina.Skill
 
         public bool MoveNext()
         {
-            if (queIndex < 0)
+            EffectData current = EffectQue[queIndex];
+            if (current.Effect is LockOn targeting)
             {
-                Owner.Targeting.LockOn.Call(new((friendly, hostile) => LockOnParam.Selector.Targeting(friendly, hostile, Owner.SiblingIndex).Take(LockOnParam.MaxTargets)));
+                targeting.Apply(Owner, null, current.Parameter);
                 queIndex++;
-                return MoveNext();
+                return queIndex != EffectQue.Count && MoveNext();
             }
             else
             {
-                EffectData current = EffectQue[queIndex];
-                if (current.Effect is LockOn targeting)
+                foreach (ICombatInteraction target in targets)
                 {
-                    targeting.Apply(Owner, null, current.Parameter);
-                    queIndex++;
-                    return MoveNext();
+                    target.Targeting.Hit.OnNext(new((entity) => current.Effect.Apply(Owner, entity, current.Parameter)));
                 }
-                else
-                {
-                    foreach (ICombatInteraction target in targets)
-                    {
-                        target.Targeting.Hit.OnNext(new((entity) => current.Effect.Apply(Owner, entity, current.Parameter)));
-                    }
-                    queIndex++;
-                    return queIndex != EffectQue.Count;
-                }
+                queIndex++;
+                return queIndex != EffectQue.Count;
             }
         }
     }

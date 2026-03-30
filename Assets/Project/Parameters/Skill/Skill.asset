@@ -16,31 +16,55 @@ MonoBehaviour:
   <Cost>k__BackingField: 1
   <Icon>k__BackingField: {fileID: 21300000, guid: 693c86cc1e9628e4c954e06ef12ed154, type: 3}
   <InitialTargeting>k__BackingField:
-    <Selector>k__BackingField: {fileID: 11400000, guid: 0633e77052e0eb54faf66fd2d6091bfb, type: 2}
+    <Selector>k__BackingField:
+      rid: 268491531548360791
     <MaxTargets>k__BackingField: 1
   <EffectQue>k__BackingField:
-  - <Effect>k__BackingField: {fileID: 11400000, guid: b2ce2a6e75bf88745b60177f36fdc609, type: 2}
+  - <Effect>k__BackingField:
+      rid: 268491531548360789
     <Parameter>k__BackingField:
-      rid: 268491170296627285
-  - <Effect>k__BackingField: {fileID: 11400000, guid: 88b3db3ca4721684e81ec2ab63803fea, type: 2}
+      rid: 268491531548360790
+  - <Effect>k__BackingField:
+      rid: 268491531548360796
     <Parameter>k__BackingField:
-      rid: 268491170296627286
-  - <Effect>k__BackingField: {fileID: 11400000, guid: b2ce2a6e75bf88745b60177f36fdc609, type: 2}
+      rid: 268491531548360797
+  - <Effect>k__BackingField:
+      rid: 268491531548360792
     <Parameter>k__BackingField:
-      rid: 268491170296627288
+      rid: 268491531548360793
+  - <Effect>k__BackingField:
+      rid: 268491531548360796
+    <Parameter>k__BackingField:
+      rid: 268491531548360797
   references:
     version: 2
     RefIds:
-    - rid: 268491170296627285
-      type: {class: AttackParam, ns: Skill.Effects, asm: Assembly-CSharp}
+    - rid: 268491531548360789
+      type: {class: AttackEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+      data: 
+    - rid: 268491531548360790
+      type: {class: AttackParam, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data:
         <Power>k__BackingField: 1
-    - rid: 268491170296627286
-      type: {class: TargetingParameter, ns: Skill.Effects, asm: Assembly-CSharp}
+    - rid: 268491531548360791
+      type: {class: EnemySelector, ns: AetherAlmachina.Skill.Effect.Selector, asm: Assembly-CSharp}
+      data: 
+    - rid: 268491531548360792
+      type: {class: LockOn, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+      data: 
+    - rid: 268491531548360793
+      type: {class: LockOnParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data:
-        <Selector>k__BackingField: {fileID: 11400000, guid: a895cb99762b6024795ab0c15f5f1cf2, type: 2}
+        <Selector>k__BackingField:
+          rid: 268491531548360795
         <MaxTargets>k__BackingField: 1
-    - rid: 268491170296627288
-      type: {class: AttackParam, ns: Skill.Effects, asm: Assembly-CSharp}
+    - rid: 268491531548360795
+      type: {class: SelfSelector, ns: AetherAlmachina.Skill.Effect.Selector, asm: Assembly-CSharp}
+      data: 
+    - rid: 268491531548360796
+      type: {class: AttackEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+      data: 
+    - rid: 268491531548360797
+      type: {class: AttackParam, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data:
         <Power>k__BackingField: 1

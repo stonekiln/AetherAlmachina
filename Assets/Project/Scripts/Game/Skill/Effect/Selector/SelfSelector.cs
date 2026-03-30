@@ -1,11 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AetherAlmachina.Entities;
-using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Selector
 {
-    [CreateAssetMenu(fileName = "Self", menuName = "Skills/Selector/Self")]
+    [Serializable]
     public class SelfSelector : SelectorBase
     {
         public override IEnumerable<ICombatInteraction> Targeting(IEnumerable<ICombatInteraction> friendly, IEnumerable<ICombatInteraction> hostile, int index)

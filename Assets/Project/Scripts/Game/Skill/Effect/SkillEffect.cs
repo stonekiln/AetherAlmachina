@@ -1,10 +1,9 @@
 using System;
 using AetherAlmachina.Entities;
-using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect
 {
-    public abstract class SkillEffect : ScriptableObject
+    public abstract class SkillEffect
     {
         public abstract Type ParameterType { get; }
         public abstract void Apply(ICombatInteraction user, ICombatInteraction target, EffectParameter parameter);

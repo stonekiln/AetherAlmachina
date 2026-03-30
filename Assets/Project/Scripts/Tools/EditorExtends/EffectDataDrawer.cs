@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using AetherAlmachina.Skill.Effect;
 using UnityEditor;
 using UnityEngine;
@@ -9,20 +11,17 @@ namespace EditorExtends
     public class EffectDataDrawer : PropertyDrawer
     {
         private const float VerticalSpacing = 2f;
-        SerializedProperty effectProp;
-        SerializedProperty parameterProp;
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            effectProp = property.FindPropertyRelative("<Effect>k__BackingField");
-            parameterProp = property.FindPropertyRelative("<Parameter>k__BackingField");
+            SerializedProperty effectProp = property.FindPropertyRelative("<Effect>k__BackingField");
+            SerializedProperty paramProp = property.FindPropertyRelative("<Parameter>k__BackingField");
 
-            SkillEffect effect = effectProp.objectReferenceValue as SkillEffect;
             float height = EditorGUIUtility.singleLineHeight;
 
-            if (effect != null)
+            if (effectProp.managedReferenceValue is SkillEffect)
             {
-                height += VerticalSpacing + EditorGUI.GetPropertyHeight(parameterProp, true);
+                height += VerticalSpacing + EditorGUI.GetPropertyHeight(paramProp, true);
             }
 
             return height;
@@ -32,45 +31,49 @@ namespace EditorExtends
         {
             EditorGUI.BeginProperty(position, label, property);
 
-            Rect currentRect = new(
+            Rect Rect = new(
                 position.x,
                 position.y,
                 position.width,
                 EditorGUIUtility.singleLineHeight
             );
 
-            // effect を表示
-            EditorGUI.PropertyField(currentRect, effectProp);
+            SerializedProperty effectProp = property.FindPropertyRelative("<Effect>k__BackingField");
+            SerializedProperty paramProp = property.FindPropertyRelative("<Parameter>k__BackingField");
 
-            SkillEffect effect = effectProp.objectReferenceValue as SkillEffect;
+            List<KeyValuePair<string, Type>> types = TypeCache.GetTypesDerivedFrom(typeof(SkillEffect)).Where(t => !t.IsAbstract && !t.IsGenericType).OrderBy(t => t.Name).Select(t => new KeyValuePair<string, Type>(t.Name, t)).ToList();
+            int selectIndex;
 
-            if (effect == null)
+            if (effectProp.managedReferenceValue is null)
             {
-                // effect 未設定なら parameter を消しておく
-                if (parameterProp.managedReferenceValue != null)
-                {
-                    parameterProp.managedReferenceValue = null;
-                    property.serializedObject.ApplyModifiedProperties();
-                }
+                KeyValuePair<string, Type> none = new("None", null);
+                types.Insert(0, none);
+                selectIndex = 0;
             }
             else
             {
-                object currentParameter = parameterProp.managedReferenceValue;
-                // 型が違う、または null の場合は作り直す
-                if (currentParameter == null || currentParameter.GetType() != effect.ParameterType)
-                {
-                    parameterProp.managedReferenceValue = Activator.CreateInstance(effect.ParameterType);
-                    property.serializedObject.ApplyModifiedProperties();
-                }
-
-                // 最新状態を取り直す
-                parameterProp = property.FindPropertyRelative("<Parameter>k__BackingField");
-
-                currentRect.y += EditorGUIUtility.singleLineHeight + VerticalSpacing;
-                currentRect.height = EditorGUI.GetPropertyHeight(parameterProp, true);
-
-                EditorGUI.PropertyField(currentRect, parameterProp, true);
+                selectIndex = types.FindIndex(t => t.Value == effectProp.managedReferenceValue.GetType());
             }
+
+            EditorGUI.BeginChangeCheck();
+            selectIndex = EditorGUI.Popup(Rect, label.text, selectIndex, types.Select(t => t.Key).ToArray());
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                effectProp.managedReferenceValue = Activator.CreateInstance(types[selectIndex].Value);
+                SkillEffect effect = effectProp.managedReferenceValue as SkillEffect;
+
+                paramProp.managedReferenceValue = Activator.CreateInstance(effect.ParameterType);
+
+                property.serializedObject.ApplyModifiedProperties();
+                paramProp = property.FindPropertyRelative("<Parameter>k__BackingField");
+            }
+
+            Rect.y += EditorGUIUtility.singleLineHeight + VerticalSpacing;
+            Rect.height = EditorGUI.GetPropertyHeight(paramProp, true);
+
+            EditorGUI.PropertyField(Rect, paramProp, true);
+
             EditorGUI.EndProperty();
         }
     }

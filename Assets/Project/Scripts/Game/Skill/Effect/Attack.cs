@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect
 {
-    [CreateAssetMenu(fileName = "AttackEffect", menuName = "Skills/Effects/Attack")]
+    [Serializable]
     public class AttackEffect : SkillEffect<AttackParam>
     {
         protected override void ApplyTyped(ICombatInteraction user, ICombatInteraction target, AttackParam parameter)

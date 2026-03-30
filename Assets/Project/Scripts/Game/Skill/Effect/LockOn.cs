@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect
 {
-    [CreateAssetMenu(fileName = "LockOn", menuName = "Skills/Effects/LockOn")]
+    [Serializable]
     public class LockOn : SkillEffect<LockOnParameter>
     {
         protected override void ApplyTyped(ICombatInteraction user, ICombatInteraction target, LockOnParameter parameter)
@@ -18,7 +18,7 @@ namespace AetherAlmachina.Skill.Effect
     [Serializable]
     public class LockOnParameter : EffectParameter
     {
-        [field: SerializeField] public SelectorBase Selector { get; private set; }
+        [field: SerializeReference] public SelectorBase Selector { get; private set; }
         [field: SerializeField] public int MaxTargets { get; private set; } = 1;
     }
 }
