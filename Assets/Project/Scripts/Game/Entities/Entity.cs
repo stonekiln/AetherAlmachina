@@ -5,8 +5,8 @@ using DConfig.StageLife.Event;
 using DConfig.EntityLife.Event;
 using DIVFactor.Event;
 using DIVFactor.Injectable;
-using AetherAlmachina.Entities.Status;
 using AetherAlmachina.Deck;
+using AetherAlmachina.Entities.Parameter;
 
 namespace AetherAlmachina.Entities
 {
@@ -19,18 +19,19 @@ namespace AetherAlmachina.Entities
         protected EventBus<DeckGetEvent> DeckGet;
         protected EventBus<SkillActiveEvent> SkillActive;
         protected TargetingEventBundle targeting;
-        protected StatusAsset statusAsset;
+        protected DeckList deckList;
         protected DeckController deckController;
         protected float power;
         protected float handPower;
-        public StatusParameter Status { get; private set; }
+        public Status Status { get; private set; }
         public TargetingEventBundle Targeting => targeting;
         public int SiblingIndex => transform.GetSiblingIndex();
 
         public virtual void Injection(InjectableResolver resolver)
         {
-            resolver.Inject(out statusAsset);
+            resolver.Inject(out StatusAsset statusAsset);
             Status = new(statusAsset);
+            deckList = statusAsset.Deck;
             power = 1;
             handPower = 1;
             resolver.Inject(out AutoIncrease);
@@ -51,24 +52,19 @@ namespace AetherAlmachina.Entities
             resolver.ActivePointAsObservable().Subscribe(_ => Get());
         }
 
-        public void Set(StatusAsset asset)
-        {
-            statusAsset = asset;
-        }
-
         public void Attack(Entity target, float skillPower)
         {
-            target.Hit(Status.attack, power * handPower * skillPower);
+            target.Hit(Status.Attack, power * handPower * skillPower);
         }
-        public void Hit(float attackerAttack, float power)
+        public void Hit(int attackerAttack, float power)
         {
-            Status.hitPoint += ((Status.defence - attackerAttack < 0) ? Status.defence - attackerAttack : 0) * power;
+            Status.hitPoint += ((Status.Defence - attackerAttack < 0) ? Status.Defence - attackerAttack : 0) * power;
             Debug.Log(gameObject.name + "が攻撃を受けました。\n残りHP:" + Status.hitPoint);
         }
         public void Get()
         {
             Debug.Log("デッキをセットしました");
-            DeckGet.OnNext(new(statusAsset.Deck.ReadDeck(this).ToList()));
+            DeckGet.OnNext(new(deckList.ReadDeck(this).ToList()));
         }
         public void SetHandPower(float power)
         {
@@ -76,7 +72,7 @@ namespace AetherAlmachina.Entities
         }
         void CostIncrease(int delta)
         {
-            Status.MPfluctuation.OnNext(new());
+            Status.MPFluctuation.OnNext(new());
             Status.magicPoint += delta;
         }
     }

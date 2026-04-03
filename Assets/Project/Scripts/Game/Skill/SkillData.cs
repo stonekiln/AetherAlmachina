@@ -9,7 +9,6 @@ namespace AetherAlmachina.Skill
 {
     public class SkillData
     {
-        record EntityData(IEnumerable<ICombatInteraction> Friendly, IEnumerable<ICombatInteraction> Hostile, int SiblingIndex);
         public string Name { get; init; }
         public int Cost { get; init; }
         public Sprite Icon { get; init; }

@@ -15,6 +15,6 @@ namespace AetherAlmachina.Skill.Effect
     [Serializable]
     public class AttackParam : EffectParameter
     {
-        [field: SerializeField] public int Power { get; private set; } = 1;
+        [field: SerializeField] public float Power { get; private set; } = 1f;
     }
 }

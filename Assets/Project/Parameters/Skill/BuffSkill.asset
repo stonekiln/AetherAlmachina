@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbc57203aefa2d044a67a2e488091548, type: 3}
+  m_Name: BuffSkill
+  m_EditorClassIdentifier: Assembly-CSharp::SkillAsset
+  <SkillName>k__BackingField: "\u6B66\u88C5\u5C55\u958B\u58F1"
+  <Description>k__BackingField: 
+  <Cost>k__BackingField: 1
+  <Icon>k__BackingField: {fileID: 21300000, guid: 693c86cc1e9628e4c954e06ef12ed154, type: 3}
+  <InitialTargeting>k__BackingField:
+    <Selector>k__BackingField:
+      rid: 2706037792494583882
+    <MaxTargets>k__BackingField: 1
+  <EffectQue>k__BackingField:
+  - <Effect>k__BackingField:
+      rid: 2706037792494583888
+    <Parameter>k__BackingField:
+      rid: 2706037792494583889
+  - <Effect>k__BackingField:
+      rid: 2706037815503749201
+    <Parameter>k__BackingField:
+      rid: 2706037815503749202
+  references:
+    version: 2
+    RefIds:
+    - rid: 2706037792494583882
+      type: {class: SelfSelector, ns: AetherAlmachina.Skill.Effect.Selectors, asm: Assembly-CSharp}
+      data: 
+    - rid: 2706037792494583888
+      type: {class: BuffEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+      data: 
+    - rid: 2706037792494583889
+      type: {class: BuffParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+      data:
+        <Type>k__BackingField: {fileID: 11400000, guid: 3684eb9a1f4aeaf4eb3b3cd5817d8771, type: 2}
+        <During>k__BackingField: 1
+        <Magnitude>k__BackingField: 1
+    - rid: 2706037815503749201
+      type: {class: BuffEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+      data: 
+    - rid: 2706037815503749202
+      type: {class: BuffParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+      data:
+        <Type>k__BackingField: {fileID: 11400000, guid: 3684eb9a1f4aeaf4eb3b3cd5817d8771, type: 2}
+        <During>k__BackingField: 1
+        <Magnitude>k__BackingField: 5

@@ -1,4 +1,4 @@
-using AetherAlmachina.Entities.Type;
+using AetherAlmachina.Entities.Faction;
 using DIVFactor.Injectable;
 using R3;
 using TMPro;
@@ -18,7 +18,7 @@ namespace AetherAlmachina.Cost
         {
             resolver.Inject(out owner);
 
-            owner.Status.MPfluctuation.Subscribe(log => SetDisplay(owner.Status.magicPoint)).AddTo(this);
+            owner.Status.MPFluctuation.Subscribe(log => SetDisplay(owner.Status.magicPoint)).AddTo(this);
         }
 
         void Awake()

@@ -7,7 +7,7 @@ using DConfig.EntityLife.Event;
 using DIVFactor.Injectable;
 using DIVFactor.Event;
 using AetherAlmachina.Entities;
-using AetherAlmachina.Entities.Type;
+using AetherAlmachina.Entities.Faction;
 using AetherAlmachina.Skill;
 
 namespace AetherAlmachina.Card.Hand

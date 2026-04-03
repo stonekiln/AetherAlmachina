@@ -1,5 +1,5 @@
 using AetherAlmachina.Cost;
-using AetherAlmachina.Entities.Status;
+using AetherAlmachina.Entities.Parameter;
 using UnityEngine;
 
 namespace AetherAlmachina.Stage

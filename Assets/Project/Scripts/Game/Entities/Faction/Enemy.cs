@@ -1,12 +1,15 @@
+using AetherAlmachina.Entities.Brain;
 using DIVFactor.Injectable;
 
-namespace AetherAlmachina.Entities.Type
+namespace AetherAlmachina.Entities.Faction
 {
     /// <summary>
-    /// プレイヤーのMonoBehaviour
+    /// エネミーのMonoBehaviour
     /// </summary>
-    public class Player : Entity
+    public class Enemy : Entity
     {
+        BrainBase brain;
+
         public override void Injection(InjectableResolver resolver)
         {
             base.Injection(resolver);
@@ -17,5 +20,7 @@ namespace AetherAlmachina.Entities.Type
         {
 
         }
+
+
     }
 }

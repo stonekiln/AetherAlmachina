@@ -1,6 +1,6 @@
 using AetherAlmachina.Card.Hand;
 using AetherAlmachina.Cost;
-using AetherAlmachina.Entities.Type;
+using AetherAlmachina.Entities.Faction;
 using DConfig.EntityLife.Installer;
 using DIVFactor.Lifetime;
 

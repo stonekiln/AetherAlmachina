@@ -1,20 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AetherAlmachina.Skill.Effect.Selector;
+using AetherAlmachina.Skill.Effect.Selectors;
 using UnityEditor;
 using UnityEngine;
 
 namespace EditorExtends
 {
-    [CustomPropertyDrawer(typeof(SelectorBase))]
-    public class LockOnParameterDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(Selector))]
+    public class SelectorDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             EditorGUI.BeginProperty(position, label, property);
 
-            List<KeyValuePair<string, Type>> types = TypeCache.GetTypesDerivedFrom(typeof(SelectorBase)).Where(t => !t.IsAbstract && !t.IsGenericType).OrderBy(t => t.Name).Select(t => new KeyValuePair<string, Type>(t.Name, t)).ToList();
+            List<KeyValuePair<string, Type>> types = TypeCache.GetTypesDerivedFrom(typeof(Selector)).Where(t => !t.IsAbstract && !t.IsGenericType).OrderBy(t => t.Name).Select(t => new KeyValuePair<string, Type>(t.Name, t)).ToList();
             int selectIndex;
 
             if (property.managedReferenceValue is null)

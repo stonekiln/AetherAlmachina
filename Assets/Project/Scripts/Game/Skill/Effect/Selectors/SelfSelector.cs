@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using AetherAlmachina.Entities;
 
-namespace AetherAlmachina.Skill.Effect.Selector
+namespace AetherAlmachina.Skill.Effect.Selectors
 {
     [Serializable]
-    public class SelfSelector : SelectorBase
+    public class SelfSelector : Selector
     {
         public override IEnumerable<ICombatInteraction> Targeting(IEnumerable<ICombatInteraction> friendly, IEnumerable<ICombatInteraction> hostile, int index)
         {

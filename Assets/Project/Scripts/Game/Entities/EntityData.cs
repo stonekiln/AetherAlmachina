@@ -1,5 +1,5 @@
 using AetherAlmachina.Entities.Brain;
-using AetherAlmachina.Entities.Status;
+using AetherAlmachina.Entities.Parameter;
 using UnityEngine;
 
 namespace AetherAlmachina.Entities

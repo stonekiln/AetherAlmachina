@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using AetherAlmachina.Entities;
-using AetherAlmachina.Skill.Effect.Selector;
+using AetherAlmachina.Skill.Effect.Selectors;
 using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect
@@ -18,7 +18,7 @@ namespace AetherAlmachina.Skill.Effect
     [Serializable]
     public class LockOnParameter : EffectParameter
     {
-        [field: SerializeReference] public SelectorBase Selector { get; private set; }
+        [field: SerializeReference] public Selector Selector { get; private set; }
         [field: SerializeField] public int MaxTargets { get; private set; } = 1;
     }
 }
