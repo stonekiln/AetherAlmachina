@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: AttackFlat
   m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.Skill.Effect.Modifiers.BuffType
   <Modifier>k__BackingField:
-    rid: 2706037815503749197
+    rid: 2706037833600073811
   <Name>k__BackingField: "\u653B\u6483\u529B\u52A0\u7B97"
   <Icon>k__BackingField: {fileID: 0}
   references:
     version: 2
     RefIds:
-    - rid: 2706037815503749197
-      type: {class: AttackModifier, ns: AetherAlmachina.Skill.Effect.Modifiers, asm: Assembly-CSharp}
+    - rid: 2706037833600073811
+      type: {class: AttackFlat, ns: AetherAlmachina.Skill.Effect.Modifiers, asm: Assembly-CSharp}
       data: 

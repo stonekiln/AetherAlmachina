@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Skill.Effect;
 using R3;
@@ -12,31 +13,29 @@ namespace AetherAlmachina.Skill
         public string Name { get; init; }
         public int Cost { get; init; }
         public Sprite Icon { get; init; }
-        List<EffectData> EffectQue { get; init; }
+        EffectData[] EffectQueue { get; init; }
         Entity Owner { get; init; }
         IEnumerable<ICombatInteraction> targets;
-        int queIndex = 0;
+        int queueIndex = 0;
 
         public SkillData(SkillAsset skillAsset, Entity owner)
         {
             Name = skillAsset.SkillName;
             Cost = skillAsset.Cost;
             Icon = skillAsset.Icon;
-            EffectQue = new() { new(Activator.CreateInstance<LockOn>(), skillAsset.InitialTargeting) };
-            EffectQue.AddRange(skillAsset.EffectQue);
+            EffectQueue = new[] { new EffectData(Activator.CreateInstance(typeof(LockOn)) as LockOn, skillAsset.InitialLockOn) }.Concat(skillAsset.EffectQueue).ToArray();
             Owner = owner;
-
             Owner.Targeting.LockOn.Response(res => targets = res.Targets).AddTo(Owner);
         }
 
         public bool MoveNext()
         {
-            EffectData current = EffectQue[queIndex];
+            EffectData current = EffectQueue[queueIndex];
             if (current.Effect is LockOn targeting)
             {
                 targeting.Apply(Owner, null, current.Parameter);
-                queIndex++;
-                return queIndex != EffectQue.Count && MoveNext();
+                queueIndex++;
+                return queueIndex != EffectQueue.Length && MoveNext();
             }
             else
             {
@@ -44,8 +43,8 @@ namespace AetherAlmachina.Skill
                 {
                     target.Targeting.Hit.OnNext(new((entity) => current.Effect.Apply(Owner, entity, current.Parameter)));
                 }
-                queIndex++;
-                return queIndex != EffectQue.Count;
+                queueIndex++;
+                return queueIndex != EffectQueue.Length;
             }
         }
     }
