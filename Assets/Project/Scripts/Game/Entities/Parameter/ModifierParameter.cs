@@ -1,46 +1,49 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AetherAlmachina.Skill.Effect.Modifiers;
 using UnityEngine;
 
 namespace AetherAlmachina.Entities.Parameter
 {
-    public abstract class ModifierParameterBase
+    public abstract class ModifierParameter
     {
+        public record ModifierData(ModifierAsset Data, Dictionary<StatusType, List<float>> ValueData);
         public Dictionary<StatusType, float> Value => CalcSum();
         public IEnumerable<Type> ModifierTypes => Modifiers.Keys;
         protected Dictionary<StatusType, float> Default { get; init; }
-        protected Dictionary<Type, Dictionary<StatusType, List<float>>> Modifiers { get; init; }
-        public ModifierParameterBase()
+        protected Dictionary<Type, ModifierData> Modifiers { get; init; }
+
+        public ModifierParameter()
         {
             Default = new();
             Modifiers = new();
         }
-
-        public void AddModifier(Type modifierType, StatusType statusType, float value)
+        public Action AddModifier(ModifierAsset modifierAsset, StatusType statusType, float value)
         {
-            if (!Modifiers.TryGetValue(modifierType, out Dictionary<StatusType, List<float>> modifier))
+            Type modifierType = modifierAsset.Modifier.GetType();
+            if (!Modifiers.TryGetValue(modifierType, out ModifierData modifier))
             {
-                Modifiers[modifierType] = modifier = new();
+                Modifiers[modifierType] = modifier = new(modifierAsset, new());
             }
-            if (!modifier.TryGetValue(statusType, out List<float> list))
+            if (!modifier.ValueData.TryGetValue(statusType, out List<float> list))
             {
-                modifier[statusType] = list = new();
+                modifier.ValueData[statusType] = list = new();
             }
-
             list.Add(value);
-        }
 
-        public void RemoveModifier(Type modifierType, StatusType statusType, float value)
+            Debug.Log(modifierAsset.Name + ":" + value + " の効果が付与された。");
+            return () => RemoveModifier(modifierAsset, statusType, value);
+        }
+        public void RemoveModifier(ModifierAsset modifierAsset, StatusType statusType, float value)
         {
-            Modifiers[modifierType][statusType].Remove(value);
-            Debug.Log(modifierType + ":" + value + "の効果が削除された。");
+            Modifiers[modifierAsset.Modifier.GetType()].ValueData[statusType].Remove(value);
+            Debug.Log(modifierAsset.Name + ":" + value + "の効果が削除された。");
         }
-
         protected abstract Dictionary<StatusType, float> CalcSum();
     }
 
-    public class FlatModifierParameter : ModifierParameterBase
+    public class FlatModifierParameter : ModifierParameter
     {
         public FlatModifierParameter(Dictionary<StatusType, float> status)
         {
@@ -53,11 +56,11 @@ namespace AetherAlmachina.Entities.Parameter
         {
             Dictionary<StatusType, float> result = new(Default);
 
-            foreach (Dictionary<StatusType, List<float>> modifier in Modifiers.Values)
+            foreach (ModifierData modifier in Modifiers.Values)
             {
-                foreach (StatusType type in modifier.Keys)
+                foreach (StatusType type in modifier.ValueData.Keys)
                 {
-                    result[type] += modifier[type].Max();
+                    result[type] += modifier.ValueData[type].Max();
                 }
             }
 
@@ -65,7 +68,7 @@ namespace AetherAlmachina.Entities.Parameter
         }
     }
 
-    public class PercentModifierParameter : ModifierParameterBase
+    public class PercentModifierParameter : ModifierParameter
     {
         public PercentModifierParameter(Dictionary<StatusType, float> status)
         {
@@ -79,11 +82,11 @@ namespace AetherAlmachina.Entities.Parameter
         {
             Dictionary<StatusType, float> result = new(Default);
 
-            foreach (Dictionary<StatusType, List<float>> modifier in Modifiers.Values)
+            foreach (ModifierData modifier in Modifiers.Values)
             {
-                foreach (StatusType type in modifier.Keys)
+                foreach (StatusType type in modifier.ValueData.Keys)
                 {
-                    result[type] *= modifier[type].Max();
+                    result[type] *= modifier.ValueData[type].Max();
                 }
             }
 

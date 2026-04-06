@@ -7,14 +7,14 @@ using UnityEngine;
 
 namespace EditorExtends
 {
-    [CustomPropertyDrawer(typeof(Modifier))]
+    [CustomPropertyDrawer(typeof(ModifierBase))]
     public class ModifierDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             EditorGUI.BeginProperty(position, label, property);
 
-            List<KeyValuePair<string, Type>> types = TypeCache.GetTypesDerivedFrom(typeof(Modifier)).Where(t => !t.IsAbstract && !t.IsGenericType).OrderBy(t => t.Name).Select(t => new KeyValuePair<string, Type>(t.Name, t)).ToList();
+            List<KeyValuePair<string, Type>> types = TypeCache.GetTypesDerivedFrom(typeof(ModifierBase)).Where(t => !t.IsAbstract && !t.IsGenericType).OrderBy(t => t.Name).Select(t => new KeyValuePair<string, Type>(t.Name, t)).ToList();
             int selectIndex;
             bool isSelect;
 

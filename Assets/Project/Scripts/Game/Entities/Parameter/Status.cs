@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DIVFactor.Event;
 
@@ -12,8 +13,7 @@ namespace AetherAlmachina.Entities.Parameter
         public int magicPoint;
         public readonly EventBus<MPFluctuationEvent> MPFluctuation;
         Dictionary<StatusType, float> BaseStatus { get; init; }
-        public FlatModifierParameter FlatModifier { get; init; }
-        public PercentModifierParameter PercentModifier { get; init; }
+        public Dictionary<Type, ModifierParameter> Modifiers { get; init; }
         public int MaxHitPoint => (int)ModifiedStatus[StatusType.MaxHitPoint];
         public int Attack => (int)ModifiedStatus[StatusType.Attack];
         public int Defence => (int)ModifiedStatus[StatusType.Defence];
@@ -31,8 +31,11 @@ namespace AetherAlmachina.Entities.Parameter
                 {StatusType.Defence,statusAsset.Defence},
                 {StatusType.Power,1}
             };
-            FlatModifier = new(BaseStatus);
-            PercentModifier = new(BaseStatus);
+            Modifiers = new()
+            {
+                {typeof(FlatModifierParameter),new FlatModifierParameter(BaseStatus)},
+                {typeof(PercentModifierParameter),new PercentModifierParameter(BaseStatus)}
+            };
             hitPoint = MaxHitPoint;
             magicPoint = 0;
         }
@@ -40,8 +43,8 @@ namespace AetherAlmachina.Entities.Parameter
         Dictionary<StatusType, float> CalcStatus()
         {
             Dictionary<StatusType, float> result = new();
-            Dictionary<StatusType, float> flat = FlatModifier.Value;
-            Dictionary<StatusType, float> percent = PercentModifier.Value;
+            Dictionary<StatusType, float> flat = Modifiers[typeof(FlatModifierParameter)].Value;
+            Dictionary<StatusType, float> percent = Modifiers[typeof(PercentModifierParameter)].Value;
 
             foreach (StatusType type in BaseStatus.Keys)
             {
