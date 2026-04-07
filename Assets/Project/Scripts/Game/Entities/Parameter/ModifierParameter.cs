@@ -21,7 +21,7 @@ namespace AetherAlmachina.Entities.Parameter
         }
         public Action AddModifier(ModifierAsset modifierAsset, StatusType statusType, float value)
         {
-            Type modifierType = modifierAsset.Modifier.GetType();
+            Type modifierType = modifierAsset.ModifierType.GetType();
             if (!Modifiers.TryGetValue(modifierType, out ModifierData modifier))
             {
                 Modifiers[modifierType] = modifier = new(modifierAsset, new());
@@ -37,7 +37,7 @@ namespace AetherAlmachina.Entities.Parameter
         }
         public void RemoveModifier(ModifierAsset modifierAsset, StatusType statusType, float value)
         {
-            Modifiers[modifierAsset.Modifier.GetType()].ValueData[statusType].Remove(value);
+            Modifiers[modifierAsset.ModifierType.GetType()].ValueData[statusType].Remove(value);
             Debug.Log(modifierAsset.Name + ":" + value + "の効果が削除された。");
         }
         protected abstract Dictionary<StatusType, float> CalcSum();

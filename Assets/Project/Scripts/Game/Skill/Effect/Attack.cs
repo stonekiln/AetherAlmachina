@@ -9,7 +9,7 @@ namespace AetherAlmachina.Skill.Effect
     {
         protected override void ApplyTyped(ICombatInteraction user, ICombatInteraction target, AttackParam parameter)
         {
-            user.Attack((Entity)target, parameter.Power);
+            user.Command.Attack.OnNext(new((Entity)target, parameter.Power));
         }
     }
     [Serializable]

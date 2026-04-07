@@ -11,7 +11,7 @@ namespace AetherAlmachina.Skill.Effect
     {
         protected override void ApplyTyped(ICombatInteraction user, ICombatInteraction target, EnchantParameter parameter)
         {
-            parameter.Modifier.Modifier.Enchant(user, target, parameter.Modifier, parameter.Value).Signed(parameter.Contract);
+            parameter.Modifier.ModifierType.Enchant(user, target, parameter.Modifier, parameter.Value).Signed(parameter.Contract);
         }
     }
 

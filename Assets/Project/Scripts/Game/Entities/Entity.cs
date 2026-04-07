@@ -15,16 +15,16 @@ namespace AetherAlmachina.Entities
     /// </summary>
     public abstract class Entity : MonoBehaviour, ICombatInteraction, IInjectable
     {
+        TargetingEventBundle targeting;
+        CommandEventBundle command;
         protected EventBus<AutoIncreaseEvent> AutoIncrease;
         protected EventBus<DeckGetEvent> DeckGet;
-        protected EventBus<SkillActiveEvent> SkillActive;
-        protected TargetingEventBundle targeting;
         protected DeckList deckList;
         protected DeckController deckController;
-        protected float power;
         protected float handPower;
         public Status Status { get; private set; }
         public TargetingEventBundle Targeting => targeting;
+        public CommandEventBundle Command => command;
         public int SiblingIndex => transform.GetSiblingIndex();
 
         public virtual void Injection(InjectableResolver resolver)
@@ -32,36 +32,39 @@ namespace AetherAlmachina.Entities
             resolver.Inject(out StatusAsset statusAsset);
             Status = new(statusAsset);
             deckList = statusAsset.Deck;
-            power = 1;
             handPower = 1;
             resolver.Inject(out AutoIncrease);
             resolver.Inject(out DeckGet);
             resolver.Inject(out deckController);
-            resolver.Inject(out SkillActive);
             resolver.Inject(out targeting);
+            resolver.Inject(out command);
 
             AutoIncrease.Subscribe(log => CostIncrease(log.Delta)).AddTo(this);
             deckController.Subscribe(this);
-            SkillActive.Subscribe(log =>
+            Targeting.Hit.Subscribe(log => log.Apply(this)).AddTo(this);
+
+            command.SkillActive.Subscribe(log =>
             {
                 Debug.Log(log.Data.Name + "が発動しました。");
                 while (log.Data.MoveNext()) ;
+                Command.SkillEnd.OnNext(new());
             }).AddTo(this);
-            Targeting.Hit.Subscribe(log => log.Apply(this)).AddTo(this);
+            command.Attack.Subscribe(log => Attack(log.Target, log.SkillPower)).AddTo(this);
+            command.Damage.Subscribe(log => Damage(log.Attack, log.Power)).AddTo(this);
 
             resolver.ActivePointAsObservable().Subscribe(_ => Get());
         }
 
-        public void Attack(Entity target, float skillPower)
+        void Attack(Entity target, float skillPower)
         {
-            target.Hit(Status.Attack, power * handPower * skillPower);
+            target.command.Damage.OnNext(new(Status.Attack, Status.Power * handPower * skillPower));
         }
-        public void Hit(int attackerAttack, float power)
+        void Damage(int attackerAttack, float power)
         {
             Status.hitPoint += ((Status.Defence - attackerAttack < 0) ? Status.Defence - attackerAttack : 0) * power;
             Debug.Log(gameObject.name + "が攻撃を受けました。\n残りHP:" + Status.hitPoint);
         }
-        public void Get()
+        void Get()
         {
             Debug.Log("デッキをセットしました");
             DeckGet.OnNext(new(deckList.ReadDeck(this).ToList()));

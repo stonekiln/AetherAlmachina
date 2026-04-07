@@ -41,7 +41,7 @@ namespace AetherAlmachina.Skill
             {
                 foreach (ICombatInteraction target in targets)
                 {
-                    target.Targeting.Hit.OnNext(new((entity) => current.Effect.Apply(Owner, entity, current.Parameter)));
+                    target.Targeting.Hit.OnNext(new(entity => current.Effect.Apply(Owner, entity, current.Parameter)));
                 }
                 queueIndex++;
                 return queueIndex != EffectQueue.Length;

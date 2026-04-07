@@ -36,13 +36,26 @@ namespace DConfig.EntityLife.Installer
     {
         public void Install(IContainerBuilder builder)
         {
-            builder.RegisterEvent<SkillActiveEvent>();
             builder.RegisterEvent<LockOnRequestEvent>();
             builder.RegisterEvent<LockOnResponseEvent>();
             builder.RegisterEvent<HitEvent>();
 
             builder.Register<LockOnEvent>(Lifetime.Singleton);
             builder.Register<TargetingEventBundle>(Lifetime.Singleton);
+        }
+    }
+    public class CommandEventInstaller : IInstaller
+    {
+        public void Install(IContainerBuilder builder)
+        {
+            builder.RegisterEvent<SkillActiveEvent>();
+            builder.RegisterEvent<SkillEndEvent>();
+            builder.RegisterEvent<AttackEvent>();
+            builder.RegisterEvent<DamageEvent>();
+            builder.RegisterEvent<HealingEvent>();
+            builder.RegisterEvent<OnHealedEvent>();
+
+            builder.Register<CommandEventBundle>(Lifetime.Singleton);
         }
     }
 }

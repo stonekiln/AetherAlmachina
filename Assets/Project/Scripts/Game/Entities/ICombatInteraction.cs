@@ -7,7 +7,7 @@ namespace AetherAlmachina.Entities
     {
         public int SiblingIndex { get; }
         public TargetingEventBundle Targeting { get; }
+        public CommandEventBundle Command { get; }
         public Status Status { get; }
-        public void Attack(Entity target, float skillPower);
     }
 }
