@@ -4,14 +4,14 @@ using AetherAlmachina.Entities.Parameter;
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
     [Serializable]
-    public class AttackFlat : FlatModifier
+    public class AttackFlat : PositiveFlatModifier
     {
-        protected override StatusType StatusTypeKey => StatusType.Attack;
+        public override StatusType StatusTypeKey => StatusType.Attack;
     }
 
     [Serializable]
-    public class AttackPercent : PercentModifier
+    public class AttackPercent : PositiveRateModifier
     {
-        protected override StatusType StatusTypeKey => StatusType.Attack;
+        public override StatusType StatusTypeKey => StatusType.Attack;
     }
 }

@@ -1,9 +1,11 @@
+using System;
 using AetherAlmachina.Entities.Parameter;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
-    public class PowerModifier : PercentModifier
+    [Serializable]
+    public class PowerModifier : PositiveRateModifier
     {
-        protected override StatusType StatusTypeKey => StatusType.Power;
+        public override StatusType StatusTypeKey => StatusType.Power;
     }
 }

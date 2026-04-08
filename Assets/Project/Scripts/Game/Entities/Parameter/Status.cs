@@ -34,7 +34,7 @@ namespace AetherAlmachina.Entities.Parameter
             Modifiers = new()
             {
                 {typeof(FlatModifierParameter),new FlatModifierParameter(BaseStatus)},
-                {typeof(PercentModifierParameter),new PercentModifierParameter(BaseStatus)}
+                {typeof(RateModifierParameter),new RateModifierParameter(BaseStatus)}
             };
             hitPoint = MaxHitPoint;
             magicPoint = 0;
@@ -44,11 +44,11 @@ namespace AetherAlmachina.Entities.Parameter
         {
             Dictionary<StatusType, float> result = new();
             Dictionary<StatusType, float> flat = Modifiers[typeof(FlatModifierParameter)].Value;
-            Dictionary<StatusType, float> percent = Modifiers[typeof(PercentModifierParameter)].Value;
+            Dictionary<StatusType, float> rate = Modifiers[typeof(RateModifierParameter)].Value;
 
             foreach (StatusType type in BaseStatus.Keys)
             {
-                result[type] = (BaseStatus[type] + flat[type]) * percent[type];
+                result[type] = (BaseStatus[type] + flat[type]) * rate[type];
             }
 
             return result;

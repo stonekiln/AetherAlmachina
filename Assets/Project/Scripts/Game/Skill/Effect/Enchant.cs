@@ -11,15 +11,14 @@ namespace AetherAlmachina.Skill.Effect
     {
         protected override void ApplyTyped(ICombatInteraction user, ICombatInteraction target, EnchantParameter parameter)
         {
-            parameter.Modifier.ModifierType.Enchant(user, target, parameter.Modifier, parameter.Value).Signed(parameter.Contract);
+            parameter.Modifier.Enchant(user, target).Signed(parameter.Contract);
         }
     }
 
     [Serializable]
     public class EnchantParameter : EffectParameter
     {
-        [field: SerializeField] public ModifierAsset Modifier { get; private set; }
+        [field: SerializeField] public ModifierData Modifier { get; private set; }
         [field: SerializeReference] public EnchantContract Contract { get; private set; }
-        [field: SerializeField] public float Value { get; private set; } = 1f;
     }
 }
