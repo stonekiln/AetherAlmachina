@@ -2,7 +2,6 @@ using System;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Entities.Parameter;
 using AetherAlmachina.Skill.Effect.Contracts;
-using EditorExtends.Attribute;
 using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
@@ -24,17 +23,17 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     [Serializable]
     public class ModifierData : IModifierData
     {
-        [SerializeField] ModifierAsset Type;
-        [field: SerializeField, NonSliderRange(0, 100)] public float Value { get; private set; }
-        public Type ModifierType => Type.ModifierType.GetType();
-        public string Name => Type.Name;
-        public Sprite Icon => Type.Icon;
-        public string DisplayUnit => Type.ModifierType.DisplayUnit;
-        public StatusType StatusTypeKey => Type.ModifierType.StatusTypeKey;
+        [SerializeField] ModifierAsset type;
+        [field: SerializeField] public float Value { get; private set; }
+        public Type ModifierType => type.ModifierType.GetType();
+        public string Name => type.Name;
+        public Sprite Icon => type.Icon;
+        public string DisplayUnit => type.ModifierType.DisplayUnit;
+        public StatusType StatusTypeKey => type.ModifierType.StatusTypeKey;
 
         public DispelModifier Enchant(ICombatInteraction user, ICombatInteraction target)
         {
-            return Type.ModifierType.Enchant(user, target, this);
+            return type.ModifierType.Enchant(user, target, this);
         }
     }
 }

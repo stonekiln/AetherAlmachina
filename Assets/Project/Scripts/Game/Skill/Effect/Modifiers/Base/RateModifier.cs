@@ -13,10 +13,12 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     {
         public override float ParameterMax => float.PositiveInfinity;
         public override float ParameterMin => 1;
+        public override string DisplaySign => "+";
     }
     public abstract class NegativeRateModifier : RateModifier
     {
         public override float ParameterMax => 1;
-        public override float ParameterMin => float.NegativeInfinity;
+        public override float ParameterMin => 0;
+        public override string DisplaySign => "-";
     }
 }

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: Assembly-CSharp::Status
   <HitPoint>k__BackingField: 1000
-  <Attack>k__BackingField: 60
+  <Attack>k__BackingField: 100
   <Defence>k__BackingField: 50
   <Deck>k__BackingField: {fileID: 11400000, guid: f7010b5683f39144f8ff32863247361d, type: 2}

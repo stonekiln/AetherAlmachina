@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: AttackPercent
   m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.Skill.Effect.Modifiers.ModifierAsset
   <ModifierType>k__BackingField:
-    rid: -2
+    rid: 1819299399445512278
   <Name>k__BackingField: "\u653B\u6483\u529B\u4E57\u7B97"
   <Icon>k__BackingField: {fileID: 0}
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 1819299399445512278
+      type: {class: AttackPercent, ns: AetherAlmachina.Skill.Effect.Modifiers, asm: Assembly-CSharp}
+      data: 

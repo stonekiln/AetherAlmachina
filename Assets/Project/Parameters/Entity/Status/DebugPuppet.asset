@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Status
   <HitPoint>k__BackingField: 1000
   <Attack>k__BackingField: 50
-  <Defence>k__BackingField: 30
+  <Defence>k__BackingField: 90
   <Deck>k__BackingField: {fileID: 11400000, guid: 87f140fcce6b46c46a2fa592e6f161e9, type: 2}

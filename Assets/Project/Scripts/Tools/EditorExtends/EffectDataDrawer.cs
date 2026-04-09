@@ -30,7 +30,10 @@ namespace EditorExtends
         {
             EditorGUI.BeginProperty(position, label, property);
 
-            Rect Rect = new(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
+            Rect rect = new(position)
+            {
+                height = EditorGUIUtility.singleLineHeight
+            };
 
             SerializedProperty effectProp = property.FindPropertyRelative(BackingField.Get("Effect"));
             SerializedProperty paramProp = property.FindPropertyRelative(BackingField.Get("Parameter"));
@@ -50,7 +53,7 @@ namespace EditorExtends
             }
 
             EditorGUI.BeginChangeCheck();
-            selectIndex = EditorGUI.Popup(Rect, label.text, selectIndex, types.Select(t => t.Key).ToArray());
+            selectIndex = EditorGUI.Popup(rect, label.text, selectIndex, types.Select(t => t.Key).ToArray());
 
             if (EditorGUI.EndChangeCheck())
             {
@@ -65,9 +68,9 @@ namespace EditorExtends
 
             if (paramProp.managedReferenceValue is not null)
             {
-                Rect.y += EditorGUIUtility.singleLineHeight;
-                Rect.height = EditorGUI.GetPropertyHeight(paramProp, true);
-                EditorGUI.PropertyField(Rect, paramProp, true);
+                rect.y += EditorGUIUtility.singleLineHeight;
+                rect.height = EditorGUI.GetPropertyHeight(paramProp, true);
+                EditorGUI.PropertyField(rect, paramProp, true);
             }
 
             EditorGUI.EndProperty();

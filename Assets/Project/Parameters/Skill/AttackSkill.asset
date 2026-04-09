@@ -29,14 +29,6 @@ MonoBehaviour:
       rid: 2706037854619566184
     <Parameter>k__BackingField:
       rid: 2706037854619566185
-  - <Effect>k__BackingField:
-      rid: 2706037854619566186
-    <Parameter>k__BackingField:
-      rid: 2706037854619566187
-  - <Effect>k__BackingField:
-      rid: 2706037854619566199
-    <Parameter>k__BackingField:
-      rid: 2706037854619566200
   references:
     version: 2
     RefIds:
@@ -54,25 +46,6 @@ MonoBehaviour:
       type: {class: AttackEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data: 
     - rid: 2706037854619566185
-      type: {class: AttackParam, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
-      data:
-        <Power>k__BackingField: 1
-    - rid: 2706037854619566186
-      type: {class: LockOn, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
-      data: 
-    - rid: 2706037854619566187
-      type: {class: LockOnParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
-      data:
-        <Selector>k__BackingField:
-          rid: 2706037854619566188
-        <MaxTargets>k__BackingField: 1
-    - rid: 2706037854619566188
-      type: {class: SelfSelector, ns: AetherAlmachina.Skill.Effect.Selectors, asm: Assembly-CSharp}
-      data: 
-    - rid: 2706037854619566199
-      type: {class: AttackEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
-      data: 
-    - rid: 2706037854619566200
       type: {class: AttackParam, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data:
         <Power>k__BackingField: 1
