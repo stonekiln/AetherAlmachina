@@ -25,7 +25,6 @@ namespace EditorExtends
         {
             EditorGUI.BeginProperty(position, label, property);
 
-            bool isSelect;
             Rect rect = new(position)
             {
                 height = EditorGUIUtility.singleLineHeight
@@ -33,24 +32,23 @@ namespace EditorExtends
 
 
             SerializedProperty modifierAssetProp = property.FindPropertyRelative("type");
-            EditorGUI.PropertyField(rect, modifierAssetProp);
+            EditorGUI.PropertyField(rect, modifierAssetProp, label, true);
 
-            if (isSelect = modifierAssetProp.objectReferenceValue != null)
+            if (modifierAssetProp.objectReferenceValue != null)
             {
                 SerializedProperty valueProp = property.FindPropertyRelative(BackingField.Get("Value"));
-                SerializedObject modifierAsset = new(modifierAssetProp.objectReferenceValue);
-                SerializedProperty modifierProp = modifierAsset.FindProperty(BackingField.Get("ModifierType"));
+                SerializedProperty modifierProp = new SerializedObject(modifierAssetProp.objectReferenceValue).FindProperty(BackingField.Get("ModifierType"));
 
                 EditorGUI.BeginChangeCheck();
                 if (modifierProp.managedReferenceValue is INonSliderRange nonSliderRange)
                 {
+                    rect.y += EditorGUIUtility.singleLineHeight;
+                    EditorGUI.PropertyField(rect, valueProp, new GUIContent("Value" + nonSliderRange.DisplayUnit), true);
                     if (EditorGUI.EndChangeCheck())
                     {
                         valueProp.floatValue = Mathf.Clamp(valueProp.floatValue, nonSliderRange.ParameterMin, nonSliderRange.ParameterMax);
                         property.serializedObject.ApplyModifiedProperties();
                     }
-                    rect.y += EditorGUIUtility.singleLineHeight;
-                    EditorGUI.PropertyField(rect, valueProp, new GUIContent(nonSliderRange.DisplaySign + "Value(" + nonSliderRange.DisplayUnit + ")"));
                 }
             }
 

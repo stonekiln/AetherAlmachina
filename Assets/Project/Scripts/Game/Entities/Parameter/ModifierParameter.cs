@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using AetherAlmachina.Skill.Effect.Modifiers;
 using UnityEngine;
 
@@ -25,39 +24,51 @@ namespace AetherAlmachina.Entities.Parameter
             Type modifierType = modifierData.ModifierType;
             if (!Modifiers.TryGetValue(modifierType, out ModifierValues modifier))
             {
-                Modifiers[modifierType] = modifier = new(modifierData, new());
+                Modifiers[modifierType] = modifier = new(modifierData, new() { 0f });
             }
 
             modifier.Values.Add(modifierData.Value);
 
-            Debug.Log(modifierData.Name + ":" + (modifierData.Value - 1) * 100 + modifierData.DisplayUnit + " の効果が付与された。");
+            Debug.Log(modifierData.Name + ":" + modifierData.Value + modifierData.DisplayUnit + " の効果が付与された。");
             return () => RemoveModifier(modifierData);
         }
         public void RemoveModifier(IModifierData modifierData)
         {
             Modifiers[modifierData.ModifierType].Values.Remove(modifierData.Value);
-            Debug.Log(modifierData.Name + ":" + (modifierData.Value - 1) * 100 + modifierData.DisplayUnit + "の効果が削除された。");
+            Debug.Log(modifierData.Name + ":" + modifierData.Value + modifierData.DisplayUnit + "の効果が解除された。");
+        }
+        protected float CalcRMS(List<float> list)
+        {
+            float max = float.NegativeInfinity;
+            float min = float.PositiveInfinity;
+            foreach (float value in list)
+            {
+                if (value > max) max = value;
+                if (value < min) min = value;
+            }
+
+            return max + min;
         }
         protected abstract Dictionary<StatusType, float> CalcSum();
     }
 
     public class FlatModifierParameter : ModifierParameter
     {
-        const float DefaultValue = 0f;
         public FlatModifierParameter(Dictionary<StatusType, float> status)
         {
             foreach (StatusType type in status.Keys)
             {
-                Default[type] = DefaultValue;
+                Default[type] = 0f;
             }
         }
+
         protected override Dictionary<StatusType, float> CalcSum()
         {
             Dictionary<StatusType, float> result = new(Default);
 
             foreach (ModifierValues modifier in Modifiers.Values)
             {
-                result[modifier.Data.StatusTypeKey] += modifier.Values.DefaultIfEmpty(DefaultValue).Max();
+                result[modifier.Data.StatusTypeKey] += CalcRMS(modifier.Values);
             }
 
             return result;
@@ -66,12 +77,11 @@ namespace AetherAlmachina.Entities.Parameter
 
     public class RateModifierParameter : ModifierParameter
     {
-        const float DefaultValue = 1f;
         public RateModifierParameter(Dictionary<StatusType, float> status)
         {
             foreach (StatusType type in status.Keys)
             {
-                Default[type] = DefaultValue;
+                Default[type] = 1f;
             }
         }
 
@@ -81,7 +91,7 @@ namespace AetherAlmachina.Entities.Parameter
 
             foreach (ModifierValues modifier in Modifiers.Values)
             {
-                result[modifier.Data.StatusTypeKey] += modifier.Values.DefaultIfEmpty(DefaultValue).Max();
+                result[modifier.Data.StatusTypeKey] += CalcRMS(modifier.Values) / 100f;
             }
 
             return result;

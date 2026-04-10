@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa4d77b4a1bfaa648b28b66263362a58, type: 3}
-  m_Name: AttackPercent
+  m_Name: PositiveAttackFlat
   m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.Skill.Effect.Modifiers.ModifierAsset
   <ModifierType>k__BackingField:
-    rid: 1819299444781744210
-  <Name>k__BackingField: "\u30D0\u30D5:\u653B\u6483\u529B%"
+    rid: 1819299444781744209
+  <Name>k__BackingField: "\u30D0\u30D5:\u653B\u6483\u529B"
   <Icon>k__BackingField: {fileID: 0}
   references:
     version: 2
     RefIds:
-    - rid: 1819299444781744210
-      type: {class: PositiveAttackPercent, ns: AetherAlmachina.Skill.Effect.Modifiers, asm: Assembly-CSharp}
+    - rid: 1819299444781744209
+      type: {class: PositiveAttackFlat, ns: AetherAlmachina.Skill.Effect.Modifiers, asm: Assembly-CSharp}
       data: 

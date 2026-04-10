@@ -10,7 +10,6 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         public float ParameterMax { get; }
         public float ParameterMin { get; }
         public string DisplayUnit { get; }
-        public string DisplaySign { get; }
     }
 
     public abstract class ModifierBase : INonSliderRange
@@ -18,7 +17,6 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         public abstract float ParameterMax { get; }
         public abstract float ParameterMin { get; }
         public abstract string DisplayUnit { get; }
-        public abstract string DisplaySign { get; }
         protected abstract Type ModifierParameterKey { get; }
         public abstract StatusType StatusTypeKey { get; }
 
@@ -32,5 +30,41 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
             Action remove = target.Status.Modifiers[ModifierParameterKey].AddModifier(modifierData);
             return new(user, target, remove);
         }
+    }
+
+    public abstract class PositiveModifier : CommonModifier
+    {
+        public override float ParameterMax => float.PositiveInfinity;
+        public override float ParameterMin => 0;
+    }
+
+    public abstract class NegativeModifier : CommonModifier
+    {
+        public override float ParameterMax => 0;
+        public override float ParameterMin => float.NegativeInfinity;
+    }
+
+    public abstract class PositiveRateModifier : PositiveModifier
+    {
+        protected override Type ModifierParameterKey => typeof(FlatModifierParameter);
+        public override string DisplayUnit => "%";
+    }
+
+    public abstract class NegativeRateModifier : NegativeModifier
+    {
+        protected override Type ModifierParameterKey => typeof(FlatModifierParameter);
+        public override string DisplayUnit => "%";
+    }
+
+    public abstract class PositiveFlatModifier : PositiveModifier
+    {
+        protected override Type ModifierParameterKey => typeof(FlatModifierParameter);
+        public override string DisplayUnit => "";
+    }
+
+    public abstract class NegativeFlatModifier : NegativeModifier
+    {
+        protected override Type ModifierParameterKey => typeof(FlatModifierParameter);
+        public override string DisplayUnit => "";
     }
 }

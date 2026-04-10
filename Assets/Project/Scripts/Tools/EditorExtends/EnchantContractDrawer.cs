@@ -38,6 +38,7 @@ namespace EditorExtends
             {
                 height = EditorGUIUtility.singleLineHeight
             };
+
             selectIndex = EditorGUI.Popup(popupRect, label.text, selectIndex, types.Select(t => t.Key).ToArray());
 
             if (EditorGUI.EndChangeCheck())
