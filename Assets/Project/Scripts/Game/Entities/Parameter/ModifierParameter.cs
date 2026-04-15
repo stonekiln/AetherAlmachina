@@ -22,12 +22,11 @@ namespace AetherAlmachina.Entities.Parameter
         public Action AddModifier(IModifierData modifierData)
         {
             Type modifierType = modifierData.ModifierType;
-            if (!Modifiers.TryGetValue(modifierType, out ModifierValues modifier))
+            if (!Modifiers.ContainsKey(modifierType))
             {
-                Modifiers[modifierType] = modifier = new(modifierData, new() { 0f });
+                Modifiers[modifierType] = new(modifierData, new() { 0f });
             }
-
-            modifier.Values.Add(modifierData.Value);
+            Modifiers[modifierType].Values.Add(modifierData.Value);
 
             Debug.Log(modifierData.Name + ":" + modifierData.Value + modifierData.DisplayUnit + " の効果が付与された。");
             return () => RemoveModifier(modifierData);

@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: PowerPercent
   m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.Skill.Effect.Modifiers.ModifierAsset
   <ModifierType>k__BackingField:
-    rid: 1819299381174861824
+    rid: 1819299444781744212
   <Name>k__BackingField: "\u4E0E\u30C0\u30E1\u30FC\u30B8\u4E0A\u6607"
   <Icon>k__BackingField: {fileID: 0}
   references:
     version: 2
     RefIds:
-    - rid: 1819299381174861824
-      type: {class: PowerModifier, ns: AetherAlmachina.Skill.Effect.Modifiers, asm: Assembly-CSharp}
+    - rid: 1819299444781744212
+      type: {class: PositivePowerRate, ns: AetherAlmachina.Skill.Effect.Modifiers, asm: Assembly-CSharp}
       data: 

@@ -1,42 +1,34 @@
 using System;
 using System.Collections.Generic;
 using DIVFactor.Event;
+using UnityEngine;
 
 namespace AetherAlmachina.Entities.Parameter
 {
     /// <summary>
     /// ステータスのパラメータをコピーして変更可能にするためのクラス
     /// </summary>
-    public class Status
+    public class StatusParameter
     {
         public float hitPoint;
         public int magicPoint;
         public readonly EventBus<MPFluctuationEvent> MPFluctuation;
         Dictionary<StatusType, float> BaseStatus { get; init; }
         public Dictionary<Type, ModifierParameter> Modifiers { get; init; }
-        public int MaxHitPoint => (int)ModifiedStatus[StatusType.MaxHitPoint];
-        public int Attack => (int)ModifiedStatus[StatusType.Attack];
-        public int Defence => (int)ModifiedStatus[StatusType.Defence];
-        public float Power => ModifiedStatus[StatusType.Power];
         Dictionary<StatusType, float> ModifiedStatus => CalcStatus();
 
         public record MPFluctuationEvent : EventObject;
 
-        public Status(StatusAsset statusAsset)
+        public StatusParameter(StatusBase status)
         {
             MPFluctuation = new();
-            BaseStatus = new(){
-                {StatusType.MaxHitPoint,statusAsset.HitPoint},
-                {StatusType.Attack,statusAsset.Attack},
-                {StatusType.Defence,statusAsset.Defence},
-                {StatusType.Power,1}
-            };
+            BaseStatus = new(status.BaseStatus);
             Modifiers = new()
             {
                 {typeof(FlatModifierParameter),new FlatModifierParameter(BaseStatus)},
                 {typeof(RateModifierParameter),new RateModifierParameter(BaseStatus)}
             };
-            hitPoint = MaxHitPoint;
+            hitPoint = ModifiedStatus[StatusType.MaxHitPoint];
             magicPoint = 0;
         }
 
@@ -52,6 +44,11 @@ namespace AetherAlmachina.Entities.Parameter
             }
 
             return result;
+        }
+
+        public int Get(StatusType type)
+        {
+            return (int)ModifiedStatus[type];
         }
     }
 }

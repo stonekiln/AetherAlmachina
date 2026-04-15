@@ -22,7 +22,7 @@ namespace AetherAlmachina.Entities
         protected DeckList deckList;
         protected DeckController deckController;
         protected float handPower;
-        public Status Status { get; private set; }
+        public StatusParameter Status { get; private set; }
         public TargetingEventBundle Targeting => targeting;
         public CommandEventBundle Command => command;
         public int SiblingIndex => transform.GetSiblingIndex();
@@ -57,11 +57,11 @@ namespace AetherAlmachina.Entities
 
         void Attack(Entity target, float skillPower)
         {
-            target.command.Damage.OnNext(new(Status.Attack, Status.Power * handPower * skillPower));
+            target.command.Damage.OnNext(new(Status.Get(StatusType.Attack), Status.Get(StatusType.Power) * handPower * skillPower));
         }
         void Damage(int attackerAttack, float power)
         {
-            Status.hitPoint += ((Status.Defence - attackerAttack < 0) ? Status.Defence - attackerAttack : 0) * power;
+            Status.hitPoint += ((Status.Get(StatusType.Defence) - attackerAttack < 0) ? Status.Get(StatusType.Defence) - attackerAttack : 0) * power;
             Debug.Log(gameObject.name + "が攻撃を受けました。\n残りHP:" + Status.hitPoint);
         }
         void Get()
