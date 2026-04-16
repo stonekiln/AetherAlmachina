@@ -46,7 +46,12 @@ namespace AetherAlmachina.Entities.Parameter
             return result;
         }
 
-        public int Get(StatusType type)
+        public float Get(StatusType type)
+        {
+            return ModifiedStatus[type];
+        }
+
+        public int GetInt(StatusType type)
         {
             return (int)ModifiedStatus[type];
         }

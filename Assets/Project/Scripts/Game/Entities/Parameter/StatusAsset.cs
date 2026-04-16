@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using AetherAlmachina.Deck;
 using UnityEngine;
-using Utility;
 
 namespace AetherAlmachina.Entities.Parameter
 {
@@ -30,11 +28,9 @@ namespace AetherAlmachina.Entities.Parameter
             foreach (PropertyInfo prop in GetType().GetProperties())
             {
                 StatusTypeRegisterAttribute attribute = prop.GetCustomAttribute<StatusTypeRegisterAttribute>();
-
                 if (attribute != null)
                 {
-                    object value = prop.GetValue(this);
-                    BaseStatus[attribute.Type] = Convert.ToSingle(value);
+                    BaseStatus[attribute.Type] = Convert.ToSingle(prop.GetValue(this));
                 }
             }
         }

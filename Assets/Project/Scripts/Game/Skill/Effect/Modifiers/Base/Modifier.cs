@@ -5,17 +5,13 @@ using AetherAlmachina.Skill.Effect.Contracts;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
-    public interface INonSliderRange
+    public interface IModifierUnit
     {
-        public float ParameterMax { get; }
-        public float ParameterMin { get; }
         public string DisplayUnit { get; }
     }
 
-    public abstract class ModifierBase : INonSliderRange
+    public abstract class ModifierBase : IModifierUnit
     {
-        public abstract float ParameterMax { get; }
-        public abstract float ParameterMin { get; }
         public abstract string DisplayUnit { get; }
         protected abstract Type ModifierParameterKey { get; }
         public abstract StatusType StatusTypeKey { get; }
@@ -32,39 +28,15 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         }
     }
 
-    public abstract class PositiveModifier : CommonModifier
-    {
-        public override float ParameterMax => float.PositiveInfinity;
-        public override float ParameterMin => 0;
-    }
-
-    public abstract class NegativeModifier : CommonModifier
-    {
-        public override float ParameterMax => 0;
-        public override float ParameterMin => float.NegativeInfinity;
-    }
-
-    public abstract class PositiveRateModifier : PositiveModifier
-    {
-        protected override Type ModifierParameterKey => typeof(FlatModifierParameter);
-        public override string DisplayUnit => "%";
-    }
-
-    public abstract class NegativeRateModifier : NegativeModifier
-    {
-        protected override Type ModifierParameterKey => typeof(FlatModifierParameter);
-        public override string DisplayUnit => "%";
-    }
-
-    public abstract class PositiveFlatModifier : PositiveModifier
+    public abstract class FlatModifier : CommonModifier
     {
         protected override Type ModifierParameterKey => typeof(FlatModifierParameter);
         public override string DisplayUnit => "";
     }
 
-    public abstract class NegativeFlatModifier : NegativeModifier
+    public abstract class RateModifier : CommonModifier
     {
-        protected override Type ModifierParameterKey => typeof(FlatModifierParameter);
-        public override string DisplayUnit => "";
+        protected override Type ModifierParameterKey => typeof(RateModifierParameter);
+        public override string DisplayUnit => "%";
     }
 }

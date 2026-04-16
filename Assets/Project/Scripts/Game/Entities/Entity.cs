@@ -57,11 +57,11 @@ namespace AetherAlmachina.Entities
 
         void Attack(Entity target, float skillPower)
         {
-            target.command.Damage.OnNext(new(Status.Get(StatusType.Attack), Status.Get(StatusType.Power) * handPower * skillPower));
+            target.command.Damage.OnNext(new(Status.GetInt(StatusType.Attack), Status.Get(StatusType.Power) * handPower * skillPower));
         }
         void Damage(int attackerAttack, float power)
         {
-            Status.hitPoint += ((Status.Get(StatusType.Defence) - attackerAttack < 0) ? Status.Get(StatusType.Defence) - attackerAttack : 0) * power;
+            Status.hitPoint += ((Status.GetInt(StatusType.Defence) - attackerAttack < 0) ? Status.GetInt(StatusType.Defence) - attackerAttack : 0) * power;
             Debug.Log(gameObject.name + "が攻撃を受けました。\n残りHP:" + Status.hitPoint);
         }
         void Get()

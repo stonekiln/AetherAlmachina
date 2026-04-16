@@ -8,7 +8,7 @@ using UnityEngine;
 namespace EditorExtends
 {
     [CustomPropertyDrawer(typeof(ModifierBase))]
-    public class ModifierDrawer : PropertyDrawer
+    public class ModifierBaseDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {

@@ -37,16 +37,18 @@ namespace EditorExtends
             if (modifierAssetProp.objectReferenceValue != null)
             {
                 SerializedProperty valueProp = property.FindPropertyRelative(BackingField.Get("Value"));
-                SerializedProperty modifierProp = new SerializedObject(modifierAssetProp.objectReferenceValue).FindProperty(BackingField.Get("ModifierType"));
+                SerializedObject modifierAssetObj = new(modifierAssetProp.objectReferenceValue);
+                SerializedProperty modifierProp = modifierAssetObj.FindProperty(BackingField.Get("ModifierType"));
+                SerializedProperty polarityProp = modifierAssetObj.FindProperty(BackingField.Get("Polarity"));
 
                 EditorGUI.BeginChangeCheck();
-                if (modifierProp.managedReferenceValue is INonSliderRange nonSliderRange)
+                if (modifierProp.managedReferenceValue is IModifierUnit Unit && polarityProp.managedReferenceValue is ModifierPolarity polarity)
                 {
                     rect.y += EditorGUIUtility.singleLineHeight;
-                    EditorGUI.PropertyField(rect, valueProp, new GUIContent("Value" + nonSliderRange.DisplayUnit), true);
+                    EditorGUI.PropertyField(rect, valueProp, new GUIContent(polarity.DisplaySign + "Value" + Unit.DisplayUnit), true);
                     if (EditorGUI.EndChangeCheck())
                     {
-                        valueProp.floatValue = Mathf.Clamp(valueProp.floatValue, nonSliderRange.ParameterMin, nonSliderRange.ParameterMax);
+                        valueProp.floatValue = Mathf.Clamp(valueProp.floatValue, polarity.ParameterMin, polarity.ParameterMax);
                         property.serializedObject.ApplyModifiedProperties();
                     }
                 }

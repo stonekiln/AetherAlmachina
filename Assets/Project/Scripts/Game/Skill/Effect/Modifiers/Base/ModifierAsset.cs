@@ -6,6 +6,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     public class ModifierAsset : ScriptableObject
     {
         [field: SerializeReference] public ModifierBase ModifierType { get; private set; }
+        [field: SerializeReference] public ModifierPolarity Polarity { get; private set; }
         [field: SerializeField] public string Name { get; private set; }
         [field: SerializeField] public Sprite Icon { get; private set; }
     }
