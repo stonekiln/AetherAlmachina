@@ -4,7 +4,6 @@ using DIVFactor.Event;
 
 namespace DConfig.EntityLife.Event
 {
-    public record SkillActiveEvent(SkillData Data) : EventObject;
     public record SkillEndEvent : EventObject;
     public record AttackEvent(Entity Target, float SkillPower) : EventObject;
     public record DamageEvent(int Attack, float Power) : EventObject;
@@ -12,7 +11,6 @@ namespace DConfig.EntityLife.Event
     public record OnHealedEvent(int Attack, float Power) : EventObject;
 
     public record CommandEventBundle(
-        EventBus<SkillActiveEvent> SkillActive,
         EventBus<SkillEndEvent> SkillEnd,
         EventBus<AttackEvent> Attack,
         EventBus<DamageEvent> Damage,

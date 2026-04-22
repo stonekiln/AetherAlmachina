@@ -16,3 +16,4 @@ MonoBehaviour:
   <HitPoint>k__BackingField: 1000
   <Attack>k__BackingField: 50
   <Defence>k__BackingField: 90
+  <Speed>k__BackingField: 100

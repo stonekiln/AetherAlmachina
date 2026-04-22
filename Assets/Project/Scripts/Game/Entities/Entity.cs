@@ -42,17 +42,10 @@ namespace AetherAlmachina.Entities
             AutoIncrease.Subscribe(log => CostIncrease(log.Delta)).AddTo(this);
             deckController.Subscribe(this);
             Targeting.Hit.Subscribe(log => log.Apply(this)).AddTo(this);
-
-            command.SkillActive.Subscribe(log =>
-            {
-                Debug.Log(log.Data.Name + "が発動しました。");
-                while (log.Data.MoveNext()) ;
-                Command.SkillEnd.OnNext(new());
-            }).AddTo(this);
             command.Attack.Subscribe(log => Attack(log.Target, log.SkillPower)).AddTo(this);
             command.Damage.Subscribe(log => Damage(log.Attack, log.Power)).AddTo(this);
 
-            resolver.ActivePointAsObservable().Subscribe(_ => Get());
+            resolver.ActivePoint.Subscribe(_ => Get());
         }
 
         void Attack(Entity target, float skillPower)

@@ -21,6 +21,7 @@ namespace AetherAlmachina.Entities.Parameter
         [field: SerializeField][StatusTypeRegister(StatusType.MaxHitPoint)] public int HitPoint { get; private set; }
         [field: SerializeField][StatusTypeRegister(StatusType.Attack)] public int Attack { get; private set; }
         [field: SerializeField][StatusTypeRegister(StatusType.Defence)] public int Defence { get; private set; }
+        [field: SerializeField][StatusTypeRegister(StatusType.Speed)] public int Speed { get; private set; }
         [StatusTypeRegister(StatusType.Power)] public float Power { get; private set; } = 1;
 
         void OnValidate()

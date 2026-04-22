@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using AetherAlmachina.Entities;
 using AetherAlmachina.Entities.Faction;
 using AetherAlmachina.Entities.Parameter;
-using AetherAlmachina.Stage;
 using DConfig.EnemyLife;
 using DConfig.PlayerLife;
 using DIVFactor.Injectable;
@@ -12,7 +12,7 @@ using DIVFactor.Spawner;
 using R3;
 using UnityEngine;
 
-namespace AetherAlmachina.Entities
+namespace AetherAlmachina.Stage
 {
     public class EntitySpawner : MonoBehaviour, IInjectable, ILifetimeSpawner
     {
@@ -26,7 +26,7 @@ namespace AetherAlmachina.Entities
         public void Injection(InjectableResolver resolver)
         {
             resolver.Inject(out StageSettings settings);
-            Data = new(settings.Friendly.Append(settings.Player).Reverse().ToArray(), settings.Hostile);
+            Data = new(new StatusAsset[] { settings.Player }.Concat(settings.Friendly).ToArray(), settings.Hostile);
         }
         public void SpawnConfigure(SpawnerBuilder builder)
         {

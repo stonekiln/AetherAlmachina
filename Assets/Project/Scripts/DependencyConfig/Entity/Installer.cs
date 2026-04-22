@@ -48,7 +48,6 @@ namespace DConfig.EntityLife.Installer
     {
         public void Install(IContainerBuilder builder)
         {
-            builder.RegisterEvent<SkillActiveEvent>();
             builder.RegisterEvent<SkillEndEvent>();
             builder.RegisterEvent<AttackEvent>();
             builder.RegisterEvent<DamageEvent>();

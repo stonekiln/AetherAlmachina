@@ -13,6 +13,7 @@ namespace AetherAlmachina.Skill
         public string Name { get; init; }
         public int Cost { get; init; }
         public Sprite Icon { get; init; }
+        public ICombatInteraction User => Owner;
         EffectData[] EffectQueue { get; init; }
         Entity Owner { get; init; }
         IEnumerable<ICombatInteraction> targets;

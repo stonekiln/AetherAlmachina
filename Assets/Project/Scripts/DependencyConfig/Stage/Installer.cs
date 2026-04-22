@@ -16,4 +16,12 @@ namespace DConfig.StageLife.Installer
             builder.RegisterEvent<BonusIncreaseEvent>();
         }
     }
+
+    public class ActGaugeInstaller : IInstaller
+    {
+        public void Install(IContainerBuilder builder)
+        {
+            builder.RegisterEvent<SkillActivateEvent>();
+        }
+    }
 }

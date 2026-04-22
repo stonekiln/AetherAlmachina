@@ -46,7 +46,7 @@ MonoBehaviour:
     - rid: 1819299423870779476
       type: {class: SkillTimesContract, ns: AetherAlmachina.Skill.Effect.Contracts, asm: Assembly-CSharp}
       data:
-        <During>k__BackingField: 2
+        <During>k__BackingField: 1
     - rid: 1819299581203316830
       type: {class: EnchantEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data: 

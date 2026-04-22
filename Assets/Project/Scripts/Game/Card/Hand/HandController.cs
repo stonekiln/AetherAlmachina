@@ -9,6 +9,7 @@ using DIVFactor.Event;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Entities.Faction;
 using AetherAlmachina.Skill;
+using DConfig.StageLife.Event;
 
 namespace AetherAlmachina.Card.Hand
 {
@@ -20,7 +21,7 @@ namespace AetherAlmachina.Card.Hand
         [field: SerializeField] HandPowerTable HandPowerTable { get; set; }
         DeckDrawEvent DeckDraw;
         CardActiveEventBundle CardActive;
-        EventBus<SkillActiveEvent> SkillActive;
+        EventBus<SkillActivateEvent> SkillActivate;
         Entity owner;
         List<int> selectedIndex;
         int Type => GetHandType();
@@ -30,7 +31,7 @@ namespace AetherAlmachina.Card.Hand
         {
             resolver.Inject(out DeckDraw);
             resolver.Inject(out CardActive);
-            resolver.Inject(out SkillActive);
+            resolver.Inject(out SkillActivate);
             owner = resolver.GetComponent<Player>();
             selectedIndex = new();
 
@@ -81,7 +82,7 @@ namespace AetherAlmachina.Card.Hand
             {
                 owner.SetHandPower(HandPowerTable.Get(Type, selectedIndex.Count()));
                 owner.Status.magicPoint -= costSum;
-                selectedIndex.ForEach(cardIndex => SkillActive.OnNext(new(Hand[cardIndex].SkillData)));
+                selectedIndex.ForEach(cardIndex => SkillActivate.OnNext(new(Hand[cardIndex].SkillData)));
                 Hand = RemoveHand();
                 Draw(selectedIndex.Count());
                 selectedIndex = new();
