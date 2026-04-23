@@ -9,7 +9,7 @@ namespace AetherAlmachina.Skill.Effect
     [Serializable]
     public class EnchantEffect : SkillEffect<EnchantParameter>
     {
-        protected override void ApplyTyped(ICombatInteraction user, ICombatInteraction target, EnchantParameter parameter)
+        protected override void ApplyTyped(IEntityInteraction user, IEntityInteraction target, EnchantParameter parameter)
         {
             parameter.Modifier.Enchant(user, target).Signed(parameter.Contract);
         }

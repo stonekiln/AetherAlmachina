@@ -18,11 +18,11 @@ namespace AetherAlmachina.Entities.Parameter
     [CreateAssetMenu(fileName = "Status", menuName = "Entity/Status")]
     public class StatusAsset : StatusBase
     {
-        [field: SerializeField][StatusTypeRegister(StatusType.MaxHitPoint)] public int HitPoint { get; private set; }
-        [field: SerializeField][StatusTypeRegister(StatusType.Attack)] public int Attack { get; private set; }
-        [field: SerializeField][StatusTypeRegister(StatusType.Defence)] public int Defence { get; private set; }
-        [field: SerializeField][StatusTypeRegister(StatusType.Speed)] public int Speed { get; private set; }
-        [StatusTypeRegister(StatusType.Power)] public float Power { get; private set; } = 1;
+        [field: SerializeField][StatusTypeRegister(StatusType.MaxHitPoint)] int HitPoint { get; set; }
+        [field: SerializeField][StatusTypeRegister(StatusType.Attack)] int Attack { get; set; }
+        [field: SerializeField][StatusTypeRegister(StatusType.Defence)] int Defence { get; set; }
+        [field: SerializeField][StatusTypeRegister(StatusType.Speed)] int Speed { get; set; }
+        [StatusTypeRegister(StatusType.Power)] float Power { get; set; } = 1;
 
         void OnValidate()
         {

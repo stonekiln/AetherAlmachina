@@ -1,5 +1,8 @@
 namespace AetherAlmachina.Entities.Parameter
 {
+    /// <summary>
+    /// エンティティのステータスの種類
+    /// </summary>
     public enum StatusType
     {
         MaxHitPoint = 1,

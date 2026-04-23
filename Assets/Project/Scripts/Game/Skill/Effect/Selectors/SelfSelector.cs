@@ -5,12 +5,15 @@ using AetherAlmachina.Entities;
 
 namespace AetherAlmachina.Skill.Effect.Selectors
 {
+    /// <summary>
+    /// 自身を選択するセレクター
+    /// </summary>
     [Serializable]
     public class SelfSelector : Selector
     {
-        public override IEnumerable<ICombatInteraction> Targeting(IEnumerable<ICombatInteraction> friendly, IEnumerable<ICombatInteraction> hostile, int index)
+        public override IEnumerable<IEntityInteraction> Targeting(IEnumerable<IEntityInteraction> friendly, IEnumerable<IEntityInteraction> hostile, int index)
         {
-            List<ICombatInteraction> list = friendly.ToList();
+            List<IEntityInteraction> list = friendly.ToList();
             (list[0], list[index]) = (list[index], list[0]);
             return list;
         }

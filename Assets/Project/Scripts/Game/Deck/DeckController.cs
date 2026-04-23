@@ -23,11 +23,20 @@ namespace AetherAlmachina.Deck
             DeckDraw = deckDraw;
         }
 
+        /// <summary>
+        /// 各種イベントの購読を行う
+        /// </summary>
+        /// <param name="monoBehaviour">イベントの購読期間を決定する</param>
         public void Subscribe(MonoBehaviour monoBehaviour)
         {
             DeckGet.Subscribe(deckData => Deck = deckData.List.Shuffle()).AddTo(monoBehaviour);
             DeckDraw.Reply(log => new(Draw(log.Count))).AddTo(monoBehaviour);
         }
+        /// <summary>
+        /// カードをドローする
+        /// </summary>
+        /// <param name="count">カードを引く枚数</param>
+        /// <returns>ドローしたカード</returns>
         List<SkillData> Draw(int count)
         {
             List<SkillData> drawCards = Deck.GetRange(0, count);

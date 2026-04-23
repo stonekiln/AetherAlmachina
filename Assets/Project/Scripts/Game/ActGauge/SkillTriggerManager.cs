@@ -9,6 +9,9 @@ using UnityEngine;
 
 namespace AetherAlmachina.Stage
 {
+    /// <summary>
+    /// スキルを発動させるための処理を行うためのクラス
+    /// </summary>
     public class SkillTriggerManager : MonoBehaviour, IInjectable
     {
         EventBus<SkillActivateEvent> skillActivate;
@@ -24,6 +27,10 @@ namespace AetherAlmachina.Stage
             skillActivate.Subscribe(log => GaugeOn(log.Data)).AddTo(this);
         }
 
+        /// <summary>
+        /// 発動に時間がかかるスキルは、このメソッドによって行動ゲージに乗せる
+        /// </summary>
+        /// <param name="data">ゲージに乗せるスキル</param>
         public void GaugeOn(SkillData data)
         {
             if (data.User is Player)

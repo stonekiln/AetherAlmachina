@@ -9,7 +9,7 @@ namespace AetherAlmachina.Skill.Effect
     [Serializable]
     public class LockOn : SkillEffect<LockOnParameter>
     {
-        protected override void ApplyTyped(ICombatInteraction user, ICombatInteraction target, LockOnParameter parameter)
+        protected override void ApplyTyped(IEntityInteraction user, IEntityInteraction target, LockOnParameter parameter)
         {
             user.Targeting.LockOn.Call(new((friendly, hostile) => parameter.Selector.Targeting(friendly, hostile, user.SiblingIndex).Take(parameter.MaxTargets)));
         }

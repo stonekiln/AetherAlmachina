@@ -13,10 +13,10 @@ namespace AetherAlmachina.Skill
         public string Name { get; init; }
         public int Cost { get; init; }
         public Sprite Icon { get; init; }
-        public ICombatInteraction User => Owner;
+        public IEntityInteraction User => Owner;
         EffectData[] EffectQueue { get; init; }
         Entity Owner { get; init; }
-        IEnumerable<ICombatInteraction> targets;
+        IEnumerable<IEntityInteraction> targets;
         int queueIndex = 0;
 
         public SkillData(SkillAsset skillAsset, Entity owner)
@@ -40,7 +40,7 @@ namespace AetherAlmachina.Skill
             }
             else
             {
-                foreach (ICombatInteraction target in targets)
+                foreach (IEntityInteraction target in targets)
                 {
                     target.Targeting.Hit.OnNext(new(entity => current.Effect.Apply(Owner, entity, current.Parameter)));
                 }

@@ -13,6 +13,9 @@ using DConfig.StageLife.Event;
 
 namespace AetherAlmachina.Card.Hand
 {
+    /// <summary>
+    /// 手札を制御するためのクラス
+    /// </summary>
     public class HandController : MonoBehaviour, IInjectable
     {
         const int HandLimit = 5;
@@ -41,7 +44,6 @@ namespace AetherAlmachina.Card.Hand
             CardActive.Invoke.Subscribe(_ => Invoke()).AddTo(this);
         }
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             Debug.Log("カードをドローします");

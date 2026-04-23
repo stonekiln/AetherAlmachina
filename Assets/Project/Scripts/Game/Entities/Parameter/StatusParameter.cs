@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using DIVFactor.Event;
-using UnityEngine;
 
 namespace AetherAlmachina.Entities.Parameter
 {
@@ -12,7 +11,7 @@ namespace AetherAlmachina.Entities.Parameter
     {
         public float hitPoint;
         public int magicPoint;
-        public readonly EventBus<MPFluctuationEvent> MPFluctuation;
+        public EventBus<MPFluctuationEvent> MPFluctuation { get; private set; }
         Dictionary<StatusType, float> BaseStatus { get; init; }
         public Dictionary<Type, ModifierParameter> Modifiers { get; init; }
         Dictionary<StatusType, float> ModifiedStatus => CalcStatus();
@@ -32,6 +31,10 @@ namespace AetherAlmachina.Entities.Parameter
             magicPoint = 0;
         }
 
+        /// <summary>
+        /// Modifierを含めた現在のステータスを計算する
+        /// </summary>
+        /// <returns>ステータスを表す辞書型</returns>
         Dictionary<StatusType, float> CalcStatus()
         {
             Dictionary<StatusType, float> result = new();
@@ -45,12 +48,20 @@ namespace AetherAlmachina.Entities.Parameter
 
             return result;
         }
-
+        /// <summary>
+        /// 指定した種類のステータスの数値を取得する
+        /// </summary>
+        /// <param name="type">指定するステータス</param>
+        /// <returns>パラメータの数値</returns>
         public float Get(StatusType type)
         {
             return ModifiedStatus[type];
         }
-
+        /// <summary>
+        /// 指定した種類のステータスの数値を整数値で取得する
+        /// </summary>
+        /// <param name="type">指定するステータス</param>
+        /// <returns>パラメータの数値</returns>
         public int GetInt(StatusType type)
         {
             return (int)ModifiedStatus[type];

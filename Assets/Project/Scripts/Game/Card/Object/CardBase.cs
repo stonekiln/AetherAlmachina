@@ -18,7 +18,6 @@ namespace AetherAlmachina.Card.Object
         public SkillData SkillData => skillData;
         public bool IsSelect => Selector.isSelect;
         Action EntryEndPoint;
-
         [NonSerialized] public RectTransform rectTransform;
         [NonSerialized] public Vector2 initialSize;
 

@@ -15,12 +15,9 @@ namespace AetherAlmachina.Entities.Faction
             base.Injection(resolver);
         }
 
-        // Update is called once per frame
         void Update()
         {
 
         }
-
-
     }
 }

@@ -8,10 +8,16 @@ using System;
 
 namespace AetherAlmachina.ActGauge.Pointer
 {
+    /// <summary>
+    /// ポインターの動きを制御するためのクラス
+    /// </summary>
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(RectTransform))]
     public class PointerController : MonoBehaviour, IInjectable
     {
+        /// <summary>
+        /// ポインターがディスプレイに表示される時間の最大値(sec)
+        /// </summary>
         const float DisplayThresholdSeconds = 10f;
         readonly DelayFormula Formula = new();
         SkillData skillData;
@@ -36,6 +42,9 @@ namespace AetherAlmachina.ActGauge.Pointer
             tween = rectTransform.DOAnchorPosX(0f, remainingTime).SetEase(Ease.Linear).OnComplete(() => Trigger());
         }
 
+        /// <summary>
+        /// 初期化処理
+        /// </summary>
         void SetUp()
         {
             rectTransform = GetComponent<RectTransform>();
@@ -43,9 +52,13 @@ namespace AetherAlmachina.ActGauge.Pointer
             spriteRenderer.color = spawnerData.Color;
 
             remainingTime = Formula.GetTime(skillData.User.Status.Get(StatusType.Speed));
+            //そのスキルの発動時間とディスプレイに表示される時間の割合とゲージの幅を掛けることで、そのスキルのポインターの初期位置を割り出す
             rectTransform.anchoredPosition = new(spawnerData.Transform.rect.xMax * remainingTime / DisplayThresholdSeconds, rectTransform.anchoredPosition.y);
         }
 
+        /// <summary>
+        /// スキルを発動させる
+        /// </summary>
         void Trigger()
         {
             Debug.Log(skillData.Name + "が発動しました。");
@@ -53,7 +66,5 @@ namespace AetherAlmachina.ActGauge.Pointer
             skillData.User.Command.SkillEnd.OnNext(new());
             entryEnd();
         }
-
-
     }
 }

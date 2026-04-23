@@ -13,7 +13,7 @@ namespace AetherAlmachina.Entities
     /// <summary>
     /// エンティティのMonoBehaviour
     /// </summary>
-    public abstract class Entity : MonoBehaviour, ICombatInteraction, IInjectable
+    public abstract class Entity : MonoBehaviour, IEntityInteraction, IInjectable
     {
         TargetingEventBundle targeting;
         CommandEventBundle command;

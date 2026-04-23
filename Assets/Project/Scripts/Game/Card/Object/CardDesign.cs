@@ -14,9 +14,13 @@ namespace AetherAlmachina.Card.Object
         [NonSerialized] public Vector2 initialPosition;
         Image image;
 
-        public void Initialize(CardBase cardManager)
+        /// <summary>
+        /// 初期化処理
+        /// </summary>
+        /// <param name="cardBase">カードの親</param>
+        public void Initialize(CardBase cardBase)
         {
-            parent = cardManager;
+            parent = cardBase;
             rectTransform = gameObject.GetComponent<RectTransform>();
             image = gameObject.GetComponent<Image>();
             image.sprite = parent.SkillData.Icon;

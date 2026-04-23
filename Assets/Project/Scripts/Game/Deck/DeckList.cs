@@ -25,6 +25,9 @@ namespace AetherAlmachina.Deck
         }
 
         const int DeckLimit = 52;
+        /// <summary>
+        /// スキル一覧
+        /// </summary>
         [SerializeField] List<SkillSlot> skills;
 
         private void OnValidate()

@@ -1,5 +1,4 @@
 using AetherAlmachina.Entities;
-using AetherAlmachina.Skill;
 using DIVFactor.Event;
 
 namespace DConfig.EntityLife.Event

@@ -7,8 +7,16 @@ using UnityEngine;
 
 namespace AetherAlmachina.ActGauge.Pointer
 {
+    /// <summary>
+    /// 行動ゲージ自体のオブジェクト情報を渡す
+    /// </summary>
+    /// <param name="Transform"></param>
+    /// <param name="Color"></param>
     public record PointerSpawnerData(RectTransform Transform, Color Color);
 
+    /// <summary>
+    /// ゲージに攻撃スキルの発動時間を示すポインターをスポーンさせるスポナー
+    /// </summary>
     [RequireComponent(typeof(RectTransform))]
     public abstract class PointerSpawner : MonoBehaviour, ILifetimeSpawner
     {
@@ -25,6 +33,11 @@ namespace AetherAlmachina.ActGauge.Pointer
         {
             rect = GetComponent<RectTransform>();
         }
+
+        /// <summary>
+        /// ポインターを生成し、ゲージに乗せる
+        /// </summary>
+        /// <param name="skill">そのポインターに乗せるスキル</param>
         public void MakePointer(SkillData skill) => pointerFactory(skill, new(rect, PointerColor));
     }
 }

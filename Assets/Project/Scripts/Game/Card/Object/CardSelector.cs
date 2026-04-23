@@ -24,6 +24,11 @@ namespace AetherAlmachina.Card.Object
         {
             resolver.Inject(out CardActive);
         }
+
+        /// <summary>
+        /// 初期化処理
+        /// </summary>
+        /// <param name="cardBase">カードの親</param>
         public void Initialize(CardBase cardBase)
         {
             parent = cardBase;
@@ -73,6 +78,7 @@ namespace AetherAlmachina.Card.Object
 
             }
         }
+
         public void MyPointerClick(PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Left)

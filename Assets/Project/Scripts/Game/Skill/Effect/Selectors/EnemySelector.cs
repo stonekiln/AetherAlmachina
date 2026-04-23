@@ -4,10 +4,13 @@ using AetherAlmachina.Entities;
 
 namespace AetherAlmachina.Skill.Effect.Selectors
 {
+    /// <summary>
+    /// 敵を選択するセレクター
+    /// </summary>
     [Serializable]
     public class EnemySelector : Selector
     {
-        public override IEnumerable<ICombatInteraction> Targeting(IEnumerable<ICombatInteraction> friendly, IEnumerable<ICombatInteraction> hostile, int index)
+        public override IEnumerable<IEntityInteraction> Targeting(IEnumerable<IEntityInteraction> friendly, IEnumerable<IEntityInteraction> hostile, int index)
         {
             return hostile;
         }

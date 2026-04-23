@@ -7,7 +7,7 @@ namespace AetherAlmachina.Skill.Effect
     [Serializable]
     public class AttackEffect : SkillEffect<AttackParam>
     {
-        protected override void ApplyTyped(ICombatInteraction user, ICombatInteraction target, AttackParam parameter)
+        protected override void ApplyTyped(IEntityInteraction user, IEntityInteraction target, AttackParam parameter)
         {
             user.Command.Attack.OnNext(new((Entity)target, parameter.Power));
         }

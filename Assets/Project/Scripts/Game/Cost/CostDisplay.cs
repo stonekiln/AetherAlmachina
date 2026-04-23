@@ -18,7 +18,7 @@ namespace AetherAlmachina.Cost
         {
             resolver.Inject(out owner);
 
-            owner.Status.MPFluctuation.Subscribe(log => SetDisplay(owner.Status.magicPoint)).AddTo(this);
+            owner.Status.MPFluctuation.Subscribe(log => UpdateDisplay(owner.Status.magicPoint)).AddTo(this);
         }
 
         void Awake()
@@ -26,7 +26,11 @@ namespace AetherAlmachina.Cost
             textMeshPro = gameObject.GetComponent<TextMeshProUGUI>();
         }
 
-        void SetDisplay(int mp)
+        /// <summary>
+        /// 画面に現在のMPを表示する
+        /// </summary>
+        /// <param name="mp">表示する値</param>
+        void UpdateDisplay(int mp)
         {
             textMeshPro.text = mp.ToString();
         }

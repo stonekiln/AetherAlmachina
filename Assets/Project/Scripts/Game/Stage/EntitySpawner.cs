@@ -20,8 +20,8 @@ namespace AetherAlmachina.Stage
         Func<StatusAsset, Player> playerFactory;
         Func<StatusAsset, Enemy> enemyFactory;
         EntityList Data;
-        List<ICombatInteraction> friendlyEntity;
-        List<ICombatInteraction> hostileEntity;
+        List<IEntityInteraction> friendlyEntity;
+        List<IEntityInteraction> hostileEntity;
 
         public void Injection(InjectableResolver resolver)
         {
@@ -38,12 +38,12 @@ namespace AetherAlmachina.Stage
 
         void Start()
         {
-            friendlyEntity = new List<ICombatInteraction>() { playerFactory(Data.Friendly[0]) };
-            hostileEntity = new List<ICombatInteraction>(Data.Hostile.Select(asset => enemyFactory(asset)));
+            friendlyEntity = new List<IEntityInteraction>() { playerFactory(Data.Friendly[0]) };
+            hostileEntity = new List<IEntityInteraction>(Data.Hostile.Select(asset => enemyFactory(asset)));
             SetUpTargeting(friendlyEntity, hostileEntity);
         }
 
-        void SetUpTargeting(List<ICombatInteraction> friendlyEntity, List<ICombatInteraction> hostileEntity)
+        void SetUpTargeting(List<IEntityInteraction> friendlyEntity, List<IEntityInteraction> hostileEntity)
         {
             friendlyEntity.ForEach(friendly => friendly.Targeting.LockOn.Reply(req => new(req.Selector(friendlyEntity, hostileEntity))).AddTo(this));
             hostileEntity.ForEach(hostile => hostile.Targeting.LockOn.Reply(req => new(req.Selector(hostileEntity, friendlyEntity))).AddTo(this));
