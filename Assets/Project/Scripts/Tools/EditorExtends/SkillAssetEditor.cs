@@ -23,6 +23,7 @@ namespace EditorExtends
 
         void OnEnable()
         {
+            //全フィールドを取得する
             scriptProp = serializedObject.FindProperty("m_Script");
             nameProp = serializedObject.FindProperty(BackingField.Get("SkillName"));
             descriptionProp = serializedObject.FindProperty(BackingField.Get("Description"));
@@ -47,6 +48,7 @@ namespace EditorExtends
                 },
                 onAddCallback = list =>
                 {
+                    //新しく追加されたエフェクトは初期値を全てnullにした状態で追加する
                     list.serializedProperty.InsertArrayElementAtIndex(list.serializedProperty.arraySize);
                     SerializedProperty newEffect = list.serializedProperty.GetArrayElementAtIndex(list.serializedProperty.arraySize - 1);
 
@@ -70,6 +72,7 @@ namespace EditorExtends
 
             EditorGUILayout.PropertyField(nameProp);
 
+            //説明文は収納可能にする
             if (isDescriptionPulled)
             {
                 Rect rect = EditorGUILayout.GetControlRect(true, EditorGUI.GetPropertyHeight(descriptionProp));
@@ -92,11 +95,11 @@ namespace EditorExtends
             if (isQueuePulled)
             {
                 EditorGUI.indentLevel++;
-
+                //SkillEffectのプロパティ表示位置の調整
                 Rect rect = EditorGUILayout.GetControlRect();
                 rect = new(rect.x + ListMargin, rect.y, rect.width - ListMargin * 2, rect.height);
                 EditorGUIUtility.labelWidth += ListMargin * 2;
-
+                //0番目はInitialLockOnとして変更不可に見せる
                 using (new EditorGUI.DisabledScope(true))
                 {
                     EditorGUI.Popup(rect, "Effect 0", 0, new string[] { "LockOn" });
@@ -104,7 +107,7 @@ namespace EditorExtends
 
                 rect = EditorGUILayout.GetControlRect(true, EditorGUI.GetPropertyHeight(initialLockOnProp, true));
                 rect = new(rect.x + ListMargin, rect.y, rect.width - ListMargin * 2, rect.height);
-
+                //InitialLockOnのパラメータを表示する
                 EditorGUI.PropertyField(rect, initialLockOnProp, new("Parameter"), true);
 
                 EditorGUIUtility.labelWidth -= ListMargin * 2;

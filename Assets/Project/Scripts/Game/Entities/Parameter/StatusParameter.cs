@@ -37,6 +37,7 @@ namespace AetherAlmachina.Entities.Parameter
         /// <returns>ステータスを表す辞書型</returns>
         Dictionary<StatusType, float> CalcStatus()
         {
+            //TODO:パラメータ毎に数値を計算するように変更すること
             Dictionary<StatusType, float> result = new();
             Dictionary<StatusType, float> flat = Modifiers[typeof(FlatModifierParameter)].Value;
             Dictionary<StatusType, float> rate = Modifiers[typeof(RateModifierParameter)].Value;

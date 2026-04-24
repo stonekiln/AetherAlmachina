@@ -3,10 +3,10 @@ using UnityEngine;
 namespace AetherAlmachina.Cost
 {
     /// <summary>
-    /// ステージ毎のコストの設定を設定するためのパラメータ
+    /// ステージ毎のコストの設定を保持する
     /// </summary>
     [CreateAssetMenu(fileName = "CostSettings", menuName = "GameSettings/CostSettings")]
-    public class CostSettings : ScriptableObject
+    public class CostSettingsAsset : ScriptableObject
     {
         /// <summary>
         /// コストの増加量

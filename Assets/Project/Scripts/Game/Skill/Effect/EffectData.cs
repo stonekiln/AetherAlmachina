@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect
 {
+    /// <summary>
+    /// スキルエフェクトの情報
+    /// </summary>
     [Serializable]
     public class EffectData
     {

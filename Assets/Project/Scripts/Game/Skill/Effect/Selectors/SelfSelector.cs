@@ -6,7 +6,7 @@ using AetherAlmachina.Entities;
 namespace AetherAlmachina.Skill.Effect.Selectors
 {
     /// <summary>
-    /// 自身を選択するセレクター
+    /// 使用者自身を選択するセレクター
     /// </summary>
     [Serializable]
     public class SelfSelector : Selector

@@ -10,8 +10,8 @@ namespace AetherAlmachina.ActGauge.Pointer
     /// <summary>
     /// 行動ゲージ自体のオブジェクト情報を渡す
     /// </summary>
-    /// <param name="Transform"></param>
-    /// <param name="Color"></param>
+    /// <param name="Transform">行動ゲージのRect</param>
+    /// <param name="Color">ポインターの色</param>
     public record PointerSpawnerData(RectTransform Transform, Color Color);
 
     /// <summary>

@@ -6,10 +6,13 @@ using UnityEngine;
 
 namespace AetherAlmachina.Stage
 {
-    public class StageManager : MonoBehaviour, ILifetimeSpawner
+    /// <summary>
+    /// ステージをスポーンさせるスポナー
+    /// </summary>
+    public class StageSpawner : MonoBehaviour, ILifetimeSpawner
     {
-        [field: SerializeField] StageSettings StageSettings { get; set; }
-        Action<StageSettings> spawner;
+        [field: SerializeField] StageSettingsAsset StageSettings { get; set; }
+        Action<StageSettingsAsset> spawner;
 
         public void SpawnConfigure(SpawnerBuilder builder)
         {

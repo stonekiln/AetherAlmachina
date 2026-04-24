@@ -19,7 +19,7 @@ namespace AetherAlmachina.Entities
         CommandEventBundle command;
         protected EventBus<AutoIncreaseEvent> AutoIncrease;
         protected EventBus<DeckGetEvent> DeckGet;
-        protected DeckList deckList;
+        protected DeckListAsset deckList;
         protected DeckController deckController;
         protected float handPower;
         public StatusParameter Status { get; private set; }

@@ -8,10 +8,10 @@ using UnityEngine;
 namespace AetherAlmachina.Deck
 {
     /// <summary>
-    /// デッキを装備するためのパラメータ
+    /// デッキをの情報を保持する
     /// </summary>
     [CreateAssetMenu(fileName = "DeckList", menuName = "Entity/DeckList")]
-    public class DeckList : ScriptableObject
+    public class DeckListAsset : ScriptableObject
     {
         /// <summary>
         /// 同じスキルは数値で枚数を指定できる

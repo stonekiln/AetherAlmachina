@@ -14,8 +14,17 @@ using UnityEngine;
 
 namespace AetherAlmachina.Stage
 {
+    /// <summary>
+    /// エンティティをスポーンさせるスポナー
+    /// </summary>
     public class EntitySpawner : MonoBehaviour, IInjectable, ILifetimeSpawner
     {
+        /// <summary>
+        /// スポーンできるエンティティの情報を渡す
+        /// </summary>
+        /// <param name="Friendly">友好的なエンティティ</param>
+        /// <param name="Hostile">敵対的なエンティティ</param>
+        //友好敵対の基準はプレイヤー
         public record EntityList(StatusAsset[] Friendly, StatusAsset[] Hostile);
         Func<StatusAsset, Player> playerFactory;
         Func<StatusAsset, Enemy> enemyFactory;
@@ -25,7 +34,7 @@ namespace AetherAlmachina.Stage
 
         public void Injection(InjectableResolver resolver)
         {
-            resolver.Inject(out StageSettings settings);
+            resolver.Inject(out StageSettingsAsset settings);
             Data = new(new StatusAsset[] { settings.Player }.Concat(settings.Friendly).ToArray(), settings.Hostile);
         }
         public void SpawnConfigure(SpawnerBuilder builder)
@@ -35,7 +44,6 @@ namespace AetherAlmachina.Stage
             builder.Register<EnemyLifetime>(Resources.Load<GameObject>(Path.Combine("EntityObject", "EnemyObject")))
                     .Inject(out enemyFactory);
         }
-
         void Start()
         {
             friendlyEntity = new List<IEntityInteraction>() { playerFactory(Data.Friendly[0]) };
@@ -43,6 +51,11 @@ namespace AetherAlmachina.Stage
             SetUpTargeting(friendlyEntity, hostileEntity);
         }
 
+        /// <summary>
+        /// ターゲティングができるように各種イベントの購読を行う
+        /// </summary>
+        /// <param name="friendlyEntity">友好的なエンティティ</param>
+        /// <param name="hostileEntity">敵対的なエンティティ</param>
         void SetUpTargeting(List<IEntityInteraction> friendlyEntity, List<IEntityInteraction> hostileEntity)
         {
             friendlyEntity.ForEach(friendly => friendly.Targeting.LockOn.Reply(req => new(req.Selector(friendlyEntity, hostileEntity))).AddTo(this));

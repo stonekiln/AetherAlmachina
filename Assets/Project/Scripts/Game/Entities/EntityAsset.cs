@@ -5,10 +5,10 @@ using UnityEngine;
 namespace AetherAlmachina.Entities
 {
     /// <summary>
-    /// エンティティのデータ
+    /// エンティティのデータを保持する
     /// </summary>
     [CreateAssetMenu(fileName = "Data", menuName = "Entity/Data")]
-    public class EntityData : ScriptableObject
+    public class EntityAsset : ScriptableObject
     {
         [field: SerializeField] public StatusAsset StatusAsset { get; private set; }
         [field: SerializeField] public Sprite Sprite { get; private set; }

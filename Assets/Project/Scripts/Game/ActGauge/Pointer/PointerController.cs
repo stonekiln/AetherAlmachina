@@ -62,6 +62,7 @@ namespace AetherAlmachina.ActGauge.Pointer
         void Trigger()
         {
             Debug.Log(skillData.Name + "が発動しました。");
+            // TODO: 暫定的にWhile文で効果を最後まで1フレームで実行する。後々モーションに合わせた効果の発動ができるようにすること。
             while (skillData.MoveNext()) ;
             skillData.User.Command.SkillEnd.OnNext(new());
             entryEnd();

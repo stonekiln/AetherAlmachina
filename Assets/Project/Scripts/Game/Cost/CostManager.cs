@@ -14,11 +14,11 @@ namespace AetherAlmachina.Cost
     public class CostManager : MonoBehaviour, IInjectable
     {
         EventBus<AutoIncreaseEvent> AutoIncrease;
-        CostSettings costSettings;
+        CostSettingsAsset costSettings;
 
         public void Injection(InjectableResolver resolver)
         {
-            costSettings = resolver.GetComponent<StageSettings>().CostSettings;
+            costSettings = resolver.GetComponent<StageSettingsAsset>().CostSettings;
             resolver.Inject(out AutoIncrease);
 
             Observable.Interval(TimeSpan.FromSeconds(costSettings.TimeSpan))
