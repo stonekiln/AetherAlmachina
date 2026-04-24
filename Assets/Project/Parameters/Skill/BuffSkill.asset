@@ -26,9 +26,9 @@ MonoBehaviour:
     <Parameter>k__BackingField:
       rid: 1819299423870779475
   - <Effect>k__BackingField:
-      rid: 1819299581203316830
+      rid: 1819299766500851794
     <Parameter>k__BackingField:
-      rid: 1819299581203316831
+      rid: 1819299766500851795
   references:
     version: 2
     RefIds:
@@ -47,18 +47,18 @@ MonoBehaviour:
       type: {class: SkillTimesContract, ns: AetherAlmachina.Skill.Effect.Contracts, asm: Assembly-CSharp}
       data:
         <During>k__BackingField: 1
-    - rid: 1819299581203316830
+    - rid: 1819299766500851794
       type: {class: EnchantEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data: 
-    - rid: 1819299581203316831
+    - rid: 1819299766500851795
       type: {class: EnchantParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data:
         <Modifier>k__BackingField:
           type: {fileID: 11400000, guid: 4f7fed7eb5cd7f747897b7fd089807ea, type: 2}
-          <Value>k__BackingField: 20
+          <Value>k__BackingField: 10
         <Contract>k__BackingField:
-          rid: 1819299581203316833
-    - rid: 1819299581203316833
+          rid: 1819299766500851796
+    - rid: 1819299766500851796
       type: {class: SkillTimesContract, ns: AetherAlmachina.Skill.Effect.Contracts, asm: Assembly-CSharp}
       data:
         <During>k__BackingField: 1

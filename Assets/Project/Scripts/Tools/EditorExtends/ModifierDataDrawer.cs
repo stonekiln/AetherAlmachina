@@ -1,3 +1,4 @@
+using System;
 using AetherAlmachina.Skill.Effect.Modifiers;
 using UnityEditor;
 using UnityEngine;
@@ -31,32 +32,28 @@ namespace EditorExtends
                 height = EditorGUIUtility.singleLineHeight
             };
 
+            EditorGUI.BeginChangeCheck();
             SerializedProperty modifierAssetProp = property.FindPropertyRelative("type");
             EditorGUI.PropertyField(rect, modifierAssetProp, label, true);
-            //Modifierの種類が設定されているか
-            if (modifierAssetProp.objectReferenceValue != null)
+            //Modifierの種類が設定されているか(1項目)
+            //設定されている場合必要なパラメータをキャストして取得する(2項目,3項目)
+            if (modifierAssetProp.objectReferenceValue is ModifierAsset modifierAsset && modifierAsset.ModifierType is IModifierUnit Unit && modifierAsset.Polarity is ModifierPolarity polarity)
             {
-                SerializedProperty valueProp = property.FindPropertyRelative(BackingField.Get("Value"));
-                //ModifierAsset内部のフィールドをさらに取得する
-                SerializedObject modifierAssetObj = new(modifierAssetProp.objectReferenceValue);
-                SerializedProperty modifierProp = modifierAssetObj.FindProperty(BackingField.Get("ModifierType"));
-                SerializedProperty polarityProp = modifierAssetObj.FindProperty(BackingField.Get("Polarity"));
 
-                EditorGUI.BeginChangeCheck();
-                //ifを使用しているが実質的にキャストを行っている
-                if (modifierProp.managedReferenceValue is IModifierUnit Unit && polarityProp.managedReferenceValue is ModifierPolarity polarity)
+                SerializedProperty valueProp = property.FindPropertyRelative(BackingField.Get("Value"));
+                rect.y += EditorGUIUtility.singleLineHeight;
+                EditorGUI.PropertyField(rect, valueProp, new GUIContent(polarity.DisplaySign + valueProp.displayName + Unit.DisplayUnit), true);
+                if (EditorGUI.EndChangeCheck())
                 {
-                    rect.y += EditorGUIUtility.singleLineHeight;
-                    EditorGUI.PropertyField(rect, valueProp, new GUIContent(polarity.DisplaySign + "Value" + Unit.DisplayUnit), true);
-                    if (EditorGUI.EndChangeCheck())
-                    {
-                        //TODO:Modifierの変更による最大値最小値の変更が行われた際にもClampが実行されるように変更すること
-                        valueProp.floatValue = Mathf.Clamp(valueProp.floatValue, polarity.ParameterMin, polarity.ParameterMax);
-                        property.serializedObject.ApplyModifiedProperties();
-                    }
+                    valueProp.floatValue = Mathf.Clamp(valueProp.floatValue, polarity.ParameterMin, polarity.ParameterMax);
                 }
             }
+            else
+            {
+                EditorGUI.EndChangeCheck();
+            }
 
+            property.serializedObject.ApplyModifiedProperties();
             EditorGUI.EndProperty();
         }
     }

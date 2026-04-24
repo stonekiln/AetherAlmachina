@@ -18,21 +18,21 @@ namespace AetherAlmachina.Entities.Parameter
     [CreateAssetMenu(fileName = "Status", menuName = "Entity/Status")]
     public class StatusAsset : StatusBase
     {
-        [field: SerializeField][StatusTypeRegister(StatusType.MaxHitPoint)] int HitPoint { get; set; }
-        [field: SerializeField][StatusTypeRegister(StatusType.Attack)] int Attack { get; set; }
-        [field: SerializeField][StatusTypeRegister(StatusType.Defence)] int Defence { get; set; }
-        [field: SerializeField][StatusTypeRegister(StatusType.Speed)] int Speed { get; set; }
-        [StatusTypeRegister(StatusType.Power)] float Power { get; set; } = 1;
+        [SerializeField][StatusTypeRegister(StatusType.MaxHitPoint)] int hitPoint;
+        [SerializeField][StatusTypeRegister(StatusType.Attack)] int attack;
+        [SerializeField][StatusTypeRegister(StatusType.Defence)] int defence;
+        [SerializeField][StatusTypeRegister(StatusType.Speed)] int speed;
+        [SerializeField][StatusTypeRegister(StatusType.Power)] float power;
 
         void OnValidate()
         {
             //上記のフィールドの属性を読み取って取り扱いやすいデータ構造に変換しておく
-            foreach (PropertyInfo prop in GetType().GetProperties())
+            foreach (FieldInfo field in GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
             {
-                StatusTypeRegisterAttribute attribute = prop.GetCustomAttribute<StatusTypeRegisterAttribute>();
+                StatusTypeRegisterAttribute attribute = field.GetCustomAttribute<StatusTypeRegisterAttribute>();
                 if (attribute != null)
                 {
-                    BaseStatus[attribute.Type] = Convert.ToSingle(prop.GetValue(this));
+                    BaseStatus[attribute.Type] = Convert.ToSingle(field.GetValue(this));
                 }
             }
         }
