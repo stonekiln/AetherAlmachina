@@ -17,7 +17,7 @@ namespace DConfig.EntityLife.Installer
             builder.RegisterEvent<DeckDrawRequestEvent>();
             builder.RegisterEvent<DeckDrawResponseEvent>();
 
-            builder.Register<DeckDrawEvent>(Lifetime.Singleton);
+            builder.Register<DeckDrawEventBundle>(Lifetime.Singleton);
             builder.Register<DeckController>(Lifetime.Singleton);
         }
     }
@@ -40,7 +40,7 @@ namespace DConfig.EntityLife.Installer
             builder.RegisterEvent<LockOnResponseEvent>();
             builder.RegisterEvent<HitEvent>();
 
-            builder.Register<LockOnEvent>(Lifetime.Singleton);
+            builder.Register<LockOnEventBundle>(Lifetime.Singleton);
             builder.Register<TargetingEventBundle>(Lifetime.Singleton);
         }
     }

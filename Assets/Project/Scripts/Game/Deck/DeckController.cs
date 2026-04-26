@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using AetherAlmachina.Skill;
 using DConfig.EntityLife.Event;
 using DIVFactor.Event;
+using DIVFactor.Extensions;
 using R3;
 using UnityEngine;
 using Utility;
@@ -14,10 +15,10 @@ namespace AetherAlmachina.Deck
     public class DeckController
     {
         readonly EventBus<DeckGetEvent> DeckGet;
-        readonly DeckDrawEvent DeckDraw;
+        readonly DeckDrawEventBundle DeckDraw;
         public List<SkillData> Deck { get; private set; }
 
-        public DeckController(EventBus<DeckGetEvent> deckGet, DeckDrawEvent deckDraw)
+        public DeckController(EventBus<DeckGetEvent> deckGet, DeckDrawEventBundle deckDraw)
         {
             DeckGet = deckGet;
             DeckDraw = deckDraw;
@@ -30,7 +31,7 @@ namespace AetherAlmachina.Deck
         public void Subscribe(MonoBehaviour monoBehaviour)
         {
             DeckGet.Subscribe(deckData => Deck = deckData.List.Shuffle()).AddTo(monoBehaviour);
-            DeckDraw.Reply(log => new(Draw(log.Count))).AddTo(monoBehaviour);
+            DeckDraw.Request.Switch(DeckDraw.Response).Subscribe(log => new(Draw(log.Count))).AddTo(monoBehaviour);
         }
         /// <summary>
         /// カードをドローする

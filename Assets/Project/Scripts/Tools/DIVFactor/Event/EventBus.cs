@@ -1,6 +1,5 @@
 using System;
 using R3;
-using VContainer;
 
 namespace DIVFactor.Event
 {
@@ -14,39 +13,28 @@ namespace DIVFactor.Event
     /// <typeparam name="T">イベントメッセージ</typeparam>
     public class EventBus<T> : Subject<T> where T : EventObject { }
     /// <summary>
-    /// イベントを発行しそれに対する返信を入手するためのクラス
+    /// イベントから別のイベントへ処理を連結させるためのイベントオブジェクト
     /// </summary>
-    /// <typeparam name="TReq">イベント発行用の型</typeparam>
-    /// <typeparam name="TRes">イベント返信用の型</typeparam>
-    public abstract class EventChannel<TReq, TRes>
+    public class EventChannel<TReq, TRes>
     where TReq : EventObject
     where TRes : EventObject
     {
-        EventBus<TReq> RequestEvent { get; set; }
-        EventBus<TRes> ResponseEvent { get; set; }
+        EventBus<TReq> Request { get; init; }
+        EventBus<TRes> Response { get; init; }
 
-        [Inject]
-        void Construct(EventBus<TReq> request, EventBus<TRes> response)
+        public EventChannel(EventBus<TReq> req, EventBus<TRes> res)
         {
-            RequestEvent = request;
-            ResponseEvent = response;
+            Request = req;
+            Response = res;
         }
         /// <summary>
-        /// イベントを発行する
+        /// イベントを受信した際のコールバックを設定する
         /// </summary>
-        /// <param name="req">イベントメッセージ</param>
-        public void Call(TReq req) => RequestEvent.OnNext(req);
-        /// <summary>
-        /// 発行したイベントの返信を監視する
-        /// </summary>
-        /// <param name="response">リプライメッセージ</param>
-        /// <returns></returns>
-        public IDisposable Response(Action<TRes> response) => ResponseEvent.Subscribe(response);
-        /// <summary>
-        /// イベント受信時の処理を設定する
-        /// </summary>
-        /// <param name="reply">処理の内容</param>
-        /// <returns></returns>
-        public IDisposable Reply(Func<TReq, TRes> reply) => RequestEvent.Subscribe(request => ResponseEvent.OnNext(reply(request)));
+        /// <param name="func">コールバック</param>
+        /// <returns>受信側のDisposable</returns>
+        public IDisposable Subscribe(Func<TReq, TRes> func)
+        {
+            return Request.Subscribe(req => Response.OnNext(func(req)));
+        }
     }
 }

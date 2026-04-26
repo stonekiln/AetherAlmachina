@@ -5,12 +5,12 @@ using DIVFactor.Event;
 
 namespace DConfig.EntityLife.Event
 {
-    public record TargetingEventBundle(LockOnEvent LockOn, EventBus<HitEvent> Hit);
+    public record TargetingEventBundle(LockOnEventBundle LockOn, EventBus<HitEvent> Hit);
 
     /// <summary>
     /// ロックオンを行うためのイベントオブジェクト
     /// </summary>
-    public class LockOnEvent : EventChannel<LockOnRequestEvent, LockOnResponseEvent> { };
+    public record LockOnEventBundle(EventBus<LockOnRequestEvent> Request, EventBus<LockOnResponseEvent> Response);
     /// <summary>
     /// ロックオンを宣言するイベントメッセージ
     /// </summary>

@@ -22,7 +22,7 @@ namespace AetherAlmachina.Card.Hand
         const int Stack = 1;
         const int Chain = 2;
         [field: SerializeField] HandPowerTable HandPowerTable { get; set; }
-        DeckDrawEvent DeckDraw;
+        DeckDrawEventBundle DeckDraw;
         CardActiveEventBundle CardActive;
         EventBus<SkillActivateEvent> SkillActivate;
         Entity owner;
@@ -38,7 +38,7 @@ namespace AetherAlmachina.Card.Hand
             owner = resolver.GetComponent<Player>();
             selectedIndex = new();
 
-            DeckDraw.Response(response => Hand = AddHand(response.DrawCard)).AddTo(this);
+            DeckDraw.Response.Subscribe(response => Hand = AddHand(response.DrawCard)).AddTo(this);
             CardActive.Select.Subscribe(log => log.Data.SetSelect(Select(log.Index))).AddTo(this);
             CardActive.Cancel.Subscribe(log => log.Data.SetSelect(!SelectCancel(log.Index))).AddTo(this);
             CardActive.Invoke.Subscribe(_ => Invoke()).AddTo(this);
@@ -57,7 +57,7 @@ namespace AetherAlmachina.Card.Hand
         /// <param name="count">引く枚数</param>
         void Draw(int count)
         {
-            DeckDraw.Call(new(count));
+            DeckDraw.Request.OnNext(new(count));
         }
         /// <summary>
         /// カードを手札に追加する

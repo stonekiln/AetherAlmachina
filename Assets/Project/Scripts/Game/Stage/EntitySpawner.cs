@@ -6,7 +6,9 @@ using AetherAlmachina.Entities;
 using AetherAlmachina.Entities.Faction;
 using AetherAlmachina.Entities.Parameter;
 using DConfig.EnemyLife;
+using DConfig.EntityLife.Event;
 using DConfig.PlayerLife;
+using DIVFactor.Extensions;
 using DIVFactor.Injectable;
 using DIVFactor.Spawner;
 using R3;
@@ -58,8 +60,11 @@ namespace AetherAlmachina.Stage
         /// <param name="hostileEntity">敵対的なエンティティ</param>
         void SetUpTargeting(List<IEntityInteraction> friendlyEntity, List<IEntityInteraction> hostileEntity)
         {
-            friendlyEntity.ForEach(friendly => friendly.Targeting.LockOn.Reply(req => new(req.Selector(friendlyEntity, hostileEntity))).AddTo(this));
-            hostileEntity.ForEach(hostile => hostile.Targeting.LockOn.Reply(req => new(req.Selector(hostileEntity, friendlyEntity))).AddTo(this));
+            Action<LockOnEventBundle> subscribe = (lockOn) =>
+                lockOn.Request.Switch(lockOn.Response).Subscribe(req => new(req.Selector(friendlyEntity, hostileEntity))).AddTo(this);
+
+            friendlyEntity.ForEach(friendly => subscribe(friendly.Targeting.LockOn));
+            hostileEntity.ForEach(hostile => subscribe(hostile.Targeting.LockOn));
         }
     }
 }
