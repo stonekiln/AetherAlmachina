@@ -1,16 +1,68 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AetherAlmachina.Skill.Effect.Modifiers;
 using UnityEngine;
 
 namespace AetherAlmachina.Entities.Parameter
 {
     /// <summary>
-    /// Modifierの情報を渡す
+    /// Modifierの数値情報を渡す
     /// </summary>
-    /// <param name="Data">付与するModifierのデータ</param>
-    /// <param name="Values">同種効果のModifierの効果量の一覧</param>
-    public record ModifierValues(IModifierTypeData Data, List<float> Values);
+    public class ModifierValueData
+    {
+        /// <summary>
+        /// 名称やアイコンなどの基本情報
+        /// </summary>
+        public IModifierData Data { get; init; }
+        /// <summary>
+        /// Modifierの実効値
+        /// </summary>
+        public float Value => CalcRMS();
+        /// <summary>
+        /// Modifierの効果量の一覧
+        /// </summary>
+        List<float> Values { get; init; }
+
+        public ModifierValueData(IModifierData data, float defaultValue)
+        {
+            Data = data;
+            Values = new() { defaultValue };
+        }
+
+        /// <summary>
+        /// 同じ種類のModifierの実効値を求める
+        /// </summary>
+        /// <returns>Modifier実効値</returns>
+        float CalcRMS()
+        {
+            float max = 0;
+            float min = 0;
+            foreach (float value in Values)
+            {
+                if (value > max) max = value;
+                if (value < min) min = value;
+            }
+
+            return max + min;
+        }
+        /// <summary>
+        /// 効果量リストに指定した数値を追加する
+        /// </summary>
+        /// <param name="value">追加する数値</param>
+        public void Add(float value)
+        {
+            Values.Add(value);
+        }
+        /// <summary>
+        /// 効果量リストから指定した数値を削除する
+        /// </summary>
+        /// <param name="value">削除する数値</param>
+        public void Remove(float value)
+        {
+            Values.Remove(value);
+        }
+    }
 
     /// <summary>
     /// Modifierによるパラメータの補正値を管理するクラス
@@ -18,21 +70,22 @@ namespace AetherAlmachina.Entities.Parameter
     public abstract class ModifierParameter
     {
         /// <summary>
-        /// Modifierによる補正値
-        /// </summary>
-        public Dictionary<StatusType, float> Value => CalcSum();
-        /// <summary>
         /// 付与されているModifierの種類
         /// </summary>
         public IEnumerable<Type> ModifierTypes => Modifiers.Keys;
-        protected Dictionary<StatusType, float> Default { get; init; }
-        protected Dictionary<Type, ModifierValues> Modifiers { get; init; }
+        //TypeをKeyとするのはType(Modifier)によってバフ効果の重複を判別するため
+        //StatusTypeとほとんど同義であるが、重複しない特殊なバフや複数のステータスが変化するModifierなどが考えられるため
+        protected Dictionary<Type, ModifierValueData> Modifiers { get; init; }
+        /// <summary>
+        /// 初期値が定数と割合で異なるためそれぞれ指定する
+        /// </summary>
+        protected abstract float DefaultValue { get; }
 
         public ModifierParameter()
         {
-            Default = new();
             Modifiers = new();
         }
+
         /// <summary>
         /// Modifierを追加する
         /// </summary>
@@ -43,9 +96,9 @@ namespace AetherAlmachina.Entities.Parameter
             Type modifierType = modifierData.ModifierType;
             if (!Modifiers.ContainsKey(modifierType))
             {
-                Modifiers[modifierType] = new(modifierData, new() { 0f });
+                Modifiers[modifierType] = new(modifierData, DefaultValue);
             }
-            Modifiers[modifierType].Values.Add(modifierData.Value);
+            Modifiers[modifierType].Add(modifierData.Value);
 
             Debug.Log(modifierData.Name + ":" + modifierData.Value + modifierData.DisplayUnit + " の効果が付与された。");
             return () => RemoveModifier(modifierData);
@@ -56,55 +109,36 @@ namespace AetherAlmachina.Entities.Parameter
         /// <param name="modifierData">削除するModifier</param>
         void RemoveModifier(IModifierData modifierData)
         {
-            Modifiers[modifierData.ModifierType].Values.Remove(modifierData.Value);
+            Modifiers[modifierData.ModifierType].Remove(modifierData.Value);
             Debug.Log(modifierData.Name + ":" + modifierData.Value + modifierData.DisplayUnit + "の効果が解除された。");
         }
         /// <summary>
-        /// 同じ種類のModifierのバフとデバフを取得し最終的な実効値を求める
+        /// 補正値の計算方法
         /// </summary>
-        /// <param name="list">Modifierの効果量の一覧</param>
-        /// <returns>Modifier実効値</returns>
-        protected float CalcRMS(List<float> list)
-        {
-            float max = float.NegativeInfinity;
-            float min = float.PositiveInfinity;
-            foreach (float value in list)
-            {
-                if (value > max) max = value;
-                if (value < min) min = value;
-            }
-
-            return max + min;
-        }
+        /// <param name="data"></param>
+        /// <param name="sumValue"></param>
+        /// <returns></returns>
+        protected abstract float CalcValue(ModifierValueData data, float sumValue);
         /// <summary>
-        /// Modifierの計算方法
+        /// Modifierによる補正値を取得する
         /// </summary>
-        /// <returns>計算後のModifierを表す辞書型</returns>
-        protected abstract Dictionary<StatusType, float> CalcSum();
+        /// <param name="key">取得する能力値</param>
+        /// <returns>取得した補正値</returns>
+        public float GetValue(StatusType key)
+        {
+            return Modifiers.Values.Where(modifier => modifier.Data.StatusTypeKey == key).Aggregate(DefaultValue, (pre, cur) => CalcValue(cur, pre));
+        }
     }
     /// <summary>
     /// 定数変化のModifierによるパラメータの補正値を管理するクラス
     /// </summary>
     public class FlatModifierParameter : ModifierParameter
     {
-        public FlatModifierParameter(Dictionary<StatusType, float> status)
+        protected override float DefaultValue => 0f;
+
+        protected override float CalcValue(ModifierValueData data, float sumValue)
         {
-            foreach (StatusType type in status.Keys)
-            {
-                Default[type] = 0f;
-            }
-        }
-
-        protected override Dictionary<StatusType, float> CalcSum()
-        {
-            Dictionary<StatusType, float> result = new(Default);
-
-            foreach (ModifierValues modifier in Modifiers.Values)
-            {
-                result[modifier.Data.StatusTypeKey] += CalcRMS(modifier.Values);
-            }
-
-            return result;
+            return sumValue + data.Value;
         }
     }
     /// <summary>
@@ -112,24 +146,11 @@ namespace AetherAlmachina.Entities.Parameter
     /// </summary>
     public class RateModifierParameter : ModifierParameter
     {
-        public RateModifierParameter(Dictionary<StatusType, float> status)
+        protected override float DefaultValue => 1f;
+
+        protected override float CalcValue(ModifierValueData data, float sumValue)
         {
-            foreach (StatusType type in status.Keys)
-            {
-                Default[type] = 1f;
-            }
-        }
-
-        protected override Dictionary<StatusType, float> CalcSum()
-        {
-            Dictionary<StatusType, float> result = new(Default);
-
-            foreach (ModifierValues modifier in Modifiers.Values)
-            {
-                result[modifier.Data.StatusTypeKey] += CalcRMS(modifier.Values) / 100f;
-            }
-
-            return result;
+            return sumValue + (data.Value / 100f);
         }
     }
 }

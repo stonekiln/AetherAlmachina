@@ -14,8 +14,9 @@ namespace AetherAlmachina.Entities.Parameter
         public EventBus<MPFluctuationEvent> MPFluctuation { get; private set; }
         Dictionary<StatusType, float> BaseStatus { get; init; }
         public Dictionary<Type, ModifierParameter> Modifiers { get; init; }
-        Dictionary<StatusType, float> ModifiedStatus => CalcStatus();
-
+        /// <summary>
+        /// コストが増加する際に呼び出されるイベントメッセージ
+        /// </summary>
         public record MPFluctuationEvent : EventObject;
 
         public StatusParameter(StatusBase status)
@@ -24,48 +25,30 @@ namespace AetherAlmachina.Entities.Parameter
             BaseStatus = new(status.BaseStatus);
             Modifiers = new()
             {
-                {typeof(FlatModifierParameter),new FlatModifierParameter(BaseStatus)},
-                {typeof(RateModifierParameter),new RateModifierParameter(BaseStatus)}
+                {typeof(FlatModifierParameter),new FlatModifierParameter()},
+                {typeof(RateModifierParameter),new RateModifierParameter()}
             };
-            hitPoint = ModifiedStatus[StatusType.MaxHitPoint];
+            hitPoint = Get(StatusType.MaxHitPoint);
             magicPoint = 0;
         }
 
         /// <summary>
-        /// Modifierを含めた現在のステータスを計算する
-        /// </summary>
-        /// <returns>ステータスを表す辞書型</returns>
-        Dictionary<StatusType, float> CalcStatus()
-        {
-            //TODO:パラメータ毎に数値を計算するように変更すること
-            Dictionary<StatusType, float> result = new();
-            Dictionary<StatusType, float> flat = Modifiers[typeof(FlatModifierParameter)].Value;
-            Dictionary<StatusType, float> rate = Modifiers[typeof(RateModifierParameter)].Value;
-
-            foreach (StatusType type in BaseStatus.Keys)
-            {
-                result[type] = (BaseStatus[type] + flat[type]) * rate[type];
-            }
-
-            return result;
-        }
-        /// <summary>
         /// 指定した種類のステータスの数値を取得する
         /// </summary>
         /// <param name="type">指定するステータス</param>
-        /// <returns>パラメータの数値</returns>
+        /// <returns>取得した数値</returns>
         public float Get(StatusType type)
         {
-            return ModifiedStatus[type];
+            return (BaseStatus[type] + Modifiers[typeof(FlatModifierParameter)].GetValue(type)) * Modifiers[typeof(RateModifierParameter)].GetValue(type);
         }
         /// <summary>
         /// 指定した種類のステータスの数値を整数値で取得する
         /// </summary>
         /// <param name="type">指定するステータス</param>
-        /// <returns>パラメータの数値</returns>
+        /// <returns>取得した数値</returns>
         public int GetInt(StatusType type)
         {
-            return (int)ModifiedStatus[type];
+            return (int)Get(type);
         }
     }
 }

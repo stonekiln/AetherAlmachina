@@ -22,17 +22,23 @@ namespace AetherAlmachina.Entities.Parameter
         [SerializeField][StatusTypeRegister(StatusType.Attack)] int attack;
         [SerializeField][StatusTypeRegister(StatusType.Defence)] int defence;
         [SerializeField][StatusTypeRegister(StatusType.Speed)] int speed;
-        [SerializeField][StatusTypeRegister(StatusType.Power)] float power;
+        [StatusTypeRegister(StatusType.Power)] float Power => 1f;
 
         void OnValidate()
         {
-            //上記のフィールドの属性を読み取って取り扱いやすいデータ構造に変換しておく
-            foreach (FieldInfo field in GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
+            //上記のフィールドとプロパティの属性を読み取って取り扱いやすいデータ構造に変換しておく
+            foreach (MemberInfo member in GetType().GetMembers(BindingFlags.Instance | BindingFlags.NonPublic))
             {
-                StatusTypeRegisterAttribute attribute = field.GetCustomAttribute<StatusTypeRegisterAttribute>();
+                StatusTypeRegisterAttribute attribute = member.GetCustomAttribute<StatusTypeRegisterAttribute>();
                 if (attribute != null)
                 {
-                    BaseStatus[attribute.Type] = Convert.ToSingle(field.GetValue(this));
+                    object value = member switch
+                    {
+                        FieldInfo field => field.GetValue(this),
+                        PropertyInfo prop => prop.GetValue(this),
+                        _ => null
+                    };
+                    BaseStatus[attribute.Type] = Convert.ToSingle(value);
                 }
             }
         }
