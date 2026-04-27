@@ -1,4 +1,5 @@
 using DIVFactor.Event;
+using R3;
 
 namespace DIVFactor.Extensions
 {
@@ -11,10 +12,8 @@ namespace DIVFactor.Extensions
         /// <typeparam name="TRes">発振用イベントメッセージ</typeparam>
         /// <param name="current">受信用イベント</param>
         /// <param name="next">発振用イベント</param>
-        /// <returns></returns>
-        public static EventChannel<TReq, TRes> Switch<TReq, TRes>(this EventBus<TReq> current, EventBus<TRes> next)
-            where TReq : EventObject
-            where TRes : EventObject
+        /// <returns>作成されたイベントオブジェクト</returns>
+        public static EventChannel<TReq, TRes> Switch<TReq, TRes>(this Observable<TReq> current, Subject<TRes> next)
         {
             return new(current, next);
         }

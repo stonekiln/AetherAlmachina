@@ -10,18 +10,12 @@ namespace AetherAlmachina.Entities.Parameter
     public class StatusParameter
     {
         public float hitPoint;
-        public int magicPoint;
-        public EventBus<MPFluctuationEvent> MPFluctuation { get; private set; }
+        public int MagicPoint { get; private set; }
         Dictionary<StatusType, float> BaseStatus { get; init; }
         public Dictionary<Type, ModifierParameter> Modifiers { get; init; }
-        /// <summary>
-        /// コストが増加する際に呼び出されるイベントメッセージ
-        /// </summary>
-        public record MPFluctuationEvent : EventObject;
 
         public StatusParameter(StatusBase status)
         {
-            MPFluctuation = new();
             BaseStatus = new(status.BaseStatus);
             Modifiers = new()
             {
@@ -29,7 +23,7 @@ namespace AetherAlmachina.Entities.Parameter
                 {typeof(RateModifierParameter),new RateModifierParameter()}
             };
             hitPoint = Get(StatusType.MaxHitPoint);
-            magicPoint = 0;
+            MagicPoint = 0;
         }
 
         /// <summary>
@@ -49,6 +43,14 @@ namespace AetherAlmachina.Entities.Parameter
         public int GetInt(StatusType type)
         {
             return (int)Get(type);
+        }
+        /// <summary>
+        /// MPの値を変更する
+        /// </summary>
+        /// <param name="delta">MPの変化量</param>
+        public void MPUpdate(int delta)
+        {
+            MagicPoint += delta;
         }
     }
 }

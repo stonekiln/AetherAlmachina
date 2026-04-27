@@ -12,23 +12,22 @@ namespace DIVFactor.Event
     /// </summary>
     /// <typeparam name="T">イベントメッセージ</typeparam>
     public class EventBus<T> : Subject<T> where T : EventObject { }
+
     /// <summary>
     /// イベントから別のイベントへ処理を連結させるためのイベントオブジェクト
     /// </summary>
     public class EventChannel<TReq, TRes>
-    where TReq : EventObject
-    where TRes : EventObject
     {
-        EventBus<TReq> Request { get; init; }
-        EventBus<TRes> Response { get; init; }
+        Observable<TReq> Request { get; init; }
+        Subject<TRes> Response { get; init; }
 
-        public EventChannel(EventBus<TReq> req, EventBus<TRes> res)
+        public EventChannel(Observable<TReq> req, Subject<TRes> res)
         {
             Request = req;
             Response = res;
         }
         /// <summary>
-        /// イベントを受信した際のコールバックを設定する
+        /// 受信側のイベントを受信した際のコールバックを設定し、その結果を送信側のイベントで送信する
         /// </summary>
         /// <param name="func">コールバック</param>
         /// <returns>受信側のDisposable</returns>

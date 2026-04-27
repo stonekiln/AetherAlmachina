@@ -31,6 +31,7 @@ namespace AetherAlmachina.Skill
         public IEntityInteraction User => Owner;
         EffectData[] EffectQueue { get; init; }
         Entity Owner { get; init; }
+        float handPower;
         IEnumerable<IEntityInteraction> targets;
         int queueIndex = 0;
 
@@ -44,6 +45,7 @@ namespace AetherAlmachina.Skill
             Owner = owner;
             Owner.Targeting.LockOn.Response.Subscribe(res => targets = res.Targets).AddTo(Owner);
         }
+
         /// <summary>
         /// 次のエフェクトを取り出す
         /// </summary>
@@ -63,11 +65,20 @@ namespace AetherAlmachina.Skill
             {
                 foreach (IEntityInteraction target in targets)
                 {
-                    target.Targeting.Hit.OnNext(new(entity => current.Effect.Apply(Owner, entity, current.Parameter)));
+                    target.Targeting.Hit.OnNext(
+                        new(entity => current.Effect.Apply(Owner, entity, current.Parameter.SetHandPower(handPower))));
                 }
                 queueIndex++;
                 return queueIndex != EffectQueue.Length;
             }
+        }
+        /// <summary>
+        /// スキルに役倍率を設定する
+        /// </summary>
+        /// <param name="power">設定する役倍率</param>
+        public void SetHandPower(float power)
+        {
+            handPower = power;
         }
     }
 }

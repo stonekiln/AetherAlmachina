@@ -41,6 +41,16 @@ namespace AetherAlmachina.Skill.Effect
     /// </summary>
     public abstract class EffectParameter
     {
-
+        public float HandPower { get; private set; }
+        /// <summary>
+        /// 使用者の役倍率を設定し自身のインスタンスを返す
+        /// </summary>
+        /// <param name="power">設定する役倍率</param>
+        /// <returns>更新後のパラメータ</returns>
+        public EffectParameter SetHandPower(float power)
+        {
+            HandPower = power;
+            return this;
+        }
     }
 }

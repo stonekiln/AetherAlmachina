@@ -1,4 +1,6 @@
 using System;
+using DIVFactor.Injectable;
+using R3;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,22 +9,29 @@ namespace AetherAlmachina.Card.Object
     /// <summary>
     /// カードの外見を設定するためのクラス
     /// </summary>
-    public class CardDesign : MonoBehaviour
+    [RequireComponent(typeof(RectTransform))]
+    [RequireComponent(typeof(Image))]
+    public class CardDesign : MonoBehaviour, IInjectable
     {
         CardBase parent;
-        [NonSerialized] public RectTransform rectTransform;
-        [NonSerialized] public Vector2 initialPosition;
+        public RectTransform RectTransform { get; set; }
+        public Vector2 InitialPosition { get; set; }
         Image image;
+
+        public void Injection(InjectableResolver resolver)
+        {
+            resolver.Inject(out parent);
+
+            resolver.ActivePoint.Subscribe(_ => Initialize()).AddTo(this);
+        }
 
         /// <summary>
         /// 初期化処理
         /// </summary>
-        /// <param name="cardBase">カードの親</param>
-        public void Initialize(CardBase cardBase)
+        void Initialize()
         {
-            parent = cardBase;
-            rectTransform = gameObject.GetComponent<RectTransform>();
-            image = gameObject.GetComponent<Image>();
+            RectTransform = GetComponent<RectTransform>();
+            image = GetComponent<Image>();
             image.sprite = parent.SkillData.Icon;
         }
     }

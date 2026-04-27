@@ -48,13 +48,16 @@ namespace DConfig.EntityLife.Installer
     {
         public void Install(IContainerBuilder builder)
         {
-            builder.RegisterEvent<SkillEndEvent>();
             builder.RegisterEvent<AttackEvent>();
             builder.RegisterEvent<DamageEvent>();
             builder.RegisterEvent<HealingEvent>();
             builder.RegisterEvent<OnHealedEvent>();
 
-            builder.Register<CommandEventBundle>(Lifetime.Singleton);
+            builder.RegisterEvent<SkillEndEvent>();
+            builder.RegisterEvent<MPUpdateEvent>();
+
+            builder.Register<ActionEventBundle>(Lifetime.Singleton);
+            builder.Register<ProcessEventBundle>(Lifetime.Singleton);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace AetherAlmachina.Skill.Effect.Contracts
     {
         public override void Sign(IEntityInteraction user, IEntityInteraction target, Action removeModifier)
         {
-            target.Command.SkillEnd.Skip((int)During).Take(1).Subscribe(_ => removeModifier());
+            target.Process.SkillEnd.Skip((int)During).Take(1).Subscribe(_ => removeModifier());
         }
     }
 }

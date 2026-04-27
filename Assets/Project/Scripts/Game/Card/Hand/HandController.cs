@@ -80,11 +80,15 @@ namespace AetherAlmachina.Card.Hand
         public void Invoke()
         {
             int costSum = (int)MathF.Ceiling(selectedIndex.Aggregate(0, (previous, current) => previous + Hand[current].SkillData.Cost) / (float)selectedIndex.Count());
-            if (costSum <= owner.Status.magicPoint)
+            if (costSum <= owner.Status.MagicPoint)
             {
-                owner.SetHandPower(HandPowerTable.Get(Type, selectedIndex.Count()));
-                owner.Status.magicPoint -= costSum;
-                selectedIndex.ForEach(cardIndex => SkillActivate.OnNext(new(Hand[cardIndex].SkillData)));
+                owner.Process.MPUpdate.OnNext(new(-costSum));
+                float handPower = HandPowerTable.Get(Type, selectedIndex.Count());
+                foreach (SkillData skill in selectedIndex.Select(index => Hand[index].SkillData))
+                {
+                    skill.SetHandPower(handPower);
+                    SkillActivate.OnNext(new(skill));
+                }
                 Hand = RemoveHand();
                 Draw(selectedIndex.Count());
                 selectedIndex = new();

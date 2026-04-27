@@ -12,7 +12,7 @@ namespace AetherAlmachina.Skill.Effect
     {
         protected override void ApplyTyped(IEntityInteraction user, IEntityInteraction target, AttackParam parameter)
         {
-            user.Command.Attack.OnNext(new((Entity)target, parameter.Power));
+            user.Action.Attack.OnNext(new((Entity)target, parameter.HandPower * parameter.Power));
         }
     }
     /// <summary>

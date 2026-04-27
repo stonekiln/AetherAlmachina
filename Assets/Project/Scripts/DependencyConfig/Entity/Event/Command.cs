@@ -4,10 +4,6 @@ using DIVFactor.Event;
 namespace DConfig.EntityLife.Event
 {
     /// <summary>
-    /// スキルが終了したことを宣言するイベントメッセージ
-    /// </summary>
-    public record SkillEndEvent : EventObject;
-    /// <summary>
     /// 攻撃を宣言するイベントメッセージ
     /// </summary>
     /// <param name="Target">対象</param>
@@ -32,10 +28,25 @@ namespace DConfig.EntityLife.Event
     /// <param name="Power">スキル威力</param>
     public record OnHealedEvent(int Recovery, float Power) : EventObject;
 
-    public record CommandEventBundle(
-        EventBus<SkillEndEvent> SkillEnd,
+    public record ActionEventBundle(
         EventBus<AttackEvent> Attack,
         EventBus<DamageEvent> Damage,
         EventBus<HealingEvent> Healing,
-        EventBus<OnHealedEvent> OnHealed);
+        EventBus<OnHealedEvent> OnHealed
+    );
+
+    /// <summary>
+    /// スキルが終了したことを宣言するイベントメッセージ
+    /// </summary>
+    public record SkillEndEvent : EventObject;
+    /// <summary>
+    /// MPが変化したことを宣言するイベントメッセージ
+    /// </summary>
+    /// <param name="Delta">変化量</param>
+    public record MPUpdateEvent(int Delta) : EventObject;
+
+    public record ProcessEventBundle(
+        EventBus<SkillEndEvent> SkillEnd,
+        EventBus<MPUpdateEvent> MPUpdate
+    );
 }

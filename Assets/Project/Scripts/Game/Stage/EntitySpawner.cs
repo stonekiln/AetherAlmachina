@@ -60,11 +60,11 @@ namespace AetherAlmachina.Stage
         /// <param name="hostileEntity">敵対的なエンティティ</param>
         void SetUpTargeting(List<IEntityInteraction> friendlyEntity, List<IEntityInteraction> hostileEntity)
         {
-            Action<LockOnEventBundle> subscribe = (lockOn) =>
+            void SetLockOn(LockOnEventBundle lockOn) =>
                 lockOn.Request.Switch(lockOn.Response).Subscribe(req => new(req.Selector(friendlyEntity, hostileEntity))).AddTo(this);
 
-            friendlyEntity.ForEach(friendly => subscribe(friendly.Targeting.LockOn));
-            hostileEntity.ForEach(hostile => subscribe(hostile.Targeting.LockOn));
+            friendlyEntity.ForEach(friendly => SetLockOn(friendly.Targeting.LockOn));
+            hostileEntity.ForEach(hostile => SetLockOn(hostile.Targeting.LockOn));
         }
     }
 }

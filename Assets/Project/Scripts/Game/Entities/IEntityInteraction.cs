@@ -19,7 +19,11 @@ namespace AetherAlmachina.Entities
         /// <summary>
         /// エンティティの行動を制御するためのイベント群
         /// </summary>
-        public CommandEventBundle Command { get; }
+        public ActionEventBundle Action { get; }
+        /// <summary>
+        /// エンティティの内部処理を制御するためのイベント群
+        /// </summary>
+        public ProcessEventBundle Process { get; }
         /// <summary>
         /// エンティティのステータス
         /// </summary>

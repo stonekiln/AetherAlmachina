@@ -24,10 +24,10 @@ namespace AetherAlmachina.Entities.Parameter
         /// </summary>
         List<float> Values { get; init; }
 
-        public ModifierValueData(IModifierData data, float defaultValue)
+        public ModifierValueData(IModifierData data)
         {
             Data = data;
-            Values = new() { defaultValue };
+            Values = new() { 0 };
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace AetherAlmachina.Entities.Parameter
             Type modifierType = modifierData.ModifierType;
             if (!Modifiers.ContainsKey(modifierType))
             {
-                Modifiers[modifierType] = new(modifierData, DefaultValue);
+                Modifiers[modifierType] = new(modifierData);
             }
             Modifiers[modifierType].Add(modifierData.Value);
 
