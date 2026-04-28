@@ -26,11 +26,14 @@ namespace AetherAlmachina.Skill
         /// </summary>
         public Sprite Icon { get; init; }
         /// <summary>
+        /// 遅延するべきスキルかどうか
+        /// </summary>
+        public bool IsDeferrable { get; init; }
+        /// <summary>
         /// スキルの使用者
         /// </summary>
-        public IEntityInteraction User => Owner;
+        public IEntityInteraction Owner { get; init; }
         EffectData[] EffectQueue { get; init; }
-        Entity Owner { get; init; }
         float handPower;
         IEnumerable<IEntityInteraction> targets;
         int queueIndex = 0;
@@ -40,10 +43,11 @@ namespace AetherAlmachina.Skill
             Name = skillAsset.SkillName;
             Cost = skillAsset.Cost;
             Icon = skillAsset.Icon;
+            IsDeferrable = skillAsset.InitialLockOn.Selector.IsDeferrable;
+            Owner = owner;
             //0番目にInitialLockOnを置いたEffectQueueの配列を渡す
             EffectQueue = new[] { new EffectData(Activator.CreateInstance(typeof(LockOn)) as LockOn, skillAsset.InitialLockOn) }.Concat(skillAsset.EffectQueue).ToArray();
-            Owner = owner;
-            Owner.Targeting.LockOn.Response.Subscribe(res => targets = res.Targets).AddTo(Owner);
+            Owner.Targeting.LockOn.Response.Subscribe(res => targets = res.Targets).AddTo(owner);
         }
 
         /// <summary>

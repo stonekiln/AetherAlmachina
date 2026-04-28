@@ -33,11 +33,11 @@ namespace AetherAlmachina.Stage
         /// <param name="data">ゲージに乗せるスキル</param>
         public void GaugeOn(SkillData data)
         {
-            if (data.User is Player)
+            if (data.Owner is Player)
             {
                 playerPointer.MakePointer(data);
             }
-            if (data.User is Enemy)
+            if (data.Owner is Enemy)
             {
                 enemyPointer.MakePointer(data);
             }

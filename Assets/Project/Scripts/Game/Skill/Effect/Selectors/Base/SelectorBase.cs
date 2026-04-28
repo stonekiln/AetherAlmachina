@@ -9,6 +9,11 @@ namespace AetherAlmachina.Skill.Effect.Selectors
     public abstract class Selector
     {
         /// <summary>
+        /// 遅延可能なセレクターかどうか
+        /// </summary>
+        //基本的に相手を対象にとる場合trueを設定する
+        public abstract bool IsDeferrable { get; }
+        /// <summary>
         /// 効果対象の選別を行う
         /// </summary>
         /// <param name="friendly">友好勢力</param>

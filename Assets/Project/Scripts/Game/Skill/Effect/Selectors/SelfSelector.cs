@@ -11,6 +11,7 @@ namespace AetherAlmachina.Skill.Effect.Selectors
     [Serializable]
     public class SelfSelector : Selector
     {
+        public override bool IsDeferrable => false;
         public override IEnumerable<IEntityInteraction> Targeting(IEnumerable<IEntityInteraction> friendly, IEnumerable<IEntityInteraction> hostile, int index)
         {
             List<IEntityInteraction> list = friendly.ToList();

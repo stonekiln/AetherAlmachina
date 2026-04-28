@@ -1,4 +1,5 @@
 using AetherAlmachina.Skill;
+using AetherAlmachina.Skill.Effect;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -91,7 +92,12 @@ namespace EditorExtends
             EditorGUILayout.PropertyField(costProp);
             EditorGUILayout.PropertyField(iconProp);
 
-            isQueuePulled = EditorGUILayout.Foldout(isQueuePulled, "Effect Queue", true);
+            string QueueLabel = "Effect Queue";
+            if (initialLockOnProp.boxedValue is LockOnParameter parameter && parameter.Selector != null && parameter.Selector.IsDeferrable)
+            {
+                QueueLabel += "(Delay)";
+            }
+            isQueuePulled = EditorGUILayout.Foldout(isQueuePulled, QueueLabel, true);
             if (isQueuePulled)
             {
                 EditorGUI.indentLevel++;
