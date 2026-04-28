@@ -22,7 +22,12 @@ namespace AetherAlmachina.Entities.Parameter
         [SerializeField][StatusTypeRegister(StatusType.Attack)] int attack;
         [SerializeField][StatusTypeRegister(StatusType.Defence)] int defence;
         [SerializeField][StatusTypeRegister(StatusType.Speed)] int speed;
+        [StatusTypeRegister(StatusType.CriticalRate)] float CriticalRate => 0.05f;
+        [StatusTypeRegister(StatusType.CriticalDamage)] float CriticalDamage => 1.2f;
         [StatusTypeRegister(StatusType.Power)] float Power => 1f;
+        [StatusTypeRegister(StatusType.DamageTaken)] float DamageTaken => 1f;
+        [StatusTypeRegister(StatusType.HealPower)] float HealPower => 1f;
+        [StatusTypeRegister(StatusType.HealingReceived)] float HealingReceived => 1f;
 
         void OnValidate()
         {

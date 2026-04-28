@@ -8,7 +8,7 @@ namespace DConfig.EntityLife.Event
     /// </summary>
     /// <param name="Target">対象</param>
     /// <param name="SkillPower">スキル威力</param>
-    public record AttackEvent(Entity Target, float SkillPower) : EventObject;
+    public record AttackEvent(IEntityInteraction Target, float SkillPower) : EventObject;
     /// <summary>
     /// ダメージを受けたことを宣言するイベントメッセージ
     /// </summary>
@@ -20,7 +20,7 @@ namespace DConfig.EntityLife.Event
     /// </summary>
     /// <param name="Target">対象</param>
     /// <param name="SkillPower">スキル威力</param>
-    public record HealingEvent(Entity Target, float SkillPower) : EventObject;
+    public record HealingEvent(IEntityInteraction Target, float SkillPower) : EventObject;
     /// <summary>
     /// 回復されたことを宣言するイベントメッセージ
     /// </summary>

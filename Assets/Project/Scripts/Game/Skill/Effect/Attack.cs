@@ -8,9 +8,9 @@ namespace AetherAlmachina.Skill.Effect
     /// 相手にダメージを与える効果
     /// </summary>
     [Serializable]
-    public class AttackEffect : SkillEffect<AttackParam>
+    public class AttackEffect : SkillEffect<AttackParameter>
     {
-        protected override void ApplyTyped(IEntityInteraction user, IEntityInteraction target, AttackParam parameter)
+        protected override void ApplyTyped(IEntityInteraction user, IEntityInteraction target, AttackParameter parameter)
         {
             user.Action.Attack.OnNext(new((Entity)target, parameter.HandPower * parameter.Power));
         }
@@ -19,7 +19,7 @@ namespace AetherAlmachina.Skill.Effect
     /// AttackEffectに必要なパラメータ
     /// </summary>
     [Serializable]
-    public class AttackParam : EffectParameter
+    public class AttackParameter : EffectParameter
     {
         /// <summary>
         /// 攻撃スキルの威力

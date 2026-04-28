@@ -9,6 +9,11 @@ namespace AetherAlmachina.Entities.Parameter
         Attack = 2,
         Defence = 4,
         Speed = 8,
-        Power = 16
+        CriticalRate = 16,
+        CriticalDamage = 32,
+        Power = 64,
+        DamageTaken = 128,
+        HealPower = 256,
+        HealingReceived = 512,
     }
 }
