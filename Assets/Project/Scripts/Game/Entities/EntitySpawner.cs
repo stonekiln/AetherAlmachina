@@ -40,20 +40,18 @@ namespace AetherAlmachina.Entities
         void Start()
         {
             // 仮取得
-            // field = GameObject.Find("Field");
+            field = GameObject.Find("Field");
 
-            // TODO: 中心位置の指定は適当に行えそうな気がするけど、整列するときの横幅は、ビューポートからレイ飛ばすやり方でやった方がしっくりきそう
-            var a = GetFieldPointFromViewport(new(0.33f, 0.5f), out field);
-            var b = GetFieldPointFromViewport(new(0.66f, 0.5f), out _);
-
-            Debug.Log(a);
-            Debug.Log(b);
+            // 今は台座の想定が Field オブジェクトなので、ややこしいことはしないでおく
+            // var a = GetFieldPointFromViewport(new(0.33f, 0.5f), out field);
+            // var b = GetFieldPointFromViewport(new(0.66f, 0.5f), out _);
 
             var friends = Data.Friendly.Select(asset => playerFactory(asset)).ToList();
             var enemies = Data.Hostile.Select(asset => enemyFactory(asset)).ToList();
 
-            AlignPosition(friends, new(-4f, 0.1f, 0f), (uint)(friends.Count / 2f) + 1, direction: -1);
-            AlignPosition(enemies, new(4f, 0.1f, 0f), (uint)(enemies.Count / 2f) + 1, direction: 1);
+            // 奥行き方向の列数は、エンティティの数の平方根の切り上げにしておく（仮？）
+            AlignPosition(friends, new(-4f, 0.1f, 0f), (uint)Mathf.Ceil(Mathf.Sqrt(friends.Count)), direction: -1);
+            AlignPosition(enemies, new(4f, 0.1f, 0f), (uint)Mathf.Ceil(Mathf.Sqrt(enemies.Count)), direction: 1);
             
             friendlyInteractions = new List<ICombatInteraction>(friends);
             hostileInteractions = new List<ICombatInteraction>(enemies);
@@ -66,6 +64,13 @@ namespace AetherAlmachina.Entities
             hostileInteractions.ForEach(hostile => hostile.Targeting.LockOn.Reply(req => new(req.Selector(hostileInteractions, friendlyInteractions))).AddTo(this));
         }
 
+        // 今はまだ使わない
+        /// <summary>
+        /// スクリーン座標から、台座 (field) を取得する
+        /// </summary>
+        /// <param name="screenPoint"></param>
+        /// <param name="field"></param>
+        /// <returns>指定したスクリーン座標に対応する台座上の位置（ワールド座標）</returns>
         Vector3 GetFieldPointFromViewport(Vector2 screenPoint, out GameObject field)
         {
             Ray ray = Camera.main.ViewportPointToRay(screenPoint);
@@ -80,9 +85,6 @@ namespace AetherAlmachina.Entities
             return Vector3.zero;
         }
 
-        // TODO: [!] 領域のテスト描画を行えるようにする
-        // TODO: columnSize は、あくまでも最大値ということにして entities.Count がそれより小さいときはそれに合わせるようにするか、
-        //       entities.Count からある程度適切な列数を計算できるようにするか
         /// <summary>
         /// 複数のエンティティを origin を中心とした領域に、指定した列数 (columnSize) に揃えて配置する
         /// デフォルトで右方向に揃える
@@ -90,7 +92,7 @@ namespace AetherAlmachina.Entities
         /// <typeparam name="TEntity">エンティティ型</typeparam>
         /// <param name="entities">エンティティのリスト</param>
         /// <param name="origin">配置の中心点</param>
-        /// <param name="columnSize">列数</param>
+        /// <param name="columnSize">列数 Z方向（奥行き方向）の配置数</param>
         /// <param name="direction">
         /// X軸（Z軸の正方向が、<b>カメラ正面 = 画面奥</b> 側のときの、左右方向）における配置方向
         /// 1 の時は origin から見て右側に配置、-1 の時は左側に配置（デフォルト 1）
@@ -104,7 +106,7 @@ namespace AetherAlmachina.Entities
 
             // 左右方向のマージン
             // 画面奥側のエンティティは手前側よりもちょっと左右 (X軸方向) に移動させる
-            const float Margin = 0.5f;
+            const float Margin = 2.5f;
 
             // 台の大きさを取得 (仮)
             MeshRenderer fieldMesh = field.GetComponent<MeshRenderer>();
@@ -113,7 +115,8 @@ namespace AetherAlmachina.Entities
             var region = new
             {
                 // 領域の幅：スクリーン幅
-                Width = fieldMesh.bounds.size.x / 3f,
+                // TODO: 今のところ Field の4分の1がいい塩梅になるが、将来的には画面サイズやエンティティの数に応じて変化させるべきかも
+                Width = fieldMesh.bounds.size.x / 4f,
 
                 // 領域の幅：台 (field) の奥行き
                 Depth = fieldMesh.bounds.size.z
