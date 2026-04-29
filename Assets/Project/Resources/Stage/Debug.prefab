@@ -112,7 +112,7 @@ GameObject:
   - component: {fileID: 6035642784699853623}
   - component: {fileID: 6166286938185045698}
   - component: {fileID: 5506606555813262482}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Field
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,6 +189,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &5506606555813262482
 BoxCollider:
@@ -255,7 +256,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30649f1b646d6224e830fe9871e9e05e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CostManager
-  costSettings: {fileID: 11400000, guid: 7f78fa94575dece4e86c9b99b49fbd1e, type: 2}
 --- !u!1 &3725167157961150416
 GameObject:
   m_ObjectHideFlags: 0
@@ -459,6 +459,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!64 &766473608701561730
 MeshCollider:
