@@ -18,7 +18,7 @@ namespace EditorExtends
             int selectIndex;
 
             //Selectorが設定されているか
-            if (property.managedReferenceValue is null)
+            if (property.managedReferenceValue == null)
             {
                 //未設定の場合限定でNoneの選択肢を出現させる
                 KeyValuePair<string, Type> none = new("None", null);

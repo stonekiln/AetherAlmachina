@@ -25,3 +25,5 @@ MonoBehaviour:
     <Skill>k__BackingField: {fileID: 11400000, guid: 4bd574a96e7c3f640b0e401a6ff4b6fe, type: 2}
   - number: 4
     <Skill>k__BackingField: {fileID: 11400000, guid: 4bd574a96e7c3f640b0e401a6ff4b6fe, type: 2}
+  - number: 4
+    <Skill>k__BackingField: {fileID: 11400000, guid: 03c5f660ef917854a874ea0a58af0117, type: 2}

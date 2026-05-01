@@ -6,54 +6,42 @@ using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
-    /// <summary>
-    /// Modifierの情報を表すインターフェイス
-    /// </summary>
-    public interface IModifierTypeData
+    public record ModifierTypeData(string Name, Sprite Icon, string DisplayUnit);
+    public class TriggerModifierData
     {
-        /// <summary>
-        /// Modifierの名称
-        /// </summary>
-        public string Name { get; }
-        /// <summary>
-        /// 付与された際のModifierのアイコン
-        /// </summary>
-        public Sprite Icon { get; }
-        /// <summary>
-        /// Modifierの単位を表す
-        /// </summary>
-        public string DisplayUnit { get; }
-        /// <summary>
-        /// 変化するステータス
-        /// </summary>
-        public StatusType StatusTypeKey { get; }
+        public ModifierTypeData TypeData { get; init; }
+        public Type ModifierType { get; init; }
+        public Type PolarityType { get; init; }
+        public ModifierPolarity Polarity { get; init; }
+        float value;
+        public float Value => Polarity.Get(value);
+        public TriggerModifierData(ModifierEnchantData modifierData)
+        {
+            ModifierType = modifierData.Type.ModifierType.GetType();
+            Polarity = modifierData.Type.Polarity;
+            PolarityType = Polarity.GetType();
+            value = modifierData.Value;
+            TypeData = new(modifierData.Type.Name, modifierData.Type.Icon, modifierData.Type.ModifierType.DisplayUnit);
+        }
     }
-
-    public interface IModifierData : IModifierTypeData
+    public class CommonModifierData : TriggerModifierData
     {
-        /// <summary>
-        /// 変化量
-        /// </summary>
-        public float Value { get; }
-        /// <summary>
-        /// Modifierの種類
-        /// </summary>
-        public Type ModifierType { get; }
+        public StatusType StatusTypeKey { get; init; }
+        public CommonModifierData(ModifierEnchantData modifierData) : base(modifierData)
+        {
+            CommonModifier commonModifier = modifierData.Type.ModifierType as CommonModifier;
+            StatusTypeKey = commonModifier.StatusTypeKey;
+        }
     }
 
     /// <summary>
     /// Modifierの情報
     /// </summary>
     [Serializable]
-    public class ModifierData : IModifierData
+    public class ModifierEnchantData
     {
-        [SerializeField] ModifierAsset type;
+        [field: SerializeField] public ModifierAsset Type { get; private set; }
         [field: SerializeField] public float Value { get; private set; }
-        public Type ModifierType => type.ModifierType.GetType();
-        public string Name => type.Name;
-        public Sprite Icon => type.Icon;
-        public string DisplayUnit => type.ModifierType.DisplayUnit;
-        public StatusType StatusTypeKey => type.ModifierType.StatusTypeKey;
 
         /// <summary>
         /// Modifierを付与する対象を決める
@@ -63,7 +51,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         /// <returns>解除を行うための情報</returns>
         public DispelModifier Enchant(IEntityInteraction user, IEntityInteraction target)
         {
-            return type.ModifierType.Enchant(user, target, this);
+            return Type.ModifierType.Enchant(user, target, this);
         }
     }
 }

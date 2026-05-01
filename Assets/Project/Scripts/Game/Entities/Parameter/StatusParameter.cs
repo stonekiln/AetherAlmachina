@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DIVFactor.Event;
+using AetherAlmachina.Skill.Effect.Modifiers;
 
 namespace AetherAlmachina.Entities.Parameter
 {
@@ -10,6 +10,7 @@ namespace AetherAlmachina.Entities.Parameter
     public class StatusParameter
     {
         public float hitPoint;
+        public float Shield;
         public int MagicPoint { get; private set; }
         Dictionary<StatusType, float> BaseStatus { get; init; }
         public Dictionary<Type, ModifierParameter> Modifiers { get; init; }
@@ -19,10 +20,11 @@ namespace AetherAlmachina.Entities.Parameter
             BaseStatus = new(status.BaseStatus);
             Modifiers = new()
             {
-                {typeof(FlatModifierParameter),new FlatModifierParameter()},
-                {typeof(RateModifierParameter),new RateModifierParameter()}
+                {typeof(FlatModifierParameter),new FlatModifierParameter(BaseStatus)},
+                {typeof(RateModifierParameter),new RateModifierParameter(BaseStatus)}
             };
             hitPoint = Get(StatusType.MaxHitPoint);
+            Shield = Get(StatusType.Shield);
             MagicPoint = 0;
         }
 

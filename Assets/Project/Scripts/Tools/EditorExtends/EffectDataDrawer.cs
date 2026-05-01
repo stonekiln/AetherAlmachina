@@ -37,7 +37,7 @@ namespace EditorExtends
             int selectIndex;
 
             //エフェクトが設定されているか
-            if (effectProp.managedReferenceValue is null)
+            if (effectProp.managedReferenceValue == null)
             {
                 //未設定の場合限定でNoneの選択肢を出現させる
                 KeyValuePair<string, Type> none = new("None", null);
@@ -70,7 +70,7 @@ namespace EditorExtends
                 paramProp = property.FindPropertyRelative(BackingField.Get("Parameter"));
             }
             //パラメータのインスタンスが設定されている場合それを表示する
-            if (paramProp.managedReferenceValue is not null)
+            if (paramProp.managedReferenceValue != null)
             {
                 rect.y += EditorGUIUtility.singleLineHeight;
                 rect.height = EditorGUI.GetPropertyHeight(paramProp, true);

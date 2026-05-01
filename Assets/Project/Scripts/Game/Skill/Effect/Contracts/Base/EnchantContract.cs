@@ -21,26 +21,26 @@ namespace AetherAlmachina.Skill.Effect.Contracts
     /// <summary>
     /// Modifierの解除を行うための情報を渡す
     /// </summary>
-    /// <param name="User">使用者</param>
-    /// <param name="Target">付与対象</param>
-    /// <param name="Remove">Modifierの解除動作を行う関数</param>
-    public record DispelModifier(IEntityInteraction User, IEntityInteraction Target, Action Remove)
+    public class DispelModifier
     {
+        IEntityInteraction User { get; init; }
+        IEntityInteraction Target { get; init; }
+        Action Remove { get; init; }
+
+        public DispelModifier(IEntityInteraction user, IEntityInteraction target, Action remove)
+        {
+            User = user;
+            Target = target;
+            Remove = remove;
+        }
+
         /// <summary>
         /// Modifierの解除の予約を実行する
         /// </summary>
         /// <param name="contract">解除のタイミング</param>
-        public void Execute(EnchantContract contract)
+        public void Signed(EnchantContract contract)
         {
             contract.Sign(User, Target, Remove);
-        }
-    }
-
-    public static class DispelModifierExtensions
-    {
-        public static void Signed(this DispelModifier dispel, EnchantContract contract)
-        {
-            dispel.Execute(contract);
         }
     }
 }

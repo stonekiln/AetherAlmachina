@@ -23,7 +23,7 @@ namespace EditorExtends
             int selectIndex;
 
             //コントラクトが設定されているか
-            if (property.managedReferenceValue is null)
+            if (property.managedReferenceValue == null)
             {
                 //未設定の場合限定でNoneの選択肢を出現させる
                 KeyValuePair<string, Type> none = new("None", null);
@@ -51,7 +51,7 @@ namespace EditorExtends
                 property.serializedObject.ApplyModifiedProperties();
             }
             //コントラクトのインスタンスが設定されている場合それを表示する
-            if (property.managedReferenceValue is not null)
+            if (property.managedReferenceValue != null)
             {
                 EditorGUI.PropertyField(position, property, GUIContent.none, true);
             }

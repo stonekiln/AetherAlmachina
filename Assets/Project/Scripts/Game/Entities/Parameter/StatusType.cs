@@ -6,14 +6,15 @@ namespace AetherAlmachina.Entities.Parameter
     public enum StatusType
     {
         MaxHitPoint = 1,
-        Attack = 2,
-        Defence = 4,
-        Speed = 8,
-        CriticalRate = 16,
-        CriticalDamage = 32,
-        Power = 64,
-        DamageTaken = 128,
-        HealPower = 256,
-        HealingReceived = 512,
+        Shield = 2,
+        Attack = 4,
+        Defence = 8,
+        Speed = 16,
+        CriticalRate = 32,
+        CriticalDamage = 64,
+        Power = 128,
+        DamageTaken = 256,
+        HealPower = 512,
+        HealingReceived = 1024,
     }
 }

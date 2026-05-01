@@ -22,30 +22,47 @@ MonoBehaviour:
     <MaxTargets>k__BackingField: 1
   <EffectQueue>k__BackingField:
   - <Effect>k__BackingField:
-      rid: 2706037854619566182
+      rid: 1819299852951486556
     <Parameter>k__BackingField:
-      rid: 2706037854619566183
+      rid: 1819299852951486557
   - <Effect>k__BackingField:
-      rid: 2706037854619566184
+      rid: 1819299852951486560
     <Parameter>k__BackingField:
-      rid: 2706037854619566185
+      rid: 1819299852951486561
+  - <Effect>k__BackingField:
+      rid: 4576090458674954316
+    <Parameter>k__BackingField:
+      rid: 4576090458674954317
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 1819299852951486556
+      type: {class: AttackEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+      data: 
+    - rid: 1819299852951486557
+      type: {class: AttackParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+      data:
+        <Power>k__BackingField: 1
+    - rid: 1819299852951486560
+      type: {class: AttackEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+      data: 
+    - rid: 1819299852951486561
+      type: {class: AttackParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+      data:
+        <Power>k__BackingField: 1
     - rid: 2706037854619566164
       type: {class: EnemySelector, ns: AetherAlmachina.Skill.Effect.Selectors, asm: Assembly-CSharp}
       data: 
-    - rid: 2706037854619566182
-      type: {class: AttackEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+    - rid: 4576090458674954316
+      type: {class: EnchantEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data: 
-    - rid: 2706037854619566183
-      type: {class: AttackParam, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+    - rid: 4576090458674954317
+      type: {class: EnchantParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data:
-        <Power>k__BackingField: 1
-    - rid: 2706037854619566184
-      type: {class: AttackEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
-      data: 
-    - rid: 2706037854619566185
-      type: {class: AttackParam, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
-      data:
-        <Power>k__BackingField: 1
+        <Modifier>k__BackingField:
+          <Type>k__BackingField: {fileID: 0}
+          <Value>k__BackingField: 0
+        <Contract>k__BackingField:
+          rid: -2

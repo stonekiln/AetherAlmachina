@@ -11,14 +11,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         /// 変化量の正負
         /// </summary>
         public abstract string DisplaySign { get; }
-        /// <summary>
-        /// 設定できる数値の最大値
-        /// </summary>
-        public abstract float ParameterMax { get; }
-        /// <summary>
-        /// 設定できる数値の最小値
-        /// </summary>
-        public abstract float ParameterMin { get; }
+        public abstract float Get(float value);
     }
     /// <summary>
     /// バフ効果の定義
@@ -27,8 +20,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     public class PositiveModifier : ModifierPolarity
     {
         public override string DisplaySign => "+";
-        public override float ParameterMax => float.PositiveInfinity;
-        public override float ParameterMin => 0;
+        public override float Get(float value) => value;
     }
     /// <summary>
     /// デバフ効果の定義
@@ -37,7 +29,6 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     public class NegativeModifier : ModifierPolarity
     {
         public override string DisplaySign => "-";
-        public override float ParameterMax => 0;
-        public override float ParameterMin => float.NegativeInfinity;
+        public override float Get(float value) => -value;
     }
 }

@@ -26,7 +26,7 @@ namespace AetherAlmachina.Skill.Effect
         /// <summary>
         /// Modifierの情報
         /// </summary>
-        [field: SerializeField] public ModifierData Modifier { get; private set; }
+        [field: SerializeField] public ModifierEnchantData Modifier { get; private set; }
         /// <summary>
         /// エフェクト解除のタイミング
         /// </summary>

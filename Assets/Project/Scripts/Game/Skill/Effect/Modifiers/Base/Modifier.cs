@@ -6,29 +6,15 @@ using AetherAlmachina.Skill.Effect.Contracts;
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
     /// <summary>
-    /// Modifierの単位を表すインターフェイス
-    /// </summary>
-    public interface IModifierUnit
-    {
-        /// <summary>
-        /// Modifierの単位を表す
-        /// </summary>
-        public string DisplayUnit { get; }
-    }
-    /// <summary>
     /// Modifierの情報
     /// </summary>
-    public abstract class ModifierBase : IModifierUnit
+    public abstract class ModifierBase
     {
         public abstract string DisplayUnit { get; }
         /// <summary>
         /// Modifierの変化の種類
         /// </summary>
         protected abstract Type ModifierParameterKey { get; }
-        /// <summary>
-        /// 変化するステータス
-        /// </summary>
-        public abstract StatusType StatusTypeKey { get; }
 
         /// <summary>
         /// Modifierを付与する対象を決める
@@ -37,14 +23,27 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         /// <param name="target">付与対象候補</param>
         /// <param name="modifierData">Modifierの情報</param>
         /// <returns>解除を行うための情報</returns>
-        public abstract DispelModifier Enchant(IEntityInteraction user, IEntityInteraction target, IModifierData modifierData);
+        public abstract DispelModifier Enchant(IEntityInteraction user, IEntityInteraction target, ModifierEnchantData modifierData);
+    }
+    public abstract class TriggerModifier : ModifierBase
+    {
+        public override DispelModifier Enchant(IEntityInteraction user, IEntityInteraction target, ModifierEnchantData modifierData)
+        {
+            return EnchantTyped(user, target, new(modifierData));
+        }
+        protected abstract DispelModifier EnchantTyped(IEntityInteraction user, IEntityInteraction target, TriggerModifierData modifierData);
     }
     /// <summary>
     /// 基本的なEnchant方法のModifier
     /// </summary>
     public abstract class CommonModifier : ModifierBase
     {
-        public override DispelModifier Enchant(IEntityInteraction user, IEntityInteraction target, IModifierData modifierData)
+        public abstract StatusType StatusTypeKey { get; }
+        public override DispelModifier Enchant(IEntityInteraction user, IEntityInteraction target, ModifierEnchantData modifierData)
+        {
+            return EnchantTyped(user, target, new(modifierData));
+        }
+        DispelModifier EnchantTyped(IEntityInteraction user, IEntityInteraction target, CommonModifierData modifierData)
         {
             Action remove = target.Status.Modifiers[ModifierParameterKey].AddModifier(modifierData);
             return new(user, target, remove);

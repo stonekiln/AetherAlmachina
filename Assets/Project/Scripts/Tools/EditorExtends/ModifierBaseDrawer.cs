@@ -19,7 +19,7 @@ namespace EditorExtends
             bool isSelect;
 
             //Modifierが設定されているか
-            if (isSelect = property.managedReferenceValue is null)
+            if (isSelect = property.managedReferenceValue == null)
             {
                 //未設定の場合限定でNoneの選択肢を出現させる
                 KeyValuePair<string, Type> none = new("None", null);
