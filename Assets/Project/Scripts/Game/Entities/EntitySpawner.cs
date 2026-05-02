@@ -20,6 +20,7 @@ namespace AetherAlmachina.Entities
         Func<StatusAsset, Player> playerFactory;
         Func<StatusAsset, Enemy> enemyFactory;
         EntityList Data;
+        bool alignEntitiesEnabled;
         List<ICombatInteraction> friendlyInteractions;
         List<ICombatInteraction> hostileInteractions;
         [SerializeField] GameObject field;
@@ -28,6 +29,7 @@ namespace AetherAlmachina.Entities
         {
             resolver.Inject(out StageSettings settings);
             Data = new(settings.Friendly.Append(settings.Player).Reverse().ToArray(), settings.Hostile);
+            alignEntitiesEnabled = settings.AlignEntitiesEnabled;
         }
         public void SpawnConfigure(SpawnerBuilder builder)
         {
@@ -49,10 +51,14 @@ namespace AetherAlmachina.Entities
             var friends = Data.Friendly.Select(asset => playerFactory(asset)).ToList();
             var enemies = Data.Hostile.Select(asset => enemyFactory(asset)).ToList();
 
-            // 奥行き方向の列数は、エンティティの数の平方根の切り上げにしておく（仮？）
-            AlignPosition(friends, new(-4f, 0.1f, 0f), (uint)Mathf.Ceil(Mathf.Sqrt(friends.Count)), direction: -1);
-            AlignPosition(enemies, new(4f, 0.1f, 0f), (uint)Mathf.Ceil(Mathf.Sqrt(enemies.Count)), direction: 1);
-            
+            // StageSettings での有効状態に応じて整列する
+            if (alignEntitiesEnabled)
+            {
+                // 奥行き方向の列数は、エンティティの数の平方根の切り上げにしておく（仮？）
+                AlignPosition(friends, new(-4f, 0.1f, 0f), (uint)Mathf.Ceil(Mathf.Sqrt(friends.Count)), direction: -1);
+                AlignPosition(enemies, new(4f, 0.1f, 0f), (uint)Mathf.Ceil(Mathf.Sqrt(enemies.Count)), direction: 1);
+            }
+
             friendlyInteractions = new List<ICombatInteraction>(friends);
             hostileInteractions = new List<ICombatInteraction>(enemies);
             SetUpTargeting(friendlyInteractions, hostileInteractions);

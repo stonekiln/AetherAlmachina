@@ -14,5 +14,6 @@ namespace AetherAlmachina.Stage
         [field: SerializeField] public StatusAsset Player { get; private set; }
         [field: SerializeField] public StatusAsset[] Friendly { get; private set; }
         [field: SerializeField] public StatusAsset[] Hostile { get; private set; }
+        [field: SerializeField] public bool AlignEntitiesEnabled { get; private set; } = true;
     }
 }
