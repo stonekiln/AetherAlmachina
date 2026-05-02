@@ -33,9 +33,9 @@ namespace AetherAlmachina.Entities
         }
         public void SpawnConfigure(SpawnerBuilder builder)
         {
-            builder.Register<PlayerLifetime>(Resources.Load<GameObject>(Path.Combine("EntityObject", "PlayerObject")))
+            builder.Register<PlayerLifetime>(Resources.Load<GameObject>(Path.Combine("EntityObject", "PlayerMock")))
                     .Inject(out playerFactory);
-            builder.Register<EnemyLifetime>(Resources.Load<GameObject>(Path.Combine("EntityObject", "EnemyObject")))
+            builder.Register<EnemyLifetime>(Resources.Load<GameObject>(Path.Combine("EntityObject", "EnemyMock")))
                     .Inject(out enemyFactory);
         }
 
