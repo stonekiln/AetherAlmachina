@@ -2,6 +2,9 @@ using AetherAlmachina.Skill;
 
 namespace AetherAlmachina.Card
 {
+    /// <summary>
+    /// オブジェクトとして実体を持たないカード
+    /// </summary>
     public class CardData : ICardData
     {
         public SkillData SkillData { get; private set; }

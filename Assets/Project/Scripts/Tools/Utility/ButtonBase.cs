@@ -21,11 +21,29 @@ namespace Utility
         /// </summary>
         [NonSerialized] public bool isSelect;
 
+        /// <summary>
+        /// アクティブ状態の処理
+        /// </summary>
         public abstract void SetActive();
+        /// <summary>
+        /// 非アクティブ状態の処理
+        /// </summary>
         public abstract void SetInActive();
+        /// <summary>
+        /// ホバー状態の処理
+        /// </summary>
         protected abstract void Hover();
+        /// <summary>
+        /// 非ホバー状態の処理
+        /// </summary>
         protected abstract void UnHover();
+        /// <summary>
+        /// ボタン押し込み時の処理
+        /// </summary>
         protected abstract void Push();
+        /// <summary>
+        /// ボタンを離した時の処理
+        /// </summary>
         protected abstract void Release();
     }
 }

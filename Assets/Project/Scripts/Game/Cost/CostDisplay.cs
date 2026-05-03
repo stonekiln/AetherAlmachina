@@ -9,6 +9,7 @@ namespace AetherAlmachina.Cost
     /// <summary>
     /// あるエンティティのコストを表示するためのクラス
     /// </summary>
+    [RequireComponent(typeof(TextMeshProUGUI))]
     public class CostDisplay : MonoBehaviour, IInjectable
     {
         TextMeshProUGUI textMeshPro;
@@ -18,15 +19,19 @@ namespace AetherAlmachina.Cost
         {
             resolver.Inject(out owner);
 
-            owner.Status.MPFluctuation.Subscribe(log => SetDisplay(owner.Status.magicPoint)).AddTo(this);
+            owner.Process.MPUpdate.Subscribe(log => UpdateDisplay(owner.Status.MagicPoint)).AddTo(this);
         }
 
         void Awake()
         {
-            textMeshPro = gameObject.GetComponent<TextMeshProUGUI>();
+            textMeshPro = GetComponent<TextMeshProUGUI>();
         }
 
-        void SetDisplay(int mp)
+        /// <summary>
+        /// 画面に現在のMPを表示する
+        /// </summary>
+        /// <param name="mp">表示する値</param>
+        void UpdateDisplay(int mp)
         {
             textMeshPro.text = mp.ToString();
         }

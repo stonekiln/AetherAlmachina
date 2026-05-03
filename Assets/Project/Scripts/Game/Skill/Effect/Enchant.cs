@@ -1,24 +1,35 @@
 using System;
 using AetherAlmachina.Entities;
+using AetherAlmachina.Skill.Effect.Contracts;
 using AetherAlmachina.Skill.Effect.Modifiers;
 using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect
 {
+    /// <summary>
+    /// 相手にModifierを付与する効果
+    /// </summary>
     [Serializable]
     public class EnchantEffect : SkillEffect<EnchantParameter>
     {
-        protected override void ApplyTyped(ICombatInteraction user, ICombatInteraction target, EnchantParameter parameter)
+        protected override void ApplyTyped(IEntityInteraction user, IEntityInteraction target, EnchantParameter parameter)
         {
-            parameter.Type.Modifier.Enchant(target, parameter.Value, parameter.During);
+            parameter.Modifier.Enchant(user, target).Signed(parameter.Contract);
         }
     }
-
+    /// <summary>
+    /// EnchantEffectに必要なパラメータ
+    /// </summary>
     [Serializable]
     public class EnchantParameter : EffectParameter
     {
-        [field: SerializeField] public ModifierType Type { get; private set; }
-        [field: SerializeField] public float Value { get; private set; } = 1f;
-        [field: SerializeField] public float During { get; private set; } = 1f;
+        /// <summary>
+        /// Modifierの情報
+        /// </summary>
+        [field: SerializeField] public ModifierEnchantData Modifier { get; private set; }
+        /// <summary>
+        /// エフェクト解除のタイミング
+        /// </summary>
+        [field: SerializeReference] public EnchantContract Contract { get; private set; }
     }
 }

@@ -1,4 +1,3 @@
-using DG.Tweening;
 using R3;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,10 +10,12 @@ namespace AetherAlmachina.Card.Object
     /// <summary>
     /// カードを画面から選択するためのクラス
     /// </summary>
+    [RequireComponent(typeof(RectTransform))]
     public class CardSelector : ButtonBase, IInjectable
     {
         CardActiveEventBundle CardActive;
         CardBase parent;
+        CardDesign design;
         RectTransform rectTransform;
         Vector2 initialPosition;
         readonly Vector2 ExtraSpacing = new(40f, 0);
@@ -23,11 +24,18 @@ namespace AetherAlmachina.Card.Object
         public void Injection(InjectableResolver resolver)
         {
             resolver.Inject(out CardActive);
+            resolver.Inject(out parent);
+            resolver.Inject(out design);
+
+            resolver.ActivePoint.Subscribe(_ => Initialize()).AddTo(this);
         }
-        public void Initialize(CardBase cardBase)
+
+        /// <summary>
+        /// 初期化処理
+        /// </summary>
+        void Initialize()
         {
-            parent = cardBase;
-            rectTransform = gameObject.GetComponent<RectTransform>();
+            rectTransform = GetComponent<RectTransform>();
             initialPosition = rectTransform.anchoredPosition;
         }
         void OnEnable()
@@ -50,16 +58,16 @@ namespace AetherAlmachina.Card.Object
         protected override void Hover()
         {
             isHover = true;
-            parent.rectTransform.sizeDelta = parent.initialSize + ExtraSpacing;
-            parent.Design.rectTransform.anchoredPosition = parent.Design.initialPosition + Offset;
+            parent.RectTransform.sizeDelta = parent.InitialSize + ExtraSpacing;
+            design.RectTransform.anchoredPosition = design.InitialPosition + Offset;
         }
         protected override void UnHover()
         {
             if (!isSelect)
             {
                 isHover = false;
-                parent.rectTransform.sizeDelta = parent.initialSize;
-                parent.Design.rectTransform.anchoredPosition = parent.Design.initialPosition;
+                parent.RectTransform.sizeDelta = parent.InitialSize;
+                design.RectTransform.anchoredPosition = design.InitialPosition;
             }
         }
         protected override void Push()
@@ -73,6 +81,7 @@ namespace AetherAlmachina.Card.Object
 
             }
         }
+
         public void MyPointerClick(PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Left)
