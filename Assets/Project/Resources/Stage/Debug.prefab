@@ -391,7 +391,7 @@ GameObject:
   - component: {fileID: 6035642784699853623}
   - component: {fileID: 6166286938185045698}
   - component: {fileID: 5506606555813262482}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Field
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -468,6 +468,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &5506606555813262482
