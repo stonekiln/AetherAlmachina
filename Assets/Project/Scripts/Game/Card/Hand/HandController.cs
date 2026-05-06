@@ -9,18 +9,22 @@ using DIVFactor.Event;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Entities.Faction;
 using AetherAlmachina.Skill;
+using DConfig.StageLife.Event;
 
 namespace AetherAlmachina.Card.Hand
 {
+    /// <summary>
+    /// 手札を制御するためのクラス
+    /// </summary>
     public class HandController : MonoBehaviour, IInjectable
     {
         const int HandLimit = 5;
         const int Stack = 1;
         const int Chain = 2;
         [field: SerializeField] HandPowerTable HandPowerTable { get; set; }
-        DeckDrawEvent DeckDraw;
+        DeckDrawEventBundle DeckDraw;
         CardActiveEventBundle CardActive;
-        EventBus<SkillActiveEvent> SkillActive;
+        EventBus<SkillActivateEvent> SkillActivate;
         Entity owner;
         List<int> selectedIndex;
         int Type => GetHandType();
@@ -30,17 +34,16 @@ namespace AetherAlmachina.Card.Hand
         {
             resolver.Inject(out DeckDraw);
             resolver.Inject(out CardActive);
-            resolver.Inject(out SkillActive);
+            resolver.Inject(out SkillActivate);
             owner = resolver.GetComponent<Player>();
             selectedIndex = new();
 
-            DeckDraw.Response(response => Hand = AddHand(response.DrawCard)).AddTo(this);
+            DeckDraw.Response.Subscribe(response => Hand = AddHand(response.DrawCard)).AddTo(this);
             CardActive.Select.Subscribe(log => log.Data.SetSelect(Select(log.Index))).AddTo(this);
             CardActive.Cancel.Subscribe(log => log.Data.SetSelect(!SelectCancel(log.Index))).AddTo(this);
             CardActive.Invoke.Subscribe(_ => Invoke()).AddTo(this);
         }
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             Debug.Log("カードをドローします");
@@ -54,7 +57,7 @@ namespace AetherAlmachina.Card.Hand
         /// <param name="count">引く枚数</param>
         void Draw(int count)
         {
-            DeckDraw.Call(new(count));
+            DeckDraw.Request.OnNext(new(count));
         }
         /// <summary>
         /// カードを手札に追加する
@@ -77,11 +80,15 @@ namespace AetherAlmachina.Card.Hand
         public void Invoke()
         {
             int costSum = (int)MathF.Ceiling(selectedIndex.Aggregate(0, (previous, current) => previous + Hand[current].SkillData.Cost) / (float)selectedIndex.Count());
-            if (costSum <= owner.Status.magicPoint)
+            if (costSum <= owner.Status.MagicPoint)
             {
-                owner.SetHandPower(HandPowerTable.Get(Type, selectedIndex.Count()));
-                owner.Status.magicPoint -= costSum;
-                selectedIndex.ForEach(cardIndex => SkillActive.OnNext(new(Hand[cardIndex].SkillData)));
+                owner.Process.MPUpdate.OnNext(new(-costSum));
+                float handPower = HandPowerTable.Get(Type, selectedIndex.Count());
+                foreach (SkillData skill in selectedIndex.Select(index => Hand[index].SkillData))
+                {
+                    skill.SetHandPower(handPower);
+                    SkillActivate.OnNext(new(skill));
+                }
                 Hand = RemoveHand();
                 Draw(selectedIndex.Count());
                 selectedIndex = new();

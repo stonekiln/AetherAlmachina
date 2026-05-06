@@ -16,4 +16,14 @@ namespace DConfig.StageLife.Installer
             builder.RegisterEvent<BonusIncreaseEvent>();
         }
     }
+    /// <summary>
+    /// 行動ゲージに関するイベントのDI登録
+    /// </summary>
+    public class ActGaugeInstaller : IInstaller
+    {
+        public void Install(IContainerBuilder builder)
+        {
+            builder.RegisterEvent<SkillActivateEvent>();
+        }
+    }
 }

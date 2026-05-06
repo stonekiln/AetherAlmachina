@@ -13,43 +13,55 @@ MonoBehaviour:
   m_Name: BuffSkill
   m_EditorClassIdentifier: Assembly-CSharp::SkillAsset
   <SkillName>k__BackingField: "\u6B66\u88C5\u5C55\u958B\u58F1"
-  <Description>k__BackingField: 
+  <Description>k__BackingField: "\u81EA\u8EAB\u306E\u653B\u6483\u529B\u309210\u79D2\u9593+5\u5897\u52A0\u3055\u305B\u308B\u3002"
   <Cost>k__BackingField: 1
   <Icon>k__BackingField: {fileID: 21300000, guid: 693c86cc1e9628e4c954e06ef12ed154, type: 3}
-  <InitialTargeting>k__BackingField:
+  <InitialLockOn>k__BackingField:
     <Selector>k__BackingField:
-      rid: 2706037792494583882
+      rid: 2706037854619566165
     <MaxTargets>k__BackingField: 1
-  <EffectQue>k__BackingField:
+  <EffectQueue>k__BackingField:
   - <Effect>k__BackingField:
-      rid: 2706037792494583888
+      rid: 1819299423870779474
     <Parameter>k__BackingField:
-      rid: 2706037792494583889
+      rid: 1819299423870779475
   - <Effect>k__BackingField:
-      rid: 2706037815503749201
+      rid: 1819299766500851794
     <Parameter>k__BackingField:
-      rid: 2706037815503749202
+      rid: 1819299766500851795
   references:
     version: 2
     RefIds:
-    - rid: 2706037792494583882
+    - rid: 1819299423870779474
+      type: {class: EnchantEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+      data: 
+    - rid: 1819299423870779475
+      type: {class: EnchantParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+      data:
+        <Modifier>k__BackingField:
+          <Type>k__BackingField: {fileID: 11400000, guid: 7d3f2880f58213740bf9c360cccad448, type: 2}
+          <Value>k__BackingField: 30
+        <Contract>k__BackingField:
+          rid: 1819299423870779476
+    - rid: 1819299423870779476
+      type: {class: SkillTimesContract, ns: AetherAlmachina.Skill.Effect.Contracts, asm: Assembly-CSharp}
+      data:
+        <During>k__BackingField: 1
+    - rid: 1819299766500851794
+      type: {class: EnchantEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+      data: 
+    - rid: 1819299766500851795
+      type: {class: EnchantParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
+      data:
+        <Modifier>k__BackingField:
+          <Type>k__BackingField: {fileID: 11400000, guid: 4f7fed7eb5cd7f747897b7fd089807ea, type: 2}
+          <Value>k__BackingField: 10
+        <Contract>k__BackingField:
+          rid: 1819299766500851796
+    - rid: 1819299766500851796
+      type: {class: SkillTimesContract, ns: AetherAlmachina.Skill.Effect.Contracts, asm: Assembly-CSharp}
+      data:
+        <During>k__BackingField: 1
+    - rid: 2706037854619566165
       type: {class: SelfSelector, ns: AetherAlmachina.Skill.Effect.Selectors, asm: Assembly-CSharp}
       data: 
-    - rid: 2706037792494583888
-      type: {class: BuffEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
-      data: 
-    - rid: 2706037792494583889
-      type: {class: BuffParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
-      data:
-        <Type>k__BackingField: {fileID: 11400000, guid: 3684eb9a1f4aeaf4eb3b3cd5817d8771, type: 2}
-        <During>k__BackingField: 1
-        <Magnitude>k__BackingField: 1
-    - rid: 2706037815503749201
-      type: {class: BuffEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
-      data: 
-    - rid: 2706037815503749202
-      type: {class: BuffParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
-      data:
-        <Type>k__BackingField: {fileID: 11400000, guid: 3684eb9a1f4aeaf4eb3b3cd5817d8771, type: 2}
-        <During>k__BackingField: 1
-        <Magnitude>k__BackingField: 5

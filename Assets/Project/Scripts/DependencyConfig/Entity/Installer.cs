@@ -17,7 +17,7 @@ namespace DConfig.EntityLife.Installer
             builder.RegisterEvent<DeckDrawRequestEvent>();
             builder.RegisterEvent<DeckDrawResponseEvent>();
 
-            builder.Register<DeckDrawEvent>(Lifetime.Singleton);
+            builder.Register<DeckDrawEventBundle>(Lifetime.Singleton);
             builder.Register<DeckController>(Lifetime.Singleton);
         }
     }
@@ -36,13 +36,28 @@ namespace DConfig.EntityLife.Installer
     {
         public void Install(IContainerBuilder builder)
         {
-            builder.RegisterEvent<SkillActiveEvent>();
             builder.RegisterEvent<LockOnRequestEvent>();
             builder.RegisterEvent<LockOnResponseEvent>();
             builder.RegisterEvent<HitEvent>();
 
-            builder.Register<LockOnEvent>(Lifetime.Singleton);
+            builder.Register<LockOnEventBundle>(Lifetime.Singleton);
             builder.Register<TargetingEventBundle>(Lifetime.Singleton);
+        }
+    }
+    public class CommandEventInstaller : IInstaller
+    {
+        public void Install(IContainerBuilder builder)
+        {
+            builder.RegisterEvent<AttackEvent>();
+            builder.RegisterEvent<DamageEvent>();
+            builder.RegisterEvent<HealingEvent>();
+            builder.RegisterEvent<OnHealedEvent>();
+
+            builder.RegisterEvent<SkillEndEvent>();
+            builder.RegisterEvent<MPUpdateEvent>();
+
+            builder.Register<ActionEventBundle>(Lifetime.Singleton);
+            builder.Register<ProcessEventBundle>(Lifetime.Singleton);
         }
     }
 }

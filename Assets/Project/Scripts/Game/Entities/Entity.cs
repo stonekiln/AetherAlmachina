@@ -7,73 +7,101 @@ using DIVFactor.Event;
 using DIVFactor.Injectable;
 using AetherAlmachina.Deck;
 using AetherAlmachina.Entities.Parameter;
+using DIVFactor.Extensions;
+using Utility;
+using System;
 
 namespace AetherAlmachina.Entities
 {
     /// <summary>
     /// エンティティのMonoBehaviour
     /// </summary>
-    public abstract class Entity : MonoBehaviour, ICombatInteraction, IInjectable
+    public abstract class Entity : MonoBehaviour, IEntityInteraction, IInjectable
     {
+        TargetingEventBundle targeting;
+        ActionEventBundle action;
+        ProcessEventBundle process;
         protected EventBus<AutoIncreaseEvent> AutoIncrease;
         protected EventBus<DeckGetEvent> DeckGet;
-        protected EventBus<SkillActiveEvent> SkillActive;
-        protected TargetingEventBundle targeting;
-        protected DeckList deckList;
+        protected DeckListAsset deckList;
         protected DeckController deckController;
-        protected float power;
-        protected float handPower;
-        public Status Status { get; private set; }
+        public StatusParameter Status { get; private set; }
         public TargetingEventBundle Targeting => targeting;
+        public ActionEventBundle Action => action;
+        public ProcessEventBundle Process => process;
         public int SiblingIndex => transform.GetSiblingIndex();
+        Action entryEnd;
 
         public virtual void Injection(InjectableResolver resolver)
         {
             resolver.Inject(out StatusAsset statusAsset);
             Status = new(statusAsset);
             deckList = statusAsset.Deck;
-            power = 1;
-            handPower = 1;
             resolver.Inject(out AutoIncrease);
             resolver.Inject(out DeckGet);
             resolver.Inject(out deckController);
-            resolver.Inject(out SkillActive);
             resolver.Inject(out targeting);
+            resolver.Inject(out action);
+            resolver.Inject(out process);
 
-            AutoIncrease.Subscribe(log => CostIncrease(log.Delta)).AddTo(this);
+            AutoIncrease.Switch(process.MPUpdate).Subscribe(log => new(log.Delta)).AddTo(this);
             deckController.Subscribe(this);
-            SkillActive.Subscribe(log =>
-            {
-                Debug.Log(log.Data.Name + "が発動しました。");
-                while (log.Data.MoveNext()) ;
-            }).AddTo(this);
             Targeting.Hit.Subscribe(log => log.Apply(this)).AddTo(this);
+            Action.Attack.Subscribe(log => Attack(log.Target, log.SkillPower)).AddTo(this);
+            Action.Damage.Subscribe(log => Damage(log.Attack, log.Power)).AddTo(this);
+            Action.Healing.Subscribe(log => Heal(log.Target, log.SkillPower)).AddTo(this);
+            Action.OnHealed.Subscribe(log => Healing(log.Recovery, log.Power)).AddTo(this);
+            Process.MPUpdate.Subscribe(log => Status.MPUpdate(log.Delta)).AddTo(this);
 
-            resolver.ActivePointAsObservable().Subscribe(_ => Get());
+            resolver.ActivePoint.Subscribe(_ => Get());
+            entryEnd = resolver.EntryEndPoint;
         }
 
-        public void Attack(Entity target, float skillPower)
+        void Attack(IEntityInteraction target, float skillPower)
         {
-            target.Hit(Status.Attack, power * handPower * skillPower);
+            float attackerPower = Status.Get(StatusType.Power);
+            if (Probability.Try(Status.Get(StatusType.CriticalRate)))
+            {
+                Debug.Log("クリティカルが発生しました。");
+                attackerPower *= Status.Get(StatusType.CriticalDamage);
+            }
+            target.Action.Damage.OnNext(new(Status.GetInt(StatusType.Attack), attackerPower * skillPower));
         }
-        public void Hit(int attackerAttack, float power)
+        void Damage(int attack, float power)
         {
-            Status.hitPoint += ((Status.Defence - attackerAttack < 0) ? Status.Defence - attackerAttack : 0) * power;
-            Debug.Log(gameObject.name + "が攻撃を受けました。\n残りHP:" + Status.hitPoint);
+            float damage = Convert.ToSingle(Status.GetInt(StatusType.Defence) - attack);
+            if (damage > 0f) damage = 0f;
+            damage *= Status.Get(StatusType.DamageTaken) * power;
+
+            Status.hitPoint += damage;
+            if (Status.hitPoint > 0)
+            {
+                Debug.Log(gameObject.name + "が" + -damage + "ダメージを受けました。\n残りHP:" + Status.hitPoint);
+            }
+            else
+            {
+                Debug.Log(gameObject.name + "が死亡しました。");
+                entryEnd();
+            }
         }
-        public void Get()
+        void Heal(IEntityInteraction target, float skillPower)
+        {
+            target.Action.OnHealed.OnNext(new(Status.GetInt(StatusType.MaxHitPoint), Status.Get(StatusType.HealPower) * skillPower));
+        }
+        void Healing(int recovery, float power)
+        {
+            float healAmount = Convert.ToSingle(recovery) * Status.Get(StatusType.HealingReceived) * power;
+            Status.hitPoint += healAmount;
+            if (Status.hitPoint > Status.Get(StatusType.MaxHitPoint))
+            {
+                Status.hitPoint = Status.Get(StatusType.MaxHitPoint);
+            }
+            Debug.Log(gameObject.name + "のHPが" + healAmount + "回復しました。\n残りHP:" + Status.hitPoint);
+        }
+        void Get()
         {
             Debug.Log("デッキをセットしました");
             DeckGet.OnNext(new(deckList.ReadDeck(this).ToList()));
-        }
-        public void SetHandPower(float power)
-        {
-            handPower = power;
-        }
-        void CostIncrease(int delta)
-        {
-            Status.MPFluctuation.OnNext(new());
-            Status.magicPoint += delta;
         }
     }
 }

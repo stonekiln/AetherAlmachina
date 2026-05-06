@@ -11,8 +11,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8cb06ced7c8f64e45978e67e800147f9, type: 3}
   m_Name: Player
-  m_EditorClassIdentifier: Assembly-CSharp::Status
-  <HitPoint>k__BackingField: 1000
-  <Attack>k__BackingField: 60
-  <Defence>k__BackingField: 50
+  m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.Entities.Parameter.StatusAsset
   <Deck>k__BackingField: {fileID: 11400000, guid: f7010b5683f39144f8ff32863247361d, type: 2}
+  hitPoint: 1000
+  attack: 100
+  defence: 50
+  speed: 100
+  power: 1

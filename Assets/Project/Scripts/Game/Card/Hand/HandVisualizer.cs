@@ -13,7 +13,7 @@ using AetherAlmachina.Skill;
 namespace AetherAlmachina.Card.Hand
 {
     /// <summary>
-    /// カードを画面に表示するためのクラス
+    /// カードを画面に表示した状態で制御するためのクラス
     /// </summary>
     public class HandVisualizer : HandController, ILifetimeSpawner
     {

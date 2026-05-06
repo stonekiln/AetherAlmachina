@@ -8,31 +8,25 @@ namespace AetherAlmachina.Card.Object
     /// <summary>
     /// カードのオブジェクトの親オブジェクトとなるクラス
     /// </summary>
+    [RequireComponent(typeof(RectTransform))]
     public class CardBase : MonoBehaviour, ICardData, IInjectable
     {
-        CardDesign design;
         CardSelector selector;
-        public CardDesign Design => design;
-        public CardSelector Selector => selector;
         SkillData skillData;
         public SkillData SkillData => skillData;
-        public bool IsSelect => Selector.isSelect;
+        public bool IsSelect => selector.isSelect;
         Action EntryEndPoint;
-
-        [NonSerialized] public RectTransform rectTransform;
-        [NonSerialized] public Vector2 initialSize;
+        public RectTransform RectTransform { get; set; }
+        public Vector2 InitialSize { get; set; }
 
         public void Injection(InjectableResolver resolver)
         {
             resolver.Inject(out skillData);
-            resolver.Inject(out design);
             resolver.Inject(out selector);
             EntryEndPoint = resolver.EntryEndPoint;
 
-            rectTransform = gameObject.GetComponent<RectTransform>();
-            initialSize = rectTransform.rect.size;
-            design.Initialize(this);
-            selector.Initialize(this);
+            RectTransform = GetComponent<RectTransform>();
+            InitialSize = RectTransform.rect.size;
         }
 
         public ICardData SetCard(int index)
@@ -48,7 +42,7 @@ namespace AetherAlmachina.Card.Object
 
         public void SetSelect(bool flag)
         {
-            Selector.isSelect = flag;
+            selector.isSelect = flag;
         }
     }
 }

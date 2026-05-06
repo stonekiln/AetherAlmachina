@@ -7,7 +7,7 @@ namespace DConfig.EntityLife.Event
     /// <summary>
     /// カードを引くためのイベントオブジェクト
     /// </summary>
-    public class DeckDrawEvent : EventChannel<DeckDrawRequestEvent, DeckDrawResponseEvent> { }
+    public record DeckDrawEventBundle(EventBus<DeckDrawRequestEvent> Request, EventBus<DeckDrawResponseEvent> Response);
     /// <summary>
     /// カードを引く宣言をするためのイベントメッセージ
     /// </summary>

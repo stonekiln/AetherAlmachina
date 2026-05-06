@@ -2,6 +2,7 @@ using System;
 using AetherAlmachina.Stage;
 using DConfig.StageLife.Event;
 using DIVFactor.Event;
+using DIVFactor.Extensions;
 using DIVFactor.Injectable;
 using R3;
 using UnityEngine;
@@ -14,15 +15,15 @@ namespace AetherAlmachina.Cost
     public class CostManager : MonoBehaviour, IInjectable
     {
         EventBus<AutoIncreaseEvent> AutoIncrease;
-        CostSettings costSettings;
+        CostSettingsAsset costSettings;
 
         public void Injection(InjectableResolver resolver)
         {
-            costSettings = resolver.GetComponent<StageSettings>().CostSettings;
+            costSettings = resolver.GetComponent<StageSettingsAsset>().CostSettings;
             resolver.Inject(out AutoIncrease);
 
             Observable.Interval(TimeSpan.FromSeconds(costSettings.TimeSpan))
-                .Subscribe(_ => AutoIncrease.OnNext(new(costSettings.Delta))).AddTo(this);
+                .Switch(AutoIncrease).Subscribe(_ => new(costSettings.Delta)).AddTo(this);
         }
     }
 }
