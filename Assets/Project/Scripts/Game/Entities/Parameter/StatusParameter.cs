@@ -9,21 +9,23 @@ namespace AetherAlmachina.Entities.Parameter
     /// </summary>
     public class StatusParameter
     {
-        public float hitPoint;
+        public int hitPoint;
         public float Shield;
         public int MagicPoint { get; private set; }
         Dictionary<StatusType, float> BaseStatus { get; init; }
-        public Dictionary<Type, ModifierParameter> Modifiers { get; init; }
+        public Dictionary<Type, ModifierParameter> ModifiedParam { get; init; }
+        public TriggerModifiers Triggers { get; init; }
 
         public StatusParameter(StatusBase status)
         {
             BaseStatus = new(status.BaseStatus);
-            Modifiers = new()
+            ModifiedParam = new()
             {
                 {typeof(FlatModifierParameter),new FlatModifierParameter(BaseStatus)},
-                {typeof(RateModifierParameter),new RateModifierParameter(BaseStatus)}
+                {typeof(RateModifierParameter),new RateModifierParameter(BaseStatus)},
             };
-            hitPoint = Get(StatusType.MaxHitPoint);
+            Triggers = new();
+            hitPoint = GetInt(StatusType.MaxHitPoint);
             Shield = Get(StatusType.Shield);
             MagicPoint = 0;
         }
@@ -35,7 +37,7 @@ namespace AetherAlmachina.Entities.Parameter
         /// <returns>取得した数値</returns>
         public float Get(StatusType type)
         {
-            return (BaseStatus[type] + Modifiers[typeof(FlatModifierParameter)].GetValue(type)) * Modifiers[typeof(RateModifierParameter)].GetValue(type);
+            return (BaseStatus[type] + ModifiedParam[typeof(FlatModifierParameter)].GetValue(type)) * ModifiedParam[typeof(RateModifierParameter)].GetValue(type);
         }
         /// <summary>
         /// 指定した種類のステータスの数値を整数値で取得する

@@ -10,9 +10,9 @@ namespace AetherAlmachina.Skill.Effect.Contracts
     [Serializable]
     public class TimeContract : EnchantContract
     {
-        public override void Sign(IEntityInteraction user, IEntityInteraction target, Action removeModifier)
+        public override void Sign(IEntityInteraction user, IEntityInteraction target, Action dispel)
         {
-            Observable.Timer(TimeSpan.FromSeconds(During)).Subscribe(_ => removeModifier());
+            Observable.Timer(TimeSpan.FromSeconds(During)).Subscribe(_ => dispel());
         }
     }
 }

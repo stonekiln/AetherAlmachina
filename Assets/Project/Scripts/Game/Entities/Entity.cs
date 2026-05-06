@@ -47,10 +47,15 @@ namespace AetherAlmachina.Entities
             AutoIncrease.Switch(process.MPUpdate).Subscribe(log => new(log.Delta)).AddTo(this);
             deckController.Subscribe(this);
             Targeting.Hit.Subscribe(log => log.Apply(this)).AddTo(this);
-            Action.Attack.Subscribe(log => Attack(log.Target, log.SkillPower)).AddTo(this);
-            Action.Damage.Subscribe(log => Damage(log.Attack, log.Power)).AddTo(this);
-            Action.Healing.Subscribe(log => Heal(log.Target, log.SkillPower)).AddTo(this);
-            Action.OnHealed.Subscribe(log => Healing(log.Recovery, log.Power)).AddTo(this);
+
+            Action.Attack.Activation.Subscribe(log => Attack(log.Target, log.SkillPower)).AddTo(this);
+            Action.Attack.Calculation.Switch(Action.Attack.Apply).Subscribe(log => new(DamageCalc(log.Attack, log.Power))).AddTo(this);
+            Action.Attack.Apply.Subscribe(log => Damage(log.Value)).AddTo(this);
+
+            Action.Heal.Activation.Subscribe(log => Heal(log.Target, log.SkillPower)).AddTo(this);
+            Action.Heal.Calculation.Switch(Action.Heal.Apply).Subscribe(log => new(RecoveryCalc(log.Recovery, log.Power))).AddTo(this);
+            Action.Heal.Apply.Subscribe(log => Recovery(log.Value)).AddTo(this);
+
             Process.MPUpdate.Subscribe(log => Status.MPUpdate(log.Delta)).AddTo(this);
 
             resolver.ActivePoint.Subscribe(_ => Get());
@@ -65,18 +70,21 @@ namespace AetherAlmachina.Entities
                 Debug.Log("クリティカルが発生しました。");
                 attackerPower *= Status.Get(StatusType.CriticalDamage);
             }
-            target.Action.Damage.OnNext(new(Status.GetInt(StatusType.Attack), attackerPower * skillPower));
+            target.Action.Attack.Calculation.OnNext(new(Status.GetInt(StatusType.Attack), attackerPower * skillPower));
         }
-        void Damage(int attack, float power)
+        int DamageCalc(int attack, float power)
         {
             float damage = Convert.ToSingle(Status.GetInt(StatusType.Defence) - attack);
             if (damage > 0f) damage = 0f;
             damage *= Status.Get(StatusType.DamageTaken) * power;
-
-            Status.hitPoint += damage;
+            return Mathf.FloorToInt(damage);
+        }
+        void Damage(int value)
+        {
+            Status.hitPoint += value;
             if (Status.hitPoint > 0)
             {
-                Debug.Log(gameObject.name + "が" + -damage + "ダメージを受けました。\n残りHP:" + Status.hitPoint);
+                Debug.Log(gameObject.name + "が" + -value + "ダメージを受けました。\n残りHP:" + Status.hitPoint);
             }
             else
             {
@@ -86,17 +94,24 @@ namespace AetherAlmachina.Entities
         }
         void Heal(IEntityInteraction target, float skillPower)
         {
-            target.Action.OnHealed.OnNext(new(Status.GetInt(StatusType.MaxHitPoint), Status.Get(StatusType.HealPower) * skillPower));
+            target.Action.Heal.Calculation.OnNext(new(Status.GetInt(StatusType.MaxHitPoint), Status.Get(StatusType.HealPower) * skillPower));
         }
-        void Healing(int recovery, float power)
+        int RecoveryCalc(int recovery, float power)
         {
-            float healAmount = Convert.ToSingle(recovery) * Status.Get(StatusType.HealingReceived) * power;
-            Status.hitPoint += healAmount;
-            if (Status.hitPoint > Status.Get(StatusType.MaxHitPoint))
+            int healAmount = Mathf.FloorToInt(Convert.ToSingle(recovery) * Status.Get(StatusType.HealingReceived) * power);
+            if (Status.hitPoint + healAmount <= Status.GetInt(StatusType.MaxHitPoint))
             {
-                Status.hitPoint = Status.Get(StatusType.MaxHitPoint);
+                return healAmount;
             }
-            Debug.Log(gameObject.name + "のHPが" + healAmount + "回復しました。\n残りHP:" + Status.hitPoint);
+            else
+            {
+                return Status.GetInt(StatusType.MaxHitPoint) - Status.hitPoint;
+            }
+        }
+        void Recovery(int value)
+        {
+            Status.hitPoint += value;
+            Debug.Log(gameObject.name + "のHPが" + value + "回復しました。\n残りHP:" + Status.hitPoint);
         }
         void Get()
         {

@@ -7,31 +7,40 @@ using UnityEngine;
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
     public record ModifierTypeData(string Name, Sprite Icon, string DisplayUnit);
-    public class TriggerModifierData
+    public class ModifierRawData
     {
         public ModifierTypeData TypeData { get; init; }
         public Type ModifierType { get; init; }
         public Type PolarityType { get; init; }
         public ModifierPolarity Polarity { get; init; }
-        float value;
-        public float Value => Polarity.Get(value);
-        public TriggerModifierData(ModifierEnchantData modifierData)
+        public float Value { get; init; }
+        public float SignedValue => Polarity.GetValue(Value);
+        public ModifierRawData(ModifierAsset asset, float value)
         {
-            ModifierType = modifierData.Type.ModifierType.GetType();
-            Polarity = modifierData.Type.Polarity;
+            ModifierType = asset.ModifierType.GetType();
+            Polarity = asset.Polarity;
             PolarityType = Polarity.GetType();
-            value = modifierData.Value;
-            TypeData = new(modifierData.Type.Name, modifierData.Type.Icon, modifierData.Type.ModifierType.DisplayUnit);
+            Value = value;
+            TypeData = new(asset.Name, asset.Icon, asset.ModifierType.DisplayUnit);
+        }
+        public ModifierRawData(ModifierRawData data)
+        {
+            ModifierType = data.ModifierType;
+            Polarity = data.Polarity;
+            PolarityType = data.PolarityType;
+            Value = data.Value;
+            TypeData = data.TypeData;
         }
     }
-    public class CommonModifierData : TriggerModifierData
+    public class CommonModifierData : ModifierRawData
     {
         public StatusType StatusTypeKey { get; init; }
-        public CommonModifierData(ModifierEnchantData modifierData) : base(modifierData)
-        {
-            CommonModifier commonModifier = modifierData.Type.ModifierType as CommonModifier;
-            StatusTypeKey = commonModifier.StatusTypeKey;
-        }
+        public CommonModifierData(ModifierRawData data) : base(data) { }
+    }
+    public class TriggerModifierData : ModifierRawData
+    {
+        public Func<Func<int>, IDisposable> CallBack { get; init; }
+        public TriggerModifierData(ModifierRawData data) : base(data) { }
     }
 
     /// <summary>
@@ -40,8 +49,8 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     [Serializable]
     public class ModifierEnchantData
     {
-        [field: SerializeField] public ModifierAsset Type { get; private set; }
-        [field: SerializeField] public float Value { get; private set; }
+        [SerializeField] ModifierAsset type;
+        [SerializeField] public float value;
 
         /// <summary>
         /// Modifierを付与する対象を決める
@@ -51,7 +60,8 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         /// <returns>解除を行うための情報</returns>
         public DispelModifier Enchant(IEntityInteraction user, IEntityInteraction target)
         {
-            return Type.ModifierType.Enchant(user, target, this);
+            Action dispel = type.ModifierType.MakeDispel(user, target, new(type, value));
+            return new(user, target, dispel);
         }
     }
 }

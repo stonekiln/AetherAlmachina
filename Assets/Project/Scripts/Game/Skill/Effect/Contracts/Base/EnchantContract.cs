@@ -15,8 +15,8 @@ namespace AetherAlmachina.Skill.Effect.Contracts
         /// </summary>
         /// <param name="user">使用者</param>
         /// <param name="target">付与対象者</param>
-        /// <param name="removeModifier">Modifierの解除動作を行う関数</param>
-        public abstract void Sign(IEntityInteraction user, IEntityInteraction target, Action removeModifier);
+        /// <param name="dispel">Modifierの解除動作を行う関数</param>
+        public abstract void Sign(IEntityInteraction user, IEntityInteraction target, Action dispel);
     }
     /// <summary>
     /// Modifierの解除を行うための情報を渡す
@@ -25,13 +25,13 @@ namespace AetherAlmachina.Skill.Effect.Contracts
     {
         IEntityInteraction User { get; init; }
         IEntityInteraction Target { get; init; }
-        Action Remove { get; init; }
+        Action Dispel { get; init; }
 
-        public DispelModifier(IEntityInteraction user, IEntityInteraction target, Action remove)
+        public DispelModifier(IEntityInteraction user, IEntityInteraction target, Action dispel)
         {
             User = user;
             Target = target;
-            Remove = remove;
+            Dispel = dispel;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace AetherAlmachina.Skill.Effect.Contracts
         /// <param name="contract">解除のタイミング</param>
         public void Signed(EnchantContract contract)
         {
-            contract.Sign(User, Target, Remove);
+            contract.Sign(User, Target, Dispel);
         }
     }
 }

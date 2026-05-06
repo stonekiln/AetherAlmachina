@@ -16,5 +16,4 @@ MonoBehaviour:
   hitPoint: 1000
   attack: 100
   defence: 50
-  speed: 100
-  power: 1
+  speed: 300

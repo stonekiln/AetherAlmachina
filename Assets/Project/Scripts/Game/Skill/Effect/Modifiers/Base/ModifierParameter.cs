@@ -1,35 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using AetherAlmachina.Entities.Parameter;
 using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
-    public class CommonModifierValue
-    {
-        public ModifierTypeData TypeData { get; init; }
-        List<float> Values { get; init; }
-        public CommonModifierValue(ModifierTypeData typeData)
-        {
-            TypeData = typeData;
-            Values = new();
-        }
-        public float Add(float value)
-        {
-            Values.Add(value);
-            return Max();
-        }
-        public float Remove(float value)
-        {
-            Values.Remove(value);
-            return Max();
-        }
-        public float Max()
-        {
-            return Values.Aggregate(0f, (pre, cur) => Mathf.Abs(cur) > Mathf.Abs(pre) ? cur : pre);
-        }
-    }
     /// <summary>
     /// Modifierによるパラメータの補正値を管理するクラス
     /// </summary>
@@ -40,8 +15,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         /// </summary>
         protected Dictionary<StatusType, float> ModifierSum { get; init; }
         //TypeをKeyとするのはType(Modifier)によってバフ効果の重複を判別するため
-        //StatusTypeとほとんど同義であるが、重複しない特殊なバフや複数のステータスが変化するModifierなどが考えられるため
-        Dictionary<Type, Dictionary<Type, CommonModifierValue>> Modifiers { get; init; }
+        Dictionary<Type, Dictionary<Type, ModifierValues>> Modifiers { get; init; }
 
         public ModifierParameter(Dictionary<StatusType, float> status)
         {
@@ -71,10 +45,13 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
                 Modifiers[modifierType][polarity] = new(modifierData.TypeData);
             }
             float preMax = Modifiers[modifierType][polarity].Max();
-            float delta = Modifiers[modifierType][polarity].Add(modifierData.Value) - preMax;
-            ModifierSum[modifierData.StatusTypeKey] += delta;
+            Modifiers[modifierType][polarity].Add(modifierData.SignedValue);
+            if (MathF.Abs(preMax) < Mathf.Abs(modifierData.SignedValue))
+            {
+                ModifierSum[modifierData.StatusTypeKey] += modifierData.SignedValue - preMax;
+            }
 
-            Debug.Log(modifierData.TypeData.Name + ":" + modifierData.Value + modifierData.TypeData.DisplayUnit + " の効果が付与された。");
+            Debug.Log(modifierData.TypeData.Name + ":" + modifierData.SignedValue + modifierData.TypeData.DisplayUnit + " の効果が付与された。");
             return () => RemoveModifier(modifierData);
         }
         /// <summary>
@@ -86,11 +63,14 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
             Type modifierType = modifierData.ModifierType;
             Type polarity = modifierData.PolarityType;
 
-            float preMax = Modifiers[modifierType][polarity].Max();
-            float delta = Modifiers[modifierType][polarity].Remove(modifierData.Value) - preMax;
-            ModifierSum[modifierData.StatusTypeKey] += delta;
+            Modifiers[modifierType][polarity].Remove(modifierData.SignedValue);
+            float curMax = Modifiers[modifierType][polarity].Max();
+            if (Mathf.Abs(curMax) < Mathf.Abs(modifierData.SignedValue))
+            {
+                ModifierSum[modifierData.StatusTypeKey] += curMax - modifierData.SignedValue;
+            }
 
-            Debug.Log(modifierData.TypeData.Name + ":" + modifierData.Value + modifierData.TypeData.DisplayUnit + "の効果が解除された。");
+            Debug.Log(modifierData.TypeData.Name + ":" + modifierData.SignedValue + modifierData.TypeData.DisplayUnit + "の効果が解除された。");
         }
         /// <summary>
         /// 補正値の計算方法

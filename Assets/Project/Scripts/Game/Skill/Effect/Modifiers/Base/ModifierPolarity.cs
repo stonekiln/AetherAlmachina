@@ -11,7 +11,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         /// 変化量の正負
         /// </summary>
         public abstract string DisplaySign { get; }
-        public abstract float Get(float value);
+        public abstract float GetValue(float value);
     }
     /// <summary>
     /// バフ効果の定義
@@ -20,7 +20,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     public class PositiveModifier : ModifierPolarity
     {
         public override string DisplaySign => "+";
-        public override float Get(float value) => value;
+        public override float GetValue(float value) => value;
     }
     /// <summary>
     /// デバフ効果の定義
@@ -29,6 +29,6 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     public class NegativeModifier : ModifierPolarity
     {
         public override string DisplaySign => "-";
-        public override float Get(float value) => -value;
+        public override float GetValue(float value) => -value;
     }
 }

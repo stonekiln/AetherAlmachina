@@ -29,15 +29,9 @@ MonoBehaviour:
       rid: 1819299852951486560
     <Parameter>k__BackingField:
       rid: 1819299852951486561
-  - <Effect>k__BackingField:
-      rid: 4576090458674954316
-    <Parameter>k__BackingField:
-      rid: 4576090458674954317
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
     - rid: 1819299852951486556
       type: {class: AttackEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data: 
@@ -55,14 +49,3 @@ MonoBehaviour:
     - rid: 2706037854619566164
       type: {class: EnemySelector, ns: AetherAlmachina.Skill.Effect.Selectors, asm: Assembly-CSharp}
       data: 
-    - rid: 4576090458674954316
-      type: {class: EnchantEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
-      data: 
-    - rid: 4576090458674954317
-      type: {class: EnchantParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
-      data:
-        <Modifier>k__BackingField:
-          <Type>k__BackingField: {fileID: 0}
-          <Value>k__BackingField: 0
-        <Contract>k__BackingField:
-          rid: -2
