@@ -17,3 +17,8 @@ MonoBehaviour:
   <Friendly>k__BackingField: []
   <Hostile>k__BackingField:
   - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
+  - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
+  - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
+  - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
+  - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
+  <AlignEntitiesEnabled>k__BackingField: 1

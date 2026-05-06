@@ -28,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 1495670932457158930}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8, y: 0.1, z: 0}
-  m_LocalScale: {x: 1, y: 0.099999994, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9191714413746539515}
@@ -89,6 +89,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!136 &455892671046452250
 CapsuleCollider:
@@ -158,4 +159,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc1a8d09af7b818469cc9e4e3739e315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  statusAsset: {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
