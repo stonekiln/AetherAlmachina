@@ -1,5 +1,6 @@
 using AetherAlmachina.Entities.Parameter;
 using DConfig.EntityLife.Event;
+using UnityEngine;
 
 namespace AetherAlmachina.Entities
 {
@@ -12,6 +13,10 @@ namespace AetherAlmachina.Entities
         /// エンティティの現在地を表すインデックス
         /// </summary>
         public int SiblingIndex { get; }
+        /// <summary>
+        /// エンティティのレイアウト上の位置を表すインデックス
+        /// </summary>
+        public Vector2Int LayoutIndex { get; }
         /// <summary>
         /// エンティティ間でターゲティングを行うためのイベント群
         /// </summary>

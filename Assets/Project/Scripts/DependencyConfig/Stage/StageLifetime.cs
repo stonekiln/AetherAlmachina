@@ -12,6 +12,7 @@ namespace DConfig.StageLife
         {
             installer.Install<CostEventInstaller>();
             installer.Install<ActGaugeInstaller>();
+            installer.Install<LayoutEventInstaller>();
         }
 
         protected override void Register(ComponentRegister register)
@@ -20,6 +21,8 @@ namespace DConfig.StageLife
             register.ComponentInChild<EntitySpawner>();
             register.ComponentInChild<FriendlyPointer>();
             register.ComponentInChild<HostilePointer>();
+            register.ComponentInChild<FriendlyLayout>();
+            register.ComponentInChild<HostileLayout>();
             register.BinderInChild<PlayerUIBinder>();
         }
     }

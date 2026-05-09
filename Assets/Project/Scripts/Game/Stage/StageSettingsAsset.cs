@@ -10,10 +10,19 @@ namespace AetherAlmachina.Stage
     [CreateAssetMenu(fileName = "StageSettings", menuName = "GameSettings/StageSettings")]
     public class StageSettingsAsset : ScriptableObject
     {
+        [System.Serializable]
+        public class EntitySpawnData
+        {
+            /// <summary>
+            /// エンティティを配置する列数と行数
+            /// xが列 (columns)、yが行数 (rows) を表す
+            /// </summary>
+            public Vector2Int layoutSize;
+            [field: SerializeField] public StatusAsset[] Entities { get; private set; }
+        }
+
         [field: SerializeField] public CostSettingsAsset CostSettings { get; private set; }
-        [field: SerializeField] public StatusAsset Player { get; private set; }
-        [field: SerializeField] public StatusAsset[] Friendly { get; private set; }
-        [field: SerializeField] public StatusAsset[] Hostile { get; private set; }
-        [field: SerializeField] public bool AlignEntitiesEnabled { get; private set; } = true;
+        [field: SerializeField] public EntitySpawnData Friendly { get; private set; }
+        [field: SerializeField] public EntitySpawnData Hostile { get; private set; }
     }
 }
