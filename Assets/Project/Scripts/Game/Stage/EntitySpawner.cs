@@ -82,7 +82,7 @@ namespace AetherAlmachina.Stage
         void SetUpTargeting(List<IEntityInteraction> friendlyEntity, List<IEntityInteraction> hostileEntity)
         {
             void SetLockOn(LockOnEventBundle lockOn) =>
-                lockOn.Request.Switch(lockOn.Response).Subscribe(req => new(req.Selector(friendlyEntity, hostileEntity))).AddTo(this);
+                lockOn.Request.Switch(lockOn.Response).Subscribe(log => new(log.Selector(friendlyEntity, hostileEntity))).AddTo(this);
 
             friendlyEntity.ForEach(friendly => SetLockOn(friendly.Targeting.LockOn));
             hostileEntity.ForEach(hostile => SetLockOn(hostile.Targeting.LockOn));
@@ -154,7 +154,7 @@ namespace AetherAlmachina.Stage
             for (int i = 0; i < rowSize; i++)
             {
                 for (int j = 0; j < columnSize; j++)
-                {                    
+                {
                     localPositions[i, j] = new Vector3
                     {
                         // X座標は、配置方向とマージンを加味する
@@ -243,7 +243,7 @@ namespace AetherAlmachina.Stage
 
                 GameObject cellObject = new("Cell");
                 cellObject.transform.SetParent(parent.transform);
-                
+
                 // マテリアルはまだ適用していない（仮なので）
                 cellObject.AddComponent<MeshRenderer>();
                 MeshFilter meshFilter = cellObject.AddComponent<MeshFilter>();

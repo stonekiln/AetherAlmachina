@@ -47,7 +47,7 @@ namespace AetherAlmachina.Skill
             Owner = owner;
             //0番目にInitialLockOnを置いたEffectQueueの配列を渡す
             EffectQueue = new[] { new EffectData(Activator.CreateInstance(typeof(LockOn)) as LockOn, skillAsset.InitialLockOn) }.Concat(skillAsset.EffectQueue).ToArray();
-            Owner.Targeting.LockOn.Response.Subscribe(res => targets = res.Targets).AddTo(owner);
+            Owner.Targeting.LockOn.Response.Subscribe(log => targets = log.Targets).AddTo(owner);
         }
 
         /// <summary>

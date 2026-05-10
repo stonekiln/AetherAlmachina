@@ -3,38 +3,26 @@ using DIVFactor.Event;
 
 namespace DConfig.EntityLife.Event
 {
-
-    public record AttackEventBundle(EventBus<AttackActivation> Activation, EventBus<DamageCalculation> Calculation, EventBus<DamageApplyEvent> Apply);
     /// <summary>
     /// 攻撃を宣言するイベントメッセージ
     /// </summary>
     /// <param name="Target">対象</param>
     /// <param name="SkillPower">スキル威力</param>
-    public record AttackActivation(IEntityInteraction Target, float SkillPower) : EventObject;
-    public record DamageCalculation(int Attack, float Power) : EventObject;
-    /// <summary>
-    /// ダメージを受けたことを宣言するイベントメッセージ
-    /// </summary>
-    /// <param name="Value">ダメージ量</param>
-    public record DamageApplyEvent(int Value) : EventObject;
-    public record HealEventBundle(EventBus<HealActivationEvent> Activation, EventBus<RecoveryCalculation> Calculation, EventBus<RecoveryApplyEvent> Apply);
+    public record AttackEvent(IEntityInteraction Target, float SkillPower) : EventObject;
+    public record DamageEvent(int Attack, float Power) : EventObject;
     /// <summary>
     /// 回復を宣言するイベントメッセージ
     /// </summary>
     /// <param name="Target">対象</param>
     /// <param name="SkillPower">スキル威力</param>
-    public record HealActivationEvent(IEntityInteraction Target, float SkillPower) : EventObject;
-    public record RecoveryCalculation(int Recovery, float Power) : EventObject;
-    /// <summary>
-    /// 回復されたことを宣言するイベントメッセージ
-    /// </summary>
-    /// <param name="Recovery">回復力</param>
-    /// <param name="Power">スキル威力</param>
-    public record RecoveryApplyEvent(int Value) : EventObject;
+    public record HealEvent(IEntityInteraction Target, float SkillPower) : EventObject;
+    public record RecoveryEvent(int Recovery, float Power) : EventObject;
 
     public record ActionEventBundle(
-        AttackEventBundle Attack,
-        HealEventBundle Heal
+        EventBus<AttackEvent> Attack,
+        EventBus<DamageEvent> Damage,
+        EventBus<HealEvent> Heal,
+        EventBus<RecoveryEvent> Recovery
     );
 
     /// <summary>
@@ -45,10 +33,19 @@ namespace DConfig.EntityLife.Event
     /// MPが変化したことを宣言するイベントメッセージ
     /// </summary>
     /// <param name="Delta">変化量</param>
-    public record MPUpdateEvent(int Delta) : EventObject;
+    public record CostUpdateEvent(int Delta) : EventObject;
+    public record HPUpdateEvent(int Delta) : EventObject;
+    public record ShieldUpdateEvent(int Delta) : EventObject;
+    public record DisableUpdateEvent(int Delta) : EventObject;
 
+    public record ResourceUpdateEventBundle(
+        EventBus<HPUpdateEvent> HP,
+        EventBus<ShieldUpdateEvent> Shield,
+        EventBus<DisableUpdateEvent> Disable
+    );
     public record ProcessEventBundle(
         EventBus<SkillEndEvent> SkillEnd,
-        EventBus<MPUpdateEvent> MPUpdate
+        ResourceUpdateEventBundle ResourceUpdate,
+        EventBus<CostUpdateEvent> CostUpdate
     );
 }

@@ -38,7 +38,7 @@ namespace AetherAlmachina.Card.Hand
             owner = resolver.GetComponent<Player>();
             selectedIndex = new();
 
-            DeckDraw.Response.Subscribe(response => Hand = AddHand(response.DrawCard)).AddTo(this);
+            DeckDraw.Response.Subscribe(log => Hand = AddHand(log.DrawCard)).AddTo(this);
             CardActive.Select.Subscribe(log => log.Data.SetSelect(Select(log.Index))).AddTo(this);
             CardActive.Cancel.Subscribe(log => log.Data.SetSelect(!SelectCancel(log.Index))).AddTo(this);
             CardActive.Invoke.Subscribe(_ => Invoke()).AddTo(this);
@@ -80,9 +80,9 @@ namespace AetherAlmachina.Card.Hand
         public void Invoke()
         {
             int costSum = (int)MathF.Ceiling(selectedIndex.Aggregate(0, (previous, current) => previous + Hand[current].SkillData.Cost) / (float)selectedIndex.Count());
-            if (costSum <= owner.Status.MagicPoint)
+            if (costSum <= owner.Status.Resource.Cost)
             {
-                owner.Process.MPUpdate.OnNext(new(-costSum));
+                owner.Process.CostUpdate.OnNext(new(-costSum));
                 float handPower = HandPowerTable.Get(Type, selectedIndex.Count());
                 foreach (SkillData skill in selectedIndex.Select(index => Hand[index].SkillData))
                 {

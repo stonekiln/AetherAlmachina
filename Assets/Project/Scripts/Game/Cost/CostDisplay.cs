@@ -19,7 +19,7 @@ namespace AetherAlmachina.Cost
         {
             resolver.Inject(out owner);
 
-            owner.Process.MPUpdate.Subscribe(log => UpdateDisplay(owner.Status.MagicPoint)).AddTo(this);
+            owner.Process.CostUpdate.Subscribe(log => UpdateDisplay(owner.Status.Resource.Cost)).AddTo(this);
         }
 
         void Awake()

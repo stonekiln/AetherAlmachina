@@ -34,7 +34,13 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         {
             return target.Status.ModifiedParam[ModifierParameterKey].AddModifier(MakeCommonData(user, target, data));
         }
-        protected abstract CommonModifierData MakeCommonData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data);
+        protected CommonModifierData MakeCommonData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
+        {
+            return new(data)
+            {
+                StatusTypeKey = StatusTypeKey
+            };
+        }
     }
     public abstract class TriggerModifier : ModifierBase
     {
@@ -45,22 +51,9 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         protected abstract TriggerModifierData MakeTriggerData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data);
     }
     /// <summary>
-    /// CommonModifierの基本的な付与方法
-    /// </summary>
-    public abstract class BasicCommonModifier : CommonModifier
-    {
-        protected override CommonModifierData MakeCommonData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
-        {
-            return new(data)
-            {
-                StatusTypeKey = StatusTypeKey
-            };
-        }
-    }
-    /// <summary>
     /// 定数変化のModifierの定義
     /// </summary>
-    public abstract class FlatModifier : BasicCommonModifier
+    public abstract class FlatModifier : CommonModifier
     {
         protected override Type ModifierParameterKey => typeof(FlatModifierParameter);
         public override string DisplayUnit => "";
@@ -68,7 +61,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     /// <summary>
     /// 割合変化のModifierの定義
     /// </summary>
-    public abstract class RateModifier : BasicCommonModifier
+    public abstract class RateModifier : CommonModifier
     {
         protected override Type ModifierParameterKey => typeof(RateModifierParameter);
         public override string DisplayUnit => "%";

@@ -21,6 +21,6 @@ namespace DConfig.EntityLife.Event
     /// <summary>
     /// デッキをDeckManagerに渡すためのイベントメッセージ
     /// </summary>
-    /// <param name="List">デッキの情報</param>
-    public record DeckGetEvent(List<SkillData> List) : EventObject;
+    /// <param name="Deck">デッキの情報</param>
+    public record DeckGetEvent(List<SkillData> Deck) : EventObject;
 }

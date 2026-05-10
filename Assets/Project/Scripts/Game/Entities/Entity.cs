@@ -35,8 +35,6 @@ namespace AetherAlmachina.Entities
         public virtual void Injection(InjectableResolver resolver)
         {
             resolver.Inject(out StatusAsset statusAsset);
-            Status = new(statusAsset);
-            deckList = statusAsset.Deck;
             resolver.Inject(out AutoIncrease);
             resolver.Inject(out DeckGet);
             resolver.Inject(out deckController);
@@ -44,19 +42,17 @@ namespace AetherAlmachina.Entities
             resolver.Inject(out action);
             resolver.Inject(out process);
 
-            AutoIncrease.Switch(process.MPUpdate).Subscribe(log => new(log.Delta)).AddTo(this);
+            Status = new(statusAsset, new(Process.ResourceUpdate, Process.CostUpdate, this), Process.ResourceUpdate.HP);
+            deckList = statusAsset.Deck;
+
+            AutoIncrease.Switch(Process.CostUpdate).Subscribe(log => new(log.Delta)).AddTo(this);
             deckController.Subscribe(this);
             Targeting.Hit.Subscribe(log => log.Apply(this)).AddTo(this);
 
-            Action.Attack.Activation.Subscribe(log => Attack(log.Target, log.SkillPower)).AddTo(this);
-            Action.Attack.Calculation.Switch(Action.Attack.Apply).Subscribe(log => new(DamageCalc(log.Attack, log.Power))).AddTo(this);
-            Action.Attack.Apply.Subscribe(log => Damage(log.Value)).AddTo(this);
-
-            Action.Heal.Activation.Subscribe(log => Heal(log.Target, log.SkillPower)).AddTo(this);
-            Action.Heal.Calculation.Switch(Action.Heal.Apply).Subscribe(log => new(RecoveryCalc(log.Recovery, log.Power))).AddTo(this);
-            Action.Heal.Apply.Subscribe(log => Recovery(log.Value)).AddTo(this);
-
-            Process.MPUpdate.Subscribe(log => Status.MPUpdate(log.Delta)).AddTo(this);
+            Action.Attack.Subscribe(log => Attack(log.Target, log.SkillPower)).AddTo(this);
+            Action.Damage.Subscribe(log => Damage(log.Attack, log.Power));
+            Action.Heal.Subscribe(log => Heal(log.Target, log.SkillPower)).AddTo(this);
+            Action.Recovery.Subscribe(log => Recovery(log.Recovery, log.Power)).AddTo(this);
 
             resolver.ActivePoint.Subscribe(_ => Get());
             entryEnd = resolver.EntryEndPoint;
@@ -70,49 +66,63 @@ namespace AetherAlmachina.Entities
                 Debug.Log("クリティカルが発生しました。");
                 attackerPower *= Status.Get(StatusType.CriticalDamage);
             }
-            target.Action.Attack.Calculation.OnNext(new(Status.GetInt(StatusType.Attack), attackerPower * skillPower));
+            target.Action.Damage.OnNext(new(Status.GetInt(StatusType.Attack), attackerPower * skillPower));
         }
-        int DamageCalc(int attack, float power)
+        void Damage(int attack, float power)
         {
             float damage = Convert.ToSingle(Status.GetInt(StatusType.Defence) - attack);
             if (damage > 0f) damage = 0f;
             damage *= Status.Get(StatusType.DamageTaken) * power;
-            return Mathf.FloorToInt(damage);
-        }
-        void Damage(int value)
-        {
-            Status.hitPoint += value;
-            if (Status.hitPoint > 0)
+            int damageAmount = Mathf.FloorToInt(damage);
+            if (Status.Resource.Disable > 0)
             {
-                Debug.Log(gameObject.name + "が" + -value + "ダメージを受けました。\n残りHP:" + Status.hitPoint);
+                Process.ResourceUpdate.Disable.OnNext(new(-1));
+                Debug.Log(gameObject.name + "がダメージを無効化しました。\n残り回数:" + Status.Resource.Disable);
             }
             else
             {
-                Debug.Log(gameObject.name + "が死亡しました。");
-                entryEnd();
+                int remainingShield = Status.Resource.Shield + damageAmount;
+                if (remainingShield < 0)
+                {
+                    if (Status.Resource.Shield > 0)
+                    {
+                        int shieldDamage = -Status.Resource.Shield;
+                        Process.ResourceUpdate.Shield.OnNext(new(shieldDamage));
+                        Debug.Log(gameObject.name + "が" + -shieldDamage + "のシールドを消費しました\n残りシールド:" + Status.Resource.Shield);
+                    }
+                    Process.ResourceUpdate.HP.OnNext(new(remainingShield));
+                    if (Status.Resource.HitPoint > 0)
+                    {
+                        Debug.Log(gameObject.name + "が" + -remainingShield + "ダメージを受けました。\n残りHP:" + Status.Resource.HitPoint);
+                    }
+                    else
+                    {
+                        Debug.Log(gameObject.name + "が死亡しました。");
+                        entryEnd();
+                    }
+                }
+                else
+                {
+                    Process.ResourceUpdate.Shield.OnNext(new(damageAmount));
+                    Debug.Log(gameObject.name + "が" + -damageAmount + "のシールドを消費しました\n残りシールド:" + Status.Resource.Shield);
+                }
             }
         }
         void Heal(IEntityInteraction target, float skillPower)
         {
-            target.Action.Heal.Calculation.OnNext(new(Status.GetInt(StatusType.MaxHitPoint), Status.Get(StatusType.HealPower) * skillPower));
+            target.Action.Recovery.OnNext(new(Status.GetInt(StatusType.MaxHitPoint), Status.Get(StatusType.HealPower) * skillPower));
         }
-        int RecoveryCalc(int recovery, float power)
+        void Recovery(int recovery, float power)
         {
             int healAmount = Mathf.FloorToInt(Convert.ToSingle(recovery) * Status.Get(StatusType.HealingReceived) * power);
-            if (Status.hitPoint + healAmount <= Status.GetInt(StatusType.MaxHitPoint))
+            if ((Status.Resource.HitPoint + healAmount) >= Status.GetInt(StatusType.MaxHitPoint))
             {
-                return healAmount;
+                healAmount = Status.GetInt(StatusType.MaxHitPoint) - Status.Resource.HitPoint;
             }
-            else
-            {
-                return Status.GetInt(StatusType.MaxHitPoint) - Status.hitPoint;
-            }
+            Process.ResourceUpdate.HP.OnNext(new(healAmount));
+            Debug.Log(gameObject.name + "のHPが" + healAmount + "回復しました。\n残りHP:" + Status.Resource.HitPoint);
         }
-        void Recovery(int value)
-        {
-            Status.hitPoint += value;
-            Debug.Log(gameObject.name + "のHPが" + value + "回復しました。\n残りHP:" + Status.hitPoint);
-        }
+
         void Get()
         {
             Debug.Log("デッキをセットしました");

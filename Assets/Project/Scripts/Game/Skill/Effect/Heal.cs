@@ -12,7 +12,7 @@ namespace AetherAlmachina.Skill.Effect
     {
         protected override void ApplyTyped(IEntityInteraction user, IEntityInteraction target, HealParameter parameter)
         {
-            user.Action.Heal.Activation.OnNext(new(target, parameter.Power));
+            user.Action.Heal.OnNext(new(target, parameter.Power));
         }
     }
     /// <summary>

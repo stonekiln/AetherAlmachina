@@ -30,7 +30,7 @@ namespace AetherAlmachina.Deck
         /// <param name="monoBehaviour">イベントの購読期間を決定する</param>
         public void Subscribe(MonoBehaviour monoBehaviour)
         {
-            DeckGet.Subscribe(deckData => Deck = deckData.List.Shuffle()).AddTo(monoBehaviour);
+            DeckGet.Subscribe(log => Deck = log.Deck.Shuffle()).AddTo(monoBehaviour);
             DeckDraw.Request.Switch(DeckDraw.Response).Subscribe(log => new(Draw(log.Count))).AddTo(monoBehaviour);
         }
         /// <summary>
