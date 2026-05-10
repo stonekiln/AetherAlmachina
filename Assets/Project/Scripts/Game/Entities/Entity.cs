@@ -30,6 +30,7 @@ namespace AetherAlmachina.Entities
         public ActionEventBundle Action => action;
         public ProcessEventBundle Process => process;
         public int SiblingIndex => transform.GetSiblingIndex();
+        public Vector2Int LayoutIndex { get; private set; }
         Action entryEnd;
 
         public virtual void Injection(InjectableResolver resolver)
@@ -127,6 +128,11 @@ namespace AetherAlmachina.Entities
         {
             Debug.Log("デッキをセットしました");
             DeckGet.OnNext(new(deckList.ReadDeck(this).ToList()));
+        }
+
+        public void SetLayoutIndex(Vector2Int layoutIndex)
+        {
+            LayoutIndex = layoutIndex;
         }
     }
 }

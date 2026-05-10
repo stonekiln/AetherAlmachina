@@ -26,4 +26,15 @@ namespace DConfig.StageLife.Installer
             builder.RegisterEvent<SkillActivateEvent>();
         }
     }
+    /// <summary>
+    /// レイアウトに関するイベントのDI登録
+    /// </summary>
+    public class LayoutEventInstaller : IInstaller
+    {
+        public void Install(IContainerBuilder builder)
+        {
+            builder.RegisterEvent<FriendlyLayoutEvent>();
+            builder.RegisterEvent<HostileLayoutEvent>();
+        }
+    }
 }

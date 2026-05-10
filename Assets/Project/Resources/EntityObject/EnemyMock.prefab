@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4812700715082687259}
+  - component: {fileID: 8558657584637604171}
   m_Layer: 0
   m_Name: EnemyMock
   m_TagString: Untagged
@@ -32,6 +33,18 @@ Transform:
   - {fileID: 4024379595190976188}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8558657584637604171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6886011605178443731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc1a8d09af7b818469cc9e4e3739e315, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.Entities.Faction.Enemy
 --- !u!1001 &2375263838718510946
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -106,9 +119,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6613918909599980126}
-    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 773631551000901861}
   m_SourcePrefab: {fileID: 4843985084834002234, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
 --- !u!1 &2815152461633513183 stripped
@@ -116,18 +126,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: -8653719598885068355, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
   m_PrefabInstance: {fileID: 2375263838718510946}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6613918909599980126
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2815152461633513183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc1a8d09af7b818469cc9e4e3739e315, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.Entities.Faction.Enemy
 --- !u!95 &773631551000901861
 Animator:
   serializedVersion: 7

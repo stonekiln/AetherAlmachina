@@ -13,12 +13,15 @@ MonoBehaviour:
   m_Name: StageSettings
   m_EditorClassIdentifier: Assembly-CSharp::StageSettings
   <CostSettings>k__BackingField: {fileID: 11400000, guid: 7f78fa94575dece4e86c9b99b49fbd1e, type: 2}
-  <Player>k__BackingField: {fileID: 11400000, guid: e27ed0df1bb44ec47a71dfba5b5d49d8, type: 2}
-  <Friendly>k__BackingField: []
+  <Friendly>k__BackingField:
+    layoutSize: {x: 3, y: 2}
+    <Entities>k__BackingField:
+    - {fileID: 11400000, guid: e27ed0df1bb44ec47a71dfba5b5d49d8, type: 2}
   <Hostile>k__BackingField:
-  - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
-  - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
-  - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
-  - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
-  - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
-  <AlignEntitiesEnabled>k__BackingField: 1
+    layoutSize: {x: 3, y: 2}
+    <Entities>k__BackingField:
+    - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
+    - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
+    - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
+    - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
+    - {fileID: 11400000, guid: 5f8253e9fc03231498fa4256a7c5bfd7, type: 2}
