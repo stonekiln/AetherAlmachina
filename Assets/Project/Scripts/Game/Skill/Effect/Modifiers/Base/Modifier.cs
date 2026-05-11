@@ -20,21 +20,30 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         /// <returns>解除を行うための情報</returns>
         public abstract Action MakeDispel(IEntityInteraction user, IEntityInteraction target, ModifierRawData data);
     }
+    public abstract class ModifierBase<TData> : ModifierBase where TData : ModifierRawData
+    {
+        public sealed override Action MakeDispel(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
+        {
+            return MakeDispelTyped(user, target, MakeModifierData(user, target, data));
+        }
+        protected abstract Action MakeDispelTyped(IEntityInteraction user, IEntityInteraction target, TData data);
+        protected abstract TData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data);
+    }
     /// <summary>
     /// ステータスに作用するModifierのEnchant方法
     /// </summary>
-    public abstract class CommonModifier : ModifierBase
+    public abstract class CommonModifier : ModifierBase<CommonModifierData>
     {
         /// <summary>
         /// Modifierの変化の種類
         /// </summary>
         protected abstract Type ModifierParameterKey { get; }
         public abstract StatusType StatusTypeKey { get; }
-        public override Action MakeDispel(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
+        protected override Action MakeDispelTyped(IEntityInteraction user, IEntityInteraction target, CommonModifierData data)
         {
-            return target.Status.ModifiedParam[ModifierParameterKey].AddModifier(MakeCommonData(user, target, data));
+            return target.Status.ModifiedParam[ModifierParameterKey].AddModifier(data);
         }
-        protected CommonModifierData MakeCommonData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
+        protected override CommonModifierData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
         {
             return new(data)
             {
@@ -42,13 +51,12 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
             };
         }
     }
-    public abstract class TriggerModifier : ModifierBase
+    public abstract class TriggerModifier : ModifierBase<TriggerModifierData>
     {
-        public override Action MakeDispel(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
+        protected override Action MakeDispelTyped(IEntityInteraction user, IEntityInteraction target, TriggerModifierData data)
         {
-            return target.Status.Triggers.AddModifier(MakeTriggerData(user, target, data));
+            return target.Status.Triggers.AddModifier(data);
         }
-        protected abstract TriggerModifierData MakeTriggerData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data);
     }
     /// <summary>
     /// 定数変化のModifierの定義

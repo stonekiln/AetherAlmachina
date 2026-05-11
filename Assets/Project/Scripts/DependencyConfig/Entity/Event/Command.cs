@@ -29,6 +29,7 @@ namespace DConfig.EntityLife.Event
     /// スキルが終了したことを宣言するイベントメッセージ
     /// </summary>
     public record SkillEndEvent : EventObject;
+    public record EntityDeathEvent : EventObject;
     /// <summary>
     /// MPが変化したことを宣言するイベントメッセージ
     /// </summary>
@@ -45,6 +46,7 @@ namespace DConfig.EntityLife.Event
     );
     public record ProcessEventBundle(
         EventBus<SkillEndEvent> SkillEnd,
+        EventBus<EntityDeathEvent> EntityDeath,
         ResourceUpdateEventBundle ResourceUpdate,
         EventBus<CostUpdateEvent> CostUpdate
     );

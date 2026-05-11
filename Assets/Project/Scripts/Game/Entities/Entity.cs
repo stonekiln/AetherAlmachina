@@ -29,7 +29,6 @@ namespace AetherAlmachina.Entities
         public TargetingEventBundle Targeting => targeting;
         public ActionEventBundle Action => action;
         public ProcessEventBundle Process => process;
-        public int SiblingIndex => transform.GetSiblingIndex();
         public Vector2Int LayoutIndex { get; private set; }
         Action entryEnd;
 
@@ -43,7 +42,7 @@ namespace AetherAlmachina.Entities
             resolver.Inject(out action);
             resolver.Inject(out process);
 
-            Status = new(statusAsset, new(Process.ResourceUpdate, Process.CostUpdate, this), Process.ResourceUpdate.HP);
+            Status = new(statusAsset, new(Process, this), Process.ResourceUpdate.HP);
             deckList = statusAsset.Deck;
 
             AutoIncrease.Switch(Process.CostUpdate).Subscribe(log => new(log.Delta)).AddTo(this);
@@ -54,6 +53,8 @@ namespace AetherAlmachina.Entities
             Action.Damage.Subscribe(log => Damage(log.Attack, log.Power));
             Action.Heal.Subscribe(log => Heal(log.Target, log.SkillPower)).AddTo(this);
             Action.Recovery.Subscribe(log => Recovery(log.Recovery, log.Power)).AddTo(this);
+
+            Process.EntityDeath.Subscribe(_ => DeathCheck());
 
             resolver.ActivePoint.Subscribe(_ => Get());
             entryEnd = resolver.EntryEndPoint;
@@ -92,15 +93,7 @@ namespace AetherAlmachina.Entities
                         Debug.Log(gameObject.name + "が" + -shieldDamage + "のシールドを消費しました\n残りシールド:" + Status.Resource.Shield);
                     }
                     Process.ResourceUpdate.HP.OnNext(new(remainingShield));
-                    if (Status.Resource.HitPoint > 0)
-                    {
-                        Debug.Log(gameObject.name + "が" + -remainingShield + "ダメージを受けました。\n残りHP:" + Status.Resource.HitPoint);
-                    }
-                    else
-                    {
-                        Debug.Log(gameObject.name + "が死亡しました。");
-                        entryEnd();
-                    }
+                    Debug.Log(gameObject.name + "が" + -remainingShield + "ダメージを受けました。\n残りHP:" + Status.Resource.HitPoint);
                 }
                 else
                 {
@@ -133,6 +126,14 @@ namespace AetherAlmachina.Entities
         public void SetLayoutIndex(Vector2Int layoutIndex)
         {
             LayoutIndex = layoutIndex;
+        }
+        void DeathCheck()
+        {
+            if (Status.Resource.HitPoint <= 0)
+            {
+                Debug.Log(gameObject.name + "が死亡しました。");
+                entryEnd();
+            }
         }
     }
 }

@@ -8,29 +8,28 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     public abstract class MaxHitPointModifier : CommonModifier
     {
         public override StatusType StatusTypeKey => StatusType.MaxHitPoint;
-        public override Action MakeDispel(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
+        protected override Action MakeDispelTyped(IEntityInteraction user, IEntityInteraction target, CommonModifierData data)
         {
-            float pre = target.Status.Get(StatusTypeKey);
-            Action dispel = target.Status.ModifiedParam[ModifierParameterKey].AddModifier(MakeCommonData(user, target, data));
-            float cur = target.Status.Get(StatusTypeKey);
-            if (cur != pre)
+            void keepRatioHpConvert(float ratio)
             {
-                float ratio = cur / pre;
-                int hpDelta = Mathf.FloorToInt(target.Status.Resource.HitPoint * ratio) - target.Status.Resource.HitPoint;
-                target.Process.ResourceUpdate.HP.OnNext(new(hpDelta));
+                if (ratio != 1)
+                {
+                    int hpDelta = Mathf.RoundToInt(target.Status.Resource.HitPoint * (ratio - 1f));
+                    target.Process.ResourceUpdate.HP.OnNext(new(hpDelta));
+                }
             }
+
+            float pre = target.Status.Get(StatusTypeKey);
+            Action dispel = target.Status.ModifiedParam[ModifierParameterKey].AddModifier(data);
+            float cur = target.Status.Get(StatusTypeKey);
+            keepRatioHpConvert(cur / pre);
 
             return () =>
             {
                 float pre = target.Status.Get(StatusTypeKey);
                 dispel();
                 float cur = target.Status.Get(StatusTypeKey);
-                if (cur != pre)
-                {
-                    float ratio = cur / pre;
-                    int hpDelta = Mathf.CeilToInt(target.Status.Resource.HitPoint * ratio) - target.Status.Resource.HitPoint;
-                    target.Process.ResourceUpdate.HP.OnNext(new(hpDelta));
-                }
+                keepRatioHpConvert(cur / pre);
             };
         }
     }

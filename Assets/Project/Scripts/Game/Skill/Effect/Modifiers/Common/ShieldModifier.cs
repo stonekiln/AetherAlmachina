@@ -1,35 +1,26 @@
 using System;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Entities.Parameter;
+using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
     public abstract class ShieldModifier : CommonModifier
     {
         public override StatusType StatusTypeKey => StatusType.Shield;
-        public override Action MakeDispel(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
+        protected override Type ModifierParameterKey => typeof(FlatModifierParameter);
+        protected override Action MakeDispelTyped(IEntityInteraction user, IEntityInteraction target, CommonModifierData data)
         {
-            int preMax = target.Status.GetInt(StatusTypeKey);
-            Action dispel = target.Status.ModifiedParam[ModifierParameterKey].AddModifier(MakeCommonData(user, target, data));
-            int MaxHpDelta = target.Status.GetInt(StatusTypeKey) - preMax;
-            Action hpFloor = () =>
+            Action dispel = target.Status.ModifiedParam[ModifierParameterKey].AddModifier(data);
+            int valueGap = Mathf.FloorToInt(data.Value) - target.Status.Resource.Shield;
+            if (valueGap > 0) target.Process.ResourceUpdate.Shield.OnNext(new(valueGap));
+
+            Action valueMaxFloor = () =>
             {
-                int hpGap = target.Status.GetInt(StatusTypeKey) - target.Status.Resource.Shield;
-                if (hpGap < 0)
-                {
-                    target.Process.ResourceUpdate.Shield.OnNext(new(hpGap));
-                }
+                int valueGap = target.Status.GetInt(StatusTypeKey) - target.Status.Resource.Shield;
+                if (valueGap < 0) target.Process.ResourceUpdate.Shield.OnNext(new(valueGap));
             };
-            switch (MaxHpDelta)
-            {
-                case > 0:
-                    target.Process.ResourceUpdate.Shield.OnNext(new(MaxHpDelta));
-                    break;
-                case < 0:
-                    hpFloor();
-                    break;
-            }
-            return dispel + hpFloor;
+            return dispel + valueMaxFloor;
         }
     }
     /// <summary>
@@ -38,16 +29,32 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     [Serializable]
     public class ShieldFlat : ShieldModifier
     {
-        protected override Type ModifierParameterKey => typeof(FlatModifierParameter);
         public override string DisplayUnit => "";
+
+        protected override CommonModifierData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
+        {
+            return new(data)
+            {
+                StatusTypeKey = StatusTypeKey,
+                ModifierType = typeof(ShieldModifier)
+            };
+        }
     }
     /// <summary>
     /// 割合攻撃力変化のModifierの定義
     /// </summary>
     [Serializable]
-    public class ShieldRate : ShieldModifier
+    public class ShieldHPRate : ShieldModifier
     {
-        protected override Type ModifierParameterKey => typeof(RateModifierParameter);
         public override string DisplayUnit => "%";
+        protected override CommonModifierData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
+        {
+            return new(data)
+            {
+                StatusTypeKey = StatusTypeKey,
+                ModifierType = typeof(ShieldModifier),
+                Value = user.Status.Get(StatusType.MaxHitPoint) * data.Value / 100f
+            };
+        }
     }
 }

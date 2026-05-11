@@ -1,8 +1,5 @@
-using System.Collections.Generic;
-using DIVFactor.Event;
 using DIVFactor.Injectable;
 using DConfig.StageLife.Event;
-using UnityEngine;
 using R3;
 
 namespace AetherAlmachina.Stage

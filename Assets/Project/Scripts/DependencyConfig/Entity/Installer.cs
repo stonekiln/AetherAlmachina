@@ -54,6 +54,7 @@ namespace DConfig.EntityLife.Installer
             builder.RegisterEvent<RecoveryEvent>();
 
             builder.RegisterEvent<SkillEndEvent>();
+            builder.RegisterEvent<EntityDeathEvent>();
             builder.RegisterEvent<CostUpdateEvent>();
             builder.RegisterEvent<HPUpdateEvent>();
             builder.RegisterEvent<ShieldUpdateEvent>();

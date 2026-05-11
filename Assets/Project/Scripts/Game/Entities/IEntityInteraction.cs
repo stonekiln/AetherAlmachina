@@ -10,10 +10,6 @@ namespace AetherAlmachina.Entities
     public interface IEntityInteraction
     {
         /// <summary>
-        /// エンティティの現在地を表すインデックス
-        /// </summary>
-        public int SiblingIndex { get; }
-        /// <summary>
         /// エンティティのレイアウト上の位置を表すインデックス
         /// </summary>
         public Vector2Int LayoutIndex { get; }

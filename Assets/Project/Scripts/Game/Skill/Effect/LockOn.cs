@@ -14,7 +14,7 @@ namespace AetherAlmachina.Skill.Effect
     {
         protected override void ApplyTyped(IEntityInteraction user, IEntityInteraction target, LockOnParameter parameter)
         {
-            user.Targeting.LockOn.Request.OnNext(new((friendly, hostile) => parameter.Selector.Targeting(friendly, hostile, user.SiblingIndex).Take(parameter.MaxTargets)));
+            user.Targeting.LockOn.Request.OnNext(new((friendly, hostile) => parameter.Selector.Targeting(friendly, hostile, user.LayoutIndex).Take(parameter.MaxTargets)));
         }
     }
     /// <summary>

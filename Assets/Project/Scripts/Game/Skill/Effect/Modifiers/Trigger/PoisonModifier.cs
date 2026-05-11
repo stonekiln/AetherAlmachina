@@ -10,7 +10,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     {
         public override string DisplayUnit => "";
 
-        protected override TriggerModifierData MakeTriggerData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
+        protected override TriggerModifierData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
         {
             return new(data)
             {

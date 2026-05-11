@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AetherAlmachina.Skill.Effect.Modifiers;
 using DConfig.EntityLife.Event;
 using DIVFactor.Event;
+using DIVFactor.Extensions;
 using R3;
 using UnityEngine;
 
@@ -15,17 +16,21 @@ namespace AetherAlmachina.Entities.Parameter
         public int Disable { get; private set; }
         public int Cost { get; private set; }
 
-        public ResourceStateParameter(ResourceUpdateEventBundle resourceUpdate, EventBus<CostUpdateEvent> costUpdate, MonoBehaviour monoBehaviour)
+        public ResourceStateParameter(ProcessEventBundle Process, MonoBehaviour monoBehaviour)
         {
             HitPoint = 0;
             Shield = 0;
             Disable = 0;
             Cost = 0;
 
-            resourceUpdate.HP.Subscribe(log => HPUpdate(log.Delta)).AddTo(monoBehaviour);
-            resourceUpdate.Shield.Subscribe(log => ShieldUpdate(log.Delta)).AddTo(monoBehaviour);
-            resourceUpdate.Disable.Subscribe(log => DisableUpdate(log.Delta)).AddTo(monoBehaviour);
-            costUpdate.Subscribe(log => CostUpdate(log.Delta)).AddTo(monoBehaviour);
+            Process.ResourceUpdate.HP.Switch(Process.EntityDeath).Subscribe(log =>
+            {
+                HPUpdate(log.Delta);
+                return new();
+            }).AddTo(monoBehaviour);
+            Process.ResourceUpdate.Shield.Subscribe(log => ShieldUpdate(log.Delta)).AddTo(monoBehaviour);
+            Process.ResourceUpdate.Disable.Subscribe(log => DisableUpdate(log.Delta)).AddTo(monoBehaviour);
+            Process.CostUpdate.Subscribe(log => CostUpdate(log.Delta)).AddTo(monoBehaviour);
         }
 
         /// <summary>

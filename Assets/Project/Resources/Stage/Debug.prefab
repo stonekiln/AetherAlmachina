@@ -541,7 +541,6 @@ GameObject:
   - component: {fileID: 6035642784699853623}
   - component: {fileID: 6166286938185045698}
   - component: {fileID: 5506606555813262482}
-  - component: {fileID: 8274195167302256826}
   m_Layer: 6
   m_Name: Field
   m_TagString: Untagged
@@ -642,18 +641,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8274195167302256826
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2427017353923325174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f9e578715c23274eb139ec6cb5bb2a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.Stage.StageField
 --- !u!1 &2589372765090825060
 GameObject:
   m_ObjectHideFlags: 0
@@ -1333,7 +1320,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc4ced2395d960047bbd46edf8bb3099, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntitySpawner
-  field: {fileID: 0}
 --- !u!1 &4815899688408921184
 GameObject:
   m_ObjectHideFlags: 0

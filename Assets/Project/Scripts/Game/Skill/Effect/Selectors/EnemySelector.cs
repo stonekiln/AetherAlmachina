@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AetherAlmachina.Entities;
+using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Selectors
 {
@@ -11,7 +12,7 @@ namespace AetherAlmachina.Skill.Effect.Selectors
     public class EnemySelector : Selector
     {
         public override bool IsDeferrable => true;
-        public override IEnumerable<IEntityInteraction> Targeting(IEnumerable<IEntityInteraction> friendly, IEnumerable<IEntityInteraction> hostile, int index)
+        public override IEnumerable<IEntityInteraction> Targeting(IEnumerable<IEntityInteraction> friendly, IEnumerable<IEntityInteraction> hostile, Vector2Int layoutIndex)
         {
             return hostile;
         }
