@@ -84,3 +84,5 @@ crashlytics-build.properties
 /ProjectSettings/QualitySettings.asset
 /ProjectSettings/Physics2DSettings.asset
 /ProjectSettings/ShaderGraphSettings.asset
+
+/.[Cc]odex/

@@ -4,7 +4,8 @@ using System.Linq;
 using AetherAlmachina.Skill.Effect;
 using UnityEditor;
 using UnityEngine;
-using Utility;
+using EditorTool.Helpers;
+using EditorTool.Extensions;
 
 namespace EditorExtends
 {
@@ -32,22 +33,8 @@ namespace EditorExtends
 
             SerializedProperty effectProp = property.FindPropertyRelative(BackingField.Get("Effect"));
             SerializedProperty paramProp = property.FindPropertyRelative(BackingField.Get("Parameter"));
-            //インスタンス可能な派生クラス一覧をアルファベット順にリストとして保持する
-            List<KeyValuePair<string, Type>> types = TypeCache.GetTypesDerivedFrom(typeof(SkillEffect)).Where(t => !t.IsAbstract && !t.IsGenericType).OrderBy(t => t.Name).Select(t => new KeyValuePair<string, Type>(t.Name, t)).ToList();
-            int selectIndex;
 
-            //エフェクトが設定されているか
-            if (effectProp.managedReferenceValue == null)
-            {
-                //未設定の場合限定でNoneの選択肢を出現させる
-                KeyValuePair<string, Type> none = new("None", null);
-                types.Insert(0, none);
-                selectIndex = 0;
-            }
-            else
-            {
-                selectIndex = types.FindIndex(t => t.Value == effectProp.managedReferenceValue.GetType());
-            }
+            List<NameTypePair> types = DerivedTypeNames.GetNameTypePair(typeof(SkillEffect)).FindSelectIndex(effectProp, out int selectIndex);
 
             //一行分のRectを保持する
             Rect rect = new(position)
@@ -56,12 +43,12 @@ namespace EditorExtends
             };
 
             EditorGUI.BeginChangeCheck();
-            selectIndex = EditorGUI.Popup(rect, label.text, selectIndex, types.Select(t => t.Key).ToArray());
+            selectIndex = EditorGUI.Popup(rect, label.text, selectIndex, types.Select(t => t.Name).ToArray());
             //プルダウンよりエフェクトの変更が行われたか調べる
             if (EditorGUI.EndChangeCheck())
             {
                 //変更された場合新しくエフェクトとそのパラメータのインスタンスを作成する
-                effectProp.managedReferenceValue = Activator.CreateInstance(types[selectIndex].Value);
+                effectProp.managedReferenceValue = Activator.CreateInstance(types[selectIndex].Derived);
                 SkillEffect effect = effectProp.managedReferenceValue as SkillEffect;
 
                 paramProp.managedReferenceValue = Activator.CreateInstance(effect.ParameterType);

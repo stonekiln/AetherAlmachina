@@ -1,9 +1,9 @@
 using AetherAlmachina.Skill;
 using AetherAlmachina.Skill.Effect;
+using EditorTool.Helpers;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-using Utility;
 
 namespace EditorExtends
 {

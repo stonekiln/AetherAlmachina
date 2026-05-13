@@ -13,7 +13,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         /// </summary>
         [field: SerializeReference] public ModifierBase ModifierType { get; private set; }
         /// <summary>
-        /// バフ・デバフの判定
+        /// バフ・デバフの定義
         /// </summary>
         [field: SerializeReference] public ModifierPolarity Polarity { get; private set; }
         /// <summary>

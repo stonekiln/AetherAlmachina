@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Utility
+namespace Tools.Helpers
 {
     public static class Probability
     {

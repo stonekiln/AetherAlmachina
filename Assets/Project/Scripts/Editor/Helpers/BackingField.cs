@@ -1,4 +1,4 @@
-namespace Utility
+namespace EditorTool.Helpers
 {
     public static class BackingField
     {

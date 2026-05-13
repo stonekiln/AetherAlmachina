@@ -1,7 +1,7 @@
 using System;
 using R3.Triggers;
 
-namespace Utility
+namespace Tools
 {
     /// <summary>
     /// UIのボタンを実装する際に継承するクラス

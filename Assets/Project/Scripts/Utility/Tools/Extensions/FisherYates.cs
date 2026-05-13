@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Utility
+namespace Tools.Extensions
 {
     public static class FisherYates
     {

@@ -49,8 +49,8 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     [Serializable]
     public class ModifierEnchantData
     {
-        [SerializeField] ModifierAsset type;
-        [SerializeField] public float value;
+        [field: SerializeField] ModifierAsset Type { get; set; }
+        [field: SerializeField] public float Value { get; set; }
 
         /// <summary>
         /// Modifierを付与する対象を決める
@@ -60,7 +60,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         /// <returns>解除を行うための情報</returns>
         public DispelModifier Enchant(IEntityInteraction user, IEntityInteraction target)
         {
-            Action dispel = type.ModifierType.MakeDispel(user, target, new(type, value));
+            Action dispel = Type.ModifierType.MakeDispel(user, target, new(Type, Value));
             return new(user, target, dispel);
         }
     }

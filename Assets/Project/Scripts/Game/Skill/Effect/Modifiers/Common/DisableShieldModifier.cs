@@ -9,7 +9,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     public class DisableShieldModifier : CommonModifier
     {
         public override StatusType StatusTypeKey => StatusType.Disable;
-        public override string DisplayUnit => "回";
+        public override string DisplayUnit => "(回)";
         protected override Type ModifierParameterKey => typeof(FlatModifierParameter);
         protected override Action MakeDispelTyped(IEntityInteraction user, IEntityInteraction target, CommonModifierData data)
         {

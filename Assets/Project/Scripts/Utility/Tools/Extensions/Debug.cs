@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Utility
+namespace Tools.Extensions
 {
     static class ArrayLog
     {

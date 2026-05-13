@@ -17,15 +17,26 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         /// <param name="user">使用者</param>
         /// <param name="target">付与対象</param>
         /// <param name="modifierData">Modifierの情報</param>
-        /// <returns>解除を行うための情報</returns>
+        /// <returns>解除を行うための動作</returns>
         public abstract Action MakeDispel(IEntityInteraction user, IEntityInteraction target, ModifierRawData data);
     }
+    /// <summary>
+    /// Modifierの情報
+    /// </summary>
+    /// <typeparam name="TData">取り扱うデータ形式</typeparam>
     public abstract class ModifierBase<TData> : ModifierBase where TData : ModifierRawData
     {
         public sealed override Action MakeDispel(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
         {
             return MakeDispelTyped(user, target, MakeModifierData(user, target, data));
         }
+        /// <summary>
+        /// Modifierを付与する
+        /// </summary>
+        /// <param name="user">使用者</param>
+        /// <param name="target">付与対象</param>
+        /// <param name="modifierData">Modifierの情報</param>
+        /// <returns>解除を行うための動作</returns>
         protected abstract Action MakeDispelTyped(IEntityInteraction user, IEntityInteraction target, TData data);
         protected abstract TData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data);
     }
@@ -51,6 +62,9 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
             };
         }
     }
+    /// <summary>
+    /// ステータスに作用しないModifierのEnchant方法
+    /// </summary>
     public abstract class TriggerModifier : ModifierBase<TriggerModifierData>
     {
         protected override Action MakeDispelTyped(IEntityInteraction user, IEntityInteraction target, TriggerModifierData data)

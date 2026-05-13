@@ -4,8 +4,8 @@ using DConfig.EntityLife.Event;
 using DIVFactor.Event;
 using DIVFactor.Extensions;
 using R3;
+using Tools.Extensions;
 using UnityEngine;
-using Utility;
 
 namespace AetherAlmachina.Deck
 {

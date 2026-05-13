@@ -1,9 +1,9 @@
 using R3;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Utility;
 using DIVFactor.Injectable;
 using DConfig.EntityLife.Event;
+using Tools;
 
 namespace AetherAlmachina.Card.Object
 {
