@@ -13,7 +13,7 @@ namespace AetherAlmachina.Stage
         {
             base.Injection(resolver);
 
-            layoutEventBus.Subscribe(req => Arrange(req.Friendly, transform.position, settings.Friendly.layoutSize, true)).AddTo(this);
+            layoutEvent.Subscribe(req => Arrange(req.Friendly, transform.position, settings.Friendly.layoutSize, true)).AddTo(this);
         }
     }
 }
