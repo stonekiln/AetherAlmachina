@@ -23,12 +23,14 @@ namespace AetherAlmachina.Entities
         ProcessEventBundle process;
         protected EventBus<AutoIncreaseEvent> AutoIncrease;
         protected EventBus<DeckGetEvent> DeckGet;
+        protected EventBus<LayoutIndexEvent> IndexGet;
         protected DeckListAsset deckList;
         protected DeckController deckController;
         public StatusParameter Status { get; private set; }
         public TargetingEventBundle Targeting => targeting;
         public ActionEventBundle Action => action;
         public ProcessEventBundle Process => process;
+        public EventBus<LayoutIndexEvent> LayoutIndexGet => IndexGet;
         public Vector2Int LayoutIndex { get; private set; }
         Action entryEnd;
 
@@ -37,6 +39,7 @@ namespace AetherAlmachina.Entities
             resolver.Inject(out StatusAsset statusAsset);
             resolver.Inject(out AutoIncrease);
             resolver.Inject(out DeckGet);
+            resolver.Inject(out IndexGet);
             resolver.Inject(out deckController);
             resolver.Inject(out targeting);
             resolver.Inject(out action);
@@ -46,6 +49,7 @@ namespace AetherAlmachina.Entities
             deckList = statusAsset.Deck;
 
             AutoIncrease.Switch(Process.CostUpdate).Subscribe(log => new(log.Delta)).AddTo(this);
+            IndexGet.Subscribe(e => LayoutIndex = e.Index);
             deckController.Subscribe(this);
             Targeting.Hit.Subscribe(log => log.Apply(this)).AddTo(this);
 

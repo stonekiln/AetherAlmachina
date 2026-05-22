@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DIVFactor.Injectable;
 using DIVFactor.Event;
+using DConfig.StageLife.Event;
 using AetherAlmachina.Entities;
 using R3;
 using UnityEngine;
@@ -20,7 +21,11 @@ namespace AetherAlmachina.Stage
         /// <summary>
         /// エンティティを配置するためのイベントバス
         /// </summary>
-        protected EventBus<TEvent> layoutEventBus;
+        protected EventBus<TEvent> layoutEvent;
+        /// <summary>
+        /// エンティティのレイアウトインデックスを通知するためのイベントバス
+        /// </summary>
+        protected EventBus<LayoutIndexEvent> indexEvent;
         /// <summary>
         /// エンティティを配置する領域のサイズ
         /// </summary>
@@ -29,7 +34,8 @@ namespace AetherAlmachina.Stage
         public virtual void Injection(InjectableResolver resolver)
         {
             resolver.Inject(out settings);
-            resolver.Inject(out layoutEventBus);
+            resolver.Inject(out layoutEvent);
+            resolver.Inject(out indexEvent);
         }
 
         void OnDrawGizmos()
@@ -107,7 +113,7 @@ namespace AetherAlmachina.Stage
                     // 配置位置の適用
                     // 位置の変化量だけ移動させると、origin を中心とした配置になる
                     entities[index].transform.position = localPositions[i, j] + deltaCenter;
-                    entities[index].SetLayoutIndex(new Vector2Int(i, j));
+                    entities[index].LayoutIndexGet.OnNext(new(new Vector2Int(i, j)));
 
                     // 自分を親にしてグループ化
                     entities[index].transform.SetParent(transform);

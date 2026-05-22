@@ -35,6 +35,7 @@ namespace DConfig.StageLife.Installer
         {
             builder.RegisterEvent<FriendlyLayoutEvent>();
             builder.RegisterEvent<HostileLayoutEvent>();
+            builder.RegisterEvent<LayoutIndexEvent>();
         }
     }
 }
