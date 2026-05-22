@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Entities.Parameter;
 using AetherAlmachina.Skill.Effect.Contracts;
@@ -7,6 +9,28 @@ using UnityEngine;
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
     public record ModifierTypeData(string Name, Sprite Icon, string DisplayUnit);
+    public class ModifierValues
+    {
+        public ModifierTypeData TypeData { get; init; }
+        List<float> Values { get; init; }
+        public ModifierValues(ModifierTypeData typeData)
+        {
+            TypeData = typeData;
+            Values = new();
+        }
+        public void Add(float value)
+        {
+            Values.Add(value);
+        }
+        public void Remove(float value)
+        {
+            Values.Remove(value);
+        }
+        public float Max()
+        {
+            return Values.Aggregate(0f, (pre, cur) => Mathf.Abs(cur) > Mathf.Abs(pre) ? cur : pre);
+        }
+    }
     public class ModifierRawData
     {
         public ModifierTypeData TypeData { get; init; }
@@ -14,13 +38,14 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         public Type PolarityType { get; init; }
         public ModifierPolarity Polarity { get; init; }
         public float Value { get; init; }
-        public float SignedValue => Polarity.GetValue(Value);
+        public float ModifyValue { get; init; }
         public ModifierRawData(ModifierAsset asset, float value)
         {
             ModifierType = asset.ModifierType.GetType();
             Polarity = asset.Polarity;
             PolarityType = Polarity.GetType();
             Value = value;
+            ModifyValue = Polarity.ApplySign(value);
             TypeData = new(asset.Name, asset.Icon, asset.ModifierType.DisplayUnit);
         }
         public ModifierRawData(ModifierRawData data)
@@ -29,6 +54,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
             Polarity = data.Polarity;
             PolarityType = data.PolarityType;
             Value = data.Value;
+            ModifyValue = ModifyValue;
             TypeData = data.TypeData;
         }
     }
@@ -39,29 +65,8 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     }
     public class TriggerModifierData : ModifierRawData
     {
-        public Func<Func<int>, IDisposable> CallBack { get; init; }
+        public Action AddCallBack { get; init; }
+        public Action RemoveCallBack { get; init; }
         public TriggerModifierData(ModifierRawData data) : base(data) { }
-    }
-
-    /// <summary>
-    /// Modifierの情報
-    /// </summary>
-    [Serializable]
-    public class ModifierEnchantData
-    {
-        [field: SerializeField] ModifierAsset Type { get; set; }
-        [field: SerializeField] public float Value { get; set; }
-
-        /// <summary>
-        /// Modifierを付与する対象を決める
-        /// </summary>
-        /// <param name="user">使用者</param>
-        /// <param name="target">付与対象候補</param>
-        /// <returns>解除を行うための情報</returns>
-        public DispelModifier Enchant(IEntityInteraction user, IEntityInteraction target)
-        {
-            Action dispel = Type.ModifierType.MakeDispel(user, target, new(Type, Value));
-            return new(user, target, dispel);
-        }
     }
 }

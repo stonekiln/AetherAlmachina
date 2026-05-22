@@ -65,23 +65,26 @@ namespace AetherAlmachina.Entities.Parameter
     {
         public ResourceStateParameter Resource { get; init; }
         Dictionary<StatusType, float> BaseStatus { get; init; }
-        public Dictionary<Type, ModifierParameter> ModifiedParam { get; init; }
-        public TriggerModifiers Triggers { get; init; }
+        Dictionary<Type, ModifierStock> ModifierStorage { get; init; }
 
         public StatusParameter(StatusBase status, ResourceStateParameter resourceState, EventBus<HPUpdateEvent> hpUpdate)
         {
             BaseStatus = new(status.BaseStatus);
-            ModifiedParam = new()
+            ModifierStorage = new()
             {
                 {typeof(FlatModifierParameter),new FlatModifierParameter(BaseStatus)},
                 {typeof(RateModifierParameter),new RateModifierParameter(BaseStatus)},
+                {typeof(TriggerModifiers),new TriggerModifiers()}
             };
-            Triggers = new();
             Resource = resourceState;
 
             hpUpdate.OnNext(new(GetInt(StatusType.MaxHitPoint)));
         }
 
+        public T GetModifiers<T>() where T : ModifierStock
+        {
+            return (T)ModifierStorage[typeof(T)];
+        }
         /// <summary>
         /// 指定した種類のステータスの数値を取得する
         /// </summary>
@@ -89,7 +92,7 @@ namespace AetherAlmachina.Entities.Parameter
         /// <returns>取得した数値</returns>
         public float Get(StatusType type)
         {
-            return (BaseStatus[type] + ModifiedParam[typeof(FlatModifierParameter)].GetValue(type)) * ModifiedParam[typeof(RateModifierParameter)].GetValue(type);
+            return (BaseStatus[type] + GetModifiers<FlatModifierParameter>().GetValue(type)) * GetModifiers<RateModifierParameter>().GetValue(type);
         }
         /// <summary>
         /// 指定した種類のステータスの数値を整数値で取得する

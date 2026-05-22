@@ -1,6 +1,7 @@
 using System;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Entities.Parameter;
+using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
@@ -23,38 +24,24 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     /// <summary>
     /// Modifierの情報
     /// </summary>
-    /// <typeparam name="TData">取り扱うデータ形式</typeparam>
-    public abstract class ModifierBase<TData> : ModifierBase where TData : ModifierRawData
+    /// <typeparam name="TMod">Modifierの形式</typeparam>
+    public abstract class ModifierBase<TMod, TData> : ModifierBase
+        where TMod : ModifierStock<TData>
+        where TData : ModifierRawData
     {
         public sealed override Action MakeDispel(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
         {
-            return MakeDispelTyped(user, target, MakeModifierData(user, target, data));
+            return target.Status.GetModifiers<TMod>().AddModifier(TransformData(user, target, data));
         }
-        /// <summary>
-        /// Modifierを付与する
-        /// </summary>
-        /// <param name="user">使用者</param>
-        /// <param name="target">付与対象</param>
-        /// <param name="modifierData">Modifierの情報</param>
-        /// <returns>解除を行うための動作</returns>
-        protected abstract Action MakeDispelTyped(IEntityInteraction user, IEntityInteraction target, TData data);
-        protected abstract TData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data);
+        protected abstract TData TransformData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data);
     }
     /// <summary>
     /// ステータスに作用するModifierのEnchant方法
     /// </summary>
-    public abstract class CommonModifier : ModifierBase<CommonModifierData>
+    public abstract class CommonModifier<TMod> : ModifierBase<TMod, CommonModifierData> where TMod : ModifierParameter
     {
-        /// <summary>
-        /// Modifierの変化の種類
-        /// </summary>
-        protected abstract Type ModifierParameterKey { get; }
         public abstract StatusType StatusTypeKey { get; }
-        protected override Action MakeDispelTyped(IEntityInteraction user, IEntityInteraction target, CommonModifierData data)
-        {
-            return target.Status.ModifiedParam[ModifierParameterKey].AddModifier(data);
-        }
-        protected override CommonModifierData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
+        protected override CommonModifierData TransformData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
         {
             return new(data)
             {
@@ -65,27 +52,29 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     /// <summary>
     /// ステータスに作用しないModifierのEnchant方法
     /// </summary>
-    public abstract class TriggerModifier : ModifierBase<TriggerModifierData>
+    public abstract class TriggerModifier : ModifierBase<TriggerModifiers, TriggerModifierData>
     {
-        protected override Action MakeDispelTyped(IEntityInteraction user, IEntityInteraction target, TriggerModifierData data)
+        protected override TriggerModifierData TransformData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
         {
-            return target.Status.Triggers.AddModifier(data);
+            return new(data)
+            {
+                AddCallBack = delegate { },
+                RemoveCallBack = delegate { }
+            };
         }
     }
     /// <summary>
     /// 定数変化のModifierの定義
     /// </summary>
-    public abstract class FlatModifier : CommonModifier
+    public abstract class FlatModifier : CommonModifier<FlatModifierParameter>
     {
-        protected override Type ModifierParameterKey => typeof(FlatModifierParameter);
         public override string DisplayUnit => "";
     }
     /// <summary>
     /// 割合変化のModifierの定義
     /// </summary>
-    public abstract class RateModifier : CommonModifier
+    public abstract class RateModifier : CommonModifier<RateModifierParameter>
     {
-        protected override Type ModifierParameterKey => typeof(RateModifierParameter);
         public override string DisplayUnit => "%";
     }
 }

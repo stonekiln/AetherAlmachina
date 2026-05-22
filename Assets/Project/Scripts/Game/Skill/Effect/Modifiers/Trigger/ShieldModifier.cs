@@ -5,13 +5,11 @@ using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
-    public abstract class ShieldModifier : CommonModifier
+    public abstract class ShieldModifier : TriggerModifier
     {
-        public override StatusType StatusTypeKey => StatusType.Shield;
-        protected override Type ModifierParameterKey => typeof(FlatModifierParameter);
-        protected override Action MakeDispelTyped(IEntityInteraction user, IEntityInteraction target, CommonModifierData data)
+        protected override Action MakeDispelTyped(IEntityInteraction user, IEntityInteraction target, TriggerModifierData data)
         {
-            Action dispel = target.Status.ModifiedParam[ModifierParameterKey].AddModifier(data);
+            Action dispel = target.Status.Triggers.AddModifier(data);
             int valueGap = Mathf.FloorToInt(data.Value) - target.Status.Resource.Shield;
             if (valueGap > 0) target.Process.ResourceUpdate.Shield.OnNext(new(valueGap));
 
@@ -31,11 +29,10 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     {
         public override string DisplayUnit => "";
 
-        protected override CommonModifierData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
+        protected override TriggerModifierData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierData data)
         {
             return new(data)
             {
-                StatusTypeKey = StatusTypeKey,
                 ModifierType = typeof(ShieldModifier)
             };
         }
@@ -47,13 +44,12 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     public class ShieldHPRate : ShieldModifier
     {
         public override string DisplayUnit => "%";
-        protected override CommonModifierData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
+        protected override TriggerModifierData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierData data)
         {
             return new(data)
             {
-                StatusTypeKey = StatusTypeKey,
                 ModifierType = typeof(ShieldModifier),
-                Value = user.Status.Get(StatusType.MaxHitPoint) * data.Value / 100f
+                ModifyValue = user.Status.Get(StatusType.MaxHitPoint) * data.Value / 100f
             };
         }
     }

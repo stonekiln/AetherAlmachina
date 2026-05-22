@@ -10,18 +10,18 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     {
         public override string DisplayUnit => "";
 
-        protected override TriggerModifierData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierRawData data)
+        protected override TriggerModifierData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierData data)
         {
             return new(data)
             {
                 Value = data.Value,
-                CallBack = (func) => Observable.Interval(TimeSpan.FromSeconds(1f)).Subscribe(_ =>
+                ApplyCallBack = (value) => Observable.Interval(TimeSpan.FromSeconds(1f)).Subscribe(_ =>
                 {
-                    int damage = func();
-                    target.Process.ResourceUpdate.HP.OnNext(new(damage));
+                    target.Process.ResourceUpdate.HP.OnNext(new(value));
                     Entity entity = (Entity)target;
-                    Debug.Log(entity.name + "が" + -damage + "ダメージを受けました。\n残りHP:" + entity.Status.Resource.HitPoint);
-                })
+                    Debug.Log(entity.name + "が" + -value + "ダメージを受けました。\n残りHP:" + entity.Status.Resource.HitPoint);
+                }),
+                DispelCallBack = ()
             };
         }
     }

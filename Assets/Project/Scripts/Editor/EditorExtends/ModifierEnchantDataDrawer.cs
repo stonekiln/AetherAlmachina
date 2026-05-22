@@ -1,3 +1,4 @@
+using AetherAlmachina.Skill.Effect;
 using AetherAlmachina.Skill.Effect.Modifiers;
 using EditorTool.Helpers;
 using UnityEditor;

@@ -18,6 +18,27 @@ namespace AetherAlmachina.Skill.Effect
         }
     }
     /// <summary>
+    /// Modifierの種類と効果量をインスペクター上で指定できるようにする
+    /// </summary>
+    [Serializable]
+    public class ModifierEnchantData
+    {
+        [field: SerializeField] ModifierAsset Type { get; set; }
+        [field: SerializeField] public float Value { get; set; }
+
+        /// <summary>
+        /// Modifierを付与する対象を決める
+        /// </summary>
+        /// <param name="user">使用者</param>
+        /// <param name="target">付与対象候補</param>
+        /// <returns>解除を行うための情報</returns>
+        public DispelModifier Enchant(IEntityInteraction user, IEntityInteraction target)
+        {
+            Action dispel = Type.ModifierType.MakeDispel(user, target, new(Type, Value));
+            return new(user, target, dispel);
+        }
+    }
+    /// <summary>
     /// EnchantEffectに必要なパラメータ
     /// </summary>
     [Serializable]

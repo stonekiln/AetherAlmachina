@@ -22,8 +22,6 @@ namespace AetherAlmachina.Entities.Parameter
         [SerializeField][StatusTypeRegister(StatusType.Attack)] int attack;
         [SerializeField][StatusTypeRegister(StatusType.Defence)] int defence;
         [SerializeField][StatusTypeRegister(StatusType.Speed)] int speed;
-        [StatusTypeRegister(StatusType.Shield)] int Shield => 0;
-        [StatusTypeRegister(StatusType.Disable)] int Disable => 0;
         [StatusTypeRegister(StatusType.CriticalRate)] float CriticalRate => 0.05f;
         [StatusTypeRegister(StatusType.CriticalDamage)] float CriticalDamage => 1.2f;
         [StatusTypeRegister(StatusType.Power)] float Power => 1f;
