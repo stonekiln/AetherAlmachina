@@ -16,7 +16,7 @@ namespace AetherAlmachina.Entities
     /// <summary>
     /// エンティティのMonoBehaviour
     /// </summary>
-    public abstract class Entity : MonoBehaviour, IEntityInteraction, IInjectable
+    public abstract class Entity : MonoBehaviour, IEntityEnchantInteraction, IInjectable
     {
         TargetingEventBundle targeting;
         ActionEventBundle action;
@@ -27,11 +27,14 @@ namespace AetherAlmachina.Entities
         protected DeckListAsset deckList;
         protected DeckController deckController;
         public StatusParameter Status { get; private set; }
+        IStatusReader IEntityInteraction.Status => Status;
+        IEnchantableStatus IEntityEnchantInteraction.Status => Status;
         public TargetingEventBundle Targeting => targeting;
         public ActionEventBundle Action => action;
         public ProcessEventBundle Process => process;
         public EventBus<LayoutIndexEvent> LayoutIndexGet => IndexGet;
         public Vector2Int LayoutIndex { get; private set; }
+
         Action entryEnd;
 
         public virtual void Injection(InjectableResolver resolver)
@@ -49,7 +52,7 @@ namespace AetherAlmachina.Entities
             deckList = statusAsset.Deck;
 
             AutoIncrease.Switch(Process.CostUpdate).Subscribe(log => new(log.Delta)).AddTo(this);
-            IndexGet.Subscribe(e => LayoutIndex = e.Index);
+            IndexGet.Subscribe(log => LayoutIndex = log.Index);
             deckController.Subscribe(this);
             Targeting.Hit.Subscribe(log => log.Apply(this)).AddTo(this);
 
@@ -120,16 +123,10 @@ namespace AetherAlmachina.Entities
             Process.ResourceUpdate.HP.OnNext(new(healAmount));
             Debug.Log(gameObject.name + "のHPが" + healAmount + "回復しました。\n残りHP:" + Status.Resource.HitPoint);
         }
-
         void Get()
         {
             Debug.Log("デッキをセットしました");
             DeckGet.OnNext(new(deckList.ReadDeck(this).ToList()));
-        }
-
-        public void SetLayoutIndex(Vector2Int layoutIndex)
-        {
-            LayoutIndex = layoutIndex;
         }
         void DeathCheck()
         {

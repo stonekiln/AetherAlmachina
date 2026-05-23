@@ -15,7 +15,7 @@ namespace DIVFactor.Injectable
         /// ここでフィールドのインジェクトを行う
         /// </summary>
         /// <param name="resolver">使用するcontainer</param>
-        public void Injection(InjectableResolver resolver);
+        void Injection(InjectableResolver resolver);
     }
     /// <summary>
     /// インジェクトを行うためのコンテナ

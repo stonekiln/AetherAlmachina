@@ -16,7 +16,7 @@ namespace DIVFactor.Binder
         /// 指定したMonoBehaviourを自身にバインドする
         /// </summary>
         /// <param name="element"></param>
-        public void Bind(T element);
+        void Bind(T element);
     }
     /// <summary>
     /// 指定したMonoBehaviourをバインドするMonoBehaviourを実装するためのクラス

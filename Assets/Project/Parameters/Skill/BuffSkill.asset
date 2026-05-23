@@ -22,34 +22,34 @@ MonoBehaviour:
     <MaxTargets>k__BackingField: 1
   <EffectQueue>k__BackingField:
   - <Effect>k__BackingField:
-      rid: 948703975320322136
-    <Parameter>k__BackingField:
-      rid: 948703975320322137
-  - <Effect>k__BackingField:
       rid: 4576090723573301331
     <Parameter>k__BackingField:
       rid: 4576090723573301332
+  - <Effect>k__BackingField:
+      rid: 948704240296788053
+    <Parameter>k__BackingField:
+      rid: 948704240296788054
   references:
     version: 2
     RefIds:
     - rid: 948703905094828116
       type: {class: EnemySelector, ns: AetherAlmachina.Skill.Effect.Selectors, asm: Assembly-CSharp}
       data: 
-    - rid: 948703975320322136
+    - rid: 948704240296788053
       type: {class: EnchantEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data: 
-    - rid: 948703975320322137
+    - rid: 948704240296788054
       type: {class: EnchantParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data:
         <Modifier>k__BackingField:
-          <Type>k__BackingField: {fileID: 11400000, guid: e560cd3994f43794fb603b67762a4342, type: 2}
-          <Value>k__BackingField: 1
+          <Type>k__BackingField: {fileID: 11400000, guid: 02dc99e46e83ee945ab3d91803a99873, type: 2}
+          <Value>k__BackingField: 10
         <Contract>k__BackingField:
-          rid: 948703975320322138
-    - rid: 948703975320322138
+          rid: 948704241663606784
+    - rid: 948704241663606784
       type: {class: TimeContract, ns: AetherAlmachina.Skill.Effect.Contracts, asm: Assembly-CSharp}
       data:
-        <During>k__BackingField: 10
+        <During>k__BackingField: 20
     - rid: 4576090723573301331
       type: {class: EnchantEffect, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data: 
@@ -57,8 +57,8 @@ MonoBehaviour:
       type: {class: EnchantParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data:
         <Modifier>k__BackingField:
-          <Type>k__BackingField: {fileID: 11400000, guid: 02dc99e46e83ee945ab3d91803a99873, type: 2}
-          <Value>k__BackingField: 5
+          <Type>k__BackingField: {fileID: 11400000, guid: e560cd3994f43794fb603b67762a4342, type: 2}
+          <Value>k__BackingField: 1
         <Contract>k__BackingField:
           rid: 4576090723573301333
     - rid: 4576090723573301333

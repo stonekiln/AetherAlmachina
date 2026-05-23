@@ -1,19 +1,17 @@
-using System;
 using System.Collections.Generic;
 using AetherAlmachina.Entities.Parameter;
-using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
     /// <summary>
     /// Modifierによるパラメータの補正値を管理するクラス
     /// </summary>
-    public abstract class ModifierParameter : ModifierStock<CommonModifierData>
+    public abstract class ModifierParameter : ModifierStock
     {
         /// <summary>
         /// 付与されているModifierの種類
         /// </summary>
-        protected Dictionary<StatusType, float> ModifierSum { get; init; }
+        public Dictionary<StatusType, float> ModifierSum { get; init; }
 
         public ModifierParameter(Dictionary<StatusType, float> status)
         {
@@ -25,39 +23,6 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
             }
         }
 
-        public override Action AddModifier(CommonModifierData data)
-        {
-            Type modifierType = data.ModifierType;
-            Type polarity = data.PolarityType;
-
-            CreateKey(modifierType, polarity, data.TypeData);
-
-            float curMax = Modifiers[modifierType][polarity].Max();
-            if (MathF.Abs(curMax) < Mathf.Abs(data.ModifyValue))
-            {
-                ModifierSum[data.StatusTypeKey] += data.ModifyValue - curMax;
-            }
-
-            Modifiers[modifierType][polarity].Add(data.ModifyValue);
-
-            Debug.Log(data.TypeData.Name + ":" + data.ModifyValue + data.TypeData.DisplayUnit + " の効果が付与された。");
-            return () => RemoveModifier(data);
-        }
-        protected override void RemoveModifier(CommonModifierData data)
-        {
-            Type modifierType = data.ModifierType;
-            Type polarity = data.PolarityType;
-
-            Modifiers[modifierType][polarity].Remove(data.ModifyValue);
-
-            float curMax = Modifiers[modifierType][polarity].Max();
-            if (Mathf.Abs(curMax) < Mathf.Abs(data.ModifyValue))
-            {
-                ModifierSum[data.StatusTypeKey] += curMax - data.ModifyValue;
-            }
-
-            Debug.Log(data.TypeData.Name + ":" + data.ModifyValue + data.TypeData.DisplayUnit + "の効果が解除された。");
-        }
         /// <summary>
         /// 補正値の計算方法
         /// </summary>

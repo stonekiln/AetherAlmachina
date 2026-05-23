@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa4d77b4a1bfaa648b28b66263362a58, type: 3}
-  m_Name: MaxHitNegative
+  m_Name: MaxHPRatePositive
   m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.Skill.Effect.Modifiers.ModifierAsset
   <ModifierType>k__BackingField:
-    rid: 948703951993438293
+    rid: 948704241663606867
   <Polarity>k__BackingField:
-    rid: 948703951993438294
-  <Name>k__BackingField: "\u6700\u5927HP\u4F4E\u4E0B"
+    rid: 948704241663606868
+  <Name>k__BackingField: "\u6700\u5927HP\u5272\u5408\u4E0A\u6607"
   <Icon>k__BackingField: {fileID: 0}
   references:
     version: 2
     RefIds:
-    - rid: 948703951993438293
-      type: {class: MaxHitPointFlat, ns: AetherAlmachina.Skill.Effect.Modifiers, asm: Assembly-CSharp}
+    - rid: 948704241663606867
+      type: {class: MaxHitPointRate, ns: , asm: Assembly-CSharp}
       data: 
-    - rid: 948703951993438294
-      type: {class: NegativeModifier, ns: AetherAlmachina.Skill.Effect.Modifiers, asm: Assembly-CSharp}
+    - rid: 948704241663606868
+      type: {class: PositiveModifier, ns: AetherAlmachina.Skill.Effect.Modifiers, asm: Assembly-CSharp}
       data: 

@@ -33,8 +33,8 @@ namespace AetherAlmachina.Stage
         Func<StatusAsset, Player> playerFactory;
         Func<StatusAsset, Enemy> enemyFactory;
         EntityList Data;
-        List<IEntityInteraction> friendlyEntity;
-        List<IEntityInteraction> hostileEntity;
+        List<Entity> friendlyEntity;
+        List<Entity> hostileEntity;
         EventBus<FriendlyLayoutEvent> friendlyLayoutEvent;
         EventBus<HostileLayoutEvent> hostileLayoutEvent;
 
@@ -61,8 +61,8 @@ namespace AetherAlmachina.Stage
             friendlyLayoutEvent.OnNext(new(friends));
             hostileLayoutEvent.OnNext(new(enemies));
 
-            friendlyEntity = new List<IEntityInteraction>(friends);
-            hostileEntity = new List<IEntityInteraction>(enemies);
+            friendlyEntity = new List<Entity>(friends);
+            hostileEntity = new List<Entity>(enemies);
             SetUpTargeting(friendlyEntity, hostileEntity);
         }
 
@@ -71,7 +71,7 @@ namespace AetherAlmachina.Stage
         /// </summary>
         /// <param name="friendlyEntity">友好的なエンティティ</param>
         /// <param name="hostileEntity">敵対的なエンティティ</param>
-        void SetUpTargeting(List<IEntityInteraction> friendlyEntity, List<IEntityInteraction> hostileEntity)
+        void SetUpTargeting(List<Entity> friendlyEntity, List<Entity> hostileEntity)
         {
             void SetLockOn(LockOnEventBundle lockOn) =>
                 lockOn.Request.Switch(lockOn.Response).Subscribe(log => new(log.Selector(friendlyEntity, hostileEntity))).AddTo(this);

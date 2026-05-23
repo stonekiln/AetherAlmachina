@@ -15,7 +15,7 @@ namespace AetherAlmachina.Skill.Effect
         /// <param name="user">使用者</param>
         /// <param name="target">対象者</param>
         /// <param name="parameter">エフェクトの設定値</param>
-        public abstract void Apply(IEntityInteraction user, IEntityInteraction target, EffectParameter parameter);
+        public abstract void Apply(Entity user, Entity target, EffectParameter parameter);
     }
     /// <summary>
     /// ジェネリックでパラメータと実行部を紐づける
@@ -24,7 +24,7 @@ namespace AetherAlmachina.Skill.Effect
     public abstract class SkillEffect<TParameter> : SkillEffect where TParameter : EffectParameter
     {
         public sealed override Type ParameterType => typeof(TParameter);
-        public sealed override void Apply(IEntityInteraction user, IEntityInteraction target, EffectParameter parameter)
+        public sealed override void Apply(Entity user, Entity target, EffectParameter parameter)
         {
             ApplyTyped(user, target, (TParameter)parameter);
         }
@@ -36,6 +36,7 @@ namespace AetherAlmachina.Skill.Effect
         /// <param name="parameter">エフェクトの設定値</param>
         protected abstract void ApplyTyped(IEntityInteraction user, IEntityInteraction target, TParameter parameter);
     }
+
     /// <summary>
     /// エフェクトの実行に必要なパラメータ
     /// </summary>

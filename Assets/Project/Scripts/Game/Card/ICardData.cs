@@ -10,26 +10,26 @@ namespace AetherAlmachina.Card
         /// <summary>
         /// カードのスキル
         /// </summary>
-        public SkillData SkillData { get; }
+        SkillData SkillData { get; }
         /// <summary>
         /// カードが選択状態
         /// </summary>
-        public bool IsSelect { get; }
+        bool IsSelect { get; }
         /// <summary>
         /// カードの選択状態を設定する
         /// </summary>
         /// <param name="flag">設定する状態</param>
-        public void SetSelect(bool flag);
+        void SetSelect(bool flag);
         /// <summary>
         /// カードを指定された順番にセットする
         /// </summary>
         /// <param name="index">指定する順番</param>
         /// <returns>自身のカード情報</returns>
-        public ICardData SetCard(int index);
+        ICardData SetCard(int index);
         /// <summary>
         /// カードを消費する
         /// </summary>
         /// <returns></returns>
-        public ICardData RemoveCard();
+        ICardData RemoveCard();
     }
 }

@@ -1,16 +1,18 @@
 using System;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Entities.Parameter;
+using AetherAlmachina.Skill.Effect.Modifiers;
 using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
-    public abstract class MaxHitPointModifier : CommonModifier
+    public abstract class MaxHitPointModifier<TMod> : CommonModifier<TMod> where TMod : ModifierParameter
     {
         public override StatusType StatusTypeKey => StatusType.MaxHitPoint;
-        protected override Action MakeDispelTyped(IEntityInteraction user, IEntityInteraction target, CommonModifierData data)
+
+        protected override ModifierData TransformData(IEntityEnchantInteraction user, IEntityEnchantInteraction target, ModifierRawData rawData)
         {
-            void keepRatioHpConvert(float ratio)
+            void KeepRatioHpConvert(float ratio)
             {
                 if (ratio != 1)
                 {
@@ -19,36 +21,42 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
                 }
             }
 
-            float pre = target.Status.Get(StatusTypeKey);
-            Action dispel = target.Status.ModifiedParam[ModifierParameterKey].AddModifier(data);
-            float cur = target.Status.Get(StatusTypeKey);
-            keepRatioHpConvert(cur / pre);
+            ModifierData data = base.TransformData(user, target, rawData);
 
-            return () =>
-            {
-                float pre = target.Status.Get(StatusTypeKey);
-                dispel();
-                float cur = target.Status.Get(StatusTypeKey);
-                keepRatioHpConvert(cur / pre);
-            };
+            return new(rawData,
+                preMax =>
+                {
+                    float preMaxHP = target.Status.Get(StatusTypeKey);
+                    data.AddCallBack(preMax);
+                    float curMaxHP = target.Status.Get(StatusTypeKey);
+
+                    KeepRatioHpConvert(curMaxHP / preMaxHP);
+                },
+                curMax =>
+                {
+                    float preMaxHP = target.Status.Get(StatusTypeKey);
+                    data.RemoveCallBack(curMax);
+                    float curMaxHP = target.Status.Get(StatusTypeKey);
+
+                    KeepRatioHpConvert(curMaxHP / preMaxHP);
+                }
+            );
         }
     }
-    /// <summary>
-    /// 定数攻撃力変化のModifierの定義
-    /// </summary>
-    [Serializable]
-    public class MaxHitPointFlat : MaxHitPointModifier
-    {
-        protected override Type ModifierParameterKey => typeof(FlatModifierParameter);
-        public override string DisplayUnit => "";
-    }
-    /// <summary>
-    /// 割合攻撃力変化のModifierの定義
-    /// </summary>
-    [Serializable]
-    public class MaxHitPointRate : MaxHitPointModifier
-    {
-        protected override Type ModifierParameterKey => typeof(RateModifierParameter);
-        public override string DisplayUnit => "%";
-    }
+}
+/// <summary>
+/// 定数攻撃力変化のModifierの定義
+/// </summary>
+[Serializable]
+public class MaxHitPointFlat : MaxHitPointModifier<FlatModifierParameter>
+{
+    public override string DisplayUnit => "";
+}
+/// <summary>
+/// 割合攻撃力変化のModifierの定義
+/// </summary>
+[Serializable]
+public class MaxHitPointRate : MaxHitPointModifier<RateModifierParameter>
+{
+    public override string DisplayUnit => "%";
 }

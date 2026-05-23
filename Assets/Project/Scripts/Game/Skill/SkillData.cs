@@ -32,10 +32,10 @@ namespace AetherAlmachina.Skill
         /// <summary>
         /// スキルの使用者
         /// </summary>
-        public IEntityInteraction Owner { get; init; }
+        public Entity Owner { get; init; }
         EffectData[] EffectQueue { get; init; }
         float handPower;
-        IEnumerable<IEntityInteraction> targets;
+        IEnumerable<Entity> targets;
         int queueIndex = 0;
 
         public SkillData(SkillAsset skillAsset, Entity owner)
@@ -47,7 +47,7 @@ namespace AetherAlmachina.Skill
             Owner = owner;
             //0番目にInitialLockOnを置いたEffectQueueの配列を渡す
             EffectQueue = new[] { new EffectData(Activator.CreateInstance(typeof(LockOn)) as LockOn, skillAsset.InitialLockOn) }.Concat(skillAsset.EffectQueue).ToArray();
-            Owner.Targeting.LockOn.Response.Subscribe(log => targets = log.Targets).AddTo(owner);
+            Owner.Targeting.LockOn.Response.Subscribe(log => targets = log.Targets.OfType<Entity>()).AddTo(owner);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace AetherAlmachina.Skill
             }
             else
             {
-                foreach (IEntityInteraction target in targets)
+                foreach (Entity target in targets)
                 {
                     target.Targeting.Hit.OnNext(
                         new(entity => current.Effect.Apply(Owner, entity, current.Parameter.SetHandPower(handPower))));

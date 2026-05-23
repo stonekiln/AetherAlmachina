@@ -10,9 +10,16 @@ namespace AetherAlmachina.Skill.Effect
     /// 相手にModifierを付与する効果
     /// </summary>
     [Serializable]
-    public class EnchantEffect : SkillEffect<EnchantParameter>
+    public class EnchantEffect : SkillEffect
     {
-        protected override void ApplyTyped(IEntityInteraction user, IEntityInteraction target, EnchantParameter parameter)
+        public override Type ParameterType => typeof(EnchantParameter);
+
+        public override void Apply(Entity user, Entity target, EffectParameter parameter)
+        {
+            ApplyTyped(user, target, (EnchantParameter)parameter);
+        }
+
+        protected void ApplyTyped(IEntityEnchantInteraction user, IEntityEnchantInteraction target, EnchantParameter parameter)
         {
             parameter.Modifier.Enchant(user, target).Signed(parameter.Contract);
         }
@@ -32,7 +39,7 @@ namespace AetherAlmachina.Skill.Effect
         /// <param name="user">使用者</param>
         /// <param name="target">付与対象候補</param>
         /// <returns>解除を行うための情報</returns>
-        public DispelModifier Enchant(IEntityInteraction user, IEntityInteraction target)
+        public DispelModifier Enchant(IEntityEnchantInteraction user, IEntityEnchantInteraction target)
         {
             Action dispel = Type.ModifierType.MakeDispel(user, target, new(Type, Value));
             return new(user, target, dispel);

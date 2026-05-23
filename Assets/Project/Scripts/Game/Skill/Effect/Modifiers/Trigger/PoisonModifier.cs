@@ -10,19 +10,29 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     {
         public override string DisplayUnit => "";
 
-        protected override TriggerModifierData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierData data)
+        protected override ModifierData TransformData(IEntityEnchantInteraction user, IEntityEnchantInteraction target, ModifierRawData data)
         {
-            return new(data)
-            {
-                Value = data.Value,
-                ApplyCallBack = (value) => Observable.Interval(TimeSpan.FromSeconds(1f)).Subscribe(_ =>
+            return new(data,
+                preMax =>
                 {
-                    target.Process.ResourceUpdate.HP.OnNext(new(value));
                     Entity entity = (Entity)target;
-                    Debug.Log(entity.name + "が" + -value + "ダメージを受けました。\n残りHP:" + entity.Status.Resource.HitPoint);
-                }),
-                DispelCallBack = ()
-            };
+                    if (preMax == 0)
+                    {
+                        Observable.Interval(TimeSpan.FromSeconds(1f))
+                            .Select(_ => Mathf.FloorToInt(target.Status.GetModifiers<TriggerModifiers>().Modifiers[data.ModifierType][data.Polarity.GetType()].Max()))
+                                .TakeWhile(value => value != 0).Subscribe(value =>
+                                    {
+                                        target.Process.ResourceUpdate.HP.OnNext(new(value));
+                                        Debug.Log(entity.name + "が" + Mathf.Abs(value) + "ダメージを受けました。\n残りHP:" + entity.Status.Resource.HitPoint);
+                                    }).AddTo(entity);
+                    }
+
+                    Debug.Log(data.TypeData.Name + ":" + data.Value + data.TypeData.DisplayUnit + " の効果が付与された。");
+                },
+                _ =>
+                {
+                    Debug.Log(data.TypeData.Name + ":" + data.Value + data.TypeData.DisplayUnit + " の効果が解除された。");
+                });
         }
     }
 }

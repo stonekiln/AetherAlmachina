@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbc57203aefa2d044a67a2e488091548, type: 3}
-  m_Name: Posison
+  m_Name: Poison
   m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.Skill.SkillAsset
   <SkillName>k__BackingField: "\u6BD2\u4ED8\u4E0E"
   <Description>k__BackingField: 
-  <Cost>k__BackingField: 0
+  <Cost>k__BackingField: 1
   <Icon>k__BackingField: {fileID: 21300000, guid: a4e478f115619e74c94a8582327961ed, type: 3}
   <InitialLockOn>k__BackingField:
     <Selector>k__BackingField:

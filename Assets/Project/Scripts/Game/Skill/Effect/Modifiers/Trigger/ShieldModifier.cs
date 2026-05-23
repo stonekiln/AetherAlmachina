@@ -7,18 +7,32 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
 {
     public abstract class ShieldModifier : TriggerModifier
     {
-        protected override Action MakeDispelTyped(IEntityInteraction user, IEntityInteraction target, TriggerModifierData data)
+        protected override ModifierData TransformData(IEntityEnchantInteraction user, IEntityEnchantInteraction target, ModifierRawData data)
         {
-            Action dispel = target.Status.Triggers.AddModifier(data);
-            int valueGap = Mathf.FloorToInt(data.Value) - target.Status.Resource.Shield;
-            if (valueGap > 0) target.Process.ResourceUpdate.Shield.OnNext(new(valueGap));
+            return new(data,
+                preMax =>
+                {
+                    int addShield = Mathf.FloorToInt(data.ModifyValue);
+                    if (target.Status.Resource.Shield < addShield)
+                    {
+                        target.Process.ResourceUpdate.Shield.OnNext(new(addShield - target.Status.Resource.Shield));
+                    }
 
-            Action valueMaxFloor = () =>
+                    Debug.Log(data.TypeData.Name + ":" + data.Value + data.TypeData.DisplayUnit + " の効果が付与された。");
+                },
+                curMax =>
+                {
+                    int curShield = Mathf.FloorToInt(curMax);
+                    if (curShield < target.Status.Resource.Shield)
+                    {
+                        target.Process.ResourceUpdate.Shield.OnNext(new(curShield - target.Status.Resource.Shield));
+                    }
+
+                    Debug.Log(data.TypeData.Name + ":" + data.Value + data.TypeData.DisplayUnit + " の効果が解除された。");
+                })
             {
-                int valueGap = target.Status.GetInt(StatusTypeKey) - target.Status.Resource.Shield;
-                if (valueGap < 0) target.Process.ResourceUpdate.Shield.OnNext(new(valueGap));
+                ModifierType = typeof(ShieldModifier)
             };
-            return dispel + valueMaxFloor;
         }
     }
     /// <summary>
@@ -28,14 +42,6 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     public class ShieldFlat : ShieldModifier
     {
         public override string DisplayUnit => "";
-
-        protected override TriggerModifierData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierData data)
-        {
-            return new(data)
-            {
-                ModifierType = typeof(ShieldModifier)
-            };
-        }
     }
     /// <summary>
     /// 割合攻撃力変化のModifierの定義
@@ -44,13 +50,13 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     public class ShieldHPRate : ShieldModifier
     {
         public override string DisplayUnit => "%";
-        protected override TriggerModifierData MakeModifierData(IEntityInteraction user, IEntityInteraction target, ModifierData data)
+        protected override ModifierData TransformData(IEntityEnchantInteraction user, IEntityEnchantInteraction target, ModifierRawData data)
         {
-            return new(data)
+            ModifierRawData modifiedValueData = new(data)
             {
-                ModifierType = typeof(ShieldModifier),
-                ModifyValue = user.Status.Get(StatusType.MaxHitPoint) * data.Value / 100f
+                ModifyValue = user.Status.Get(StatusType.MaxHitPoint) * data.ModifyValue / 100f
             };
+            return base.TransformData(user, target, modifiedValueData);
         }
     }
 }
