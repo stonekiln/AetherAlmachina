@@ -54,13 +54,21 @@ namespace DConfig.EntityLife.Installer
             builder.RegisterEvent<RecoveryEvent>();
 
             builder.RegisterEvent<SkillEndEvent>();
-            builder.RegisterEvent<EntityDeathEvent>();
-            builder.RegisterEvent<CostUpdateEvent>();
-            builder.RegisterEvent<HPUpdateEvent>();
-            builder.RegisterEvent<ShieldUpdateEvent>();
-            builder.RegisterEvent<DisableUpdateEvent>();
+
+            builder.RegisterEvent<CostUpdateRequestEvent>();
+            builder.RegisterEvent<CostUpdateResponseEvent>();
+            builder.RegisterEvent<HPUpdateRequestEvent>();
+            builder.RegisterEvent<HPUpdateResponseEvent>();
+            builder.RegisterEvent<ShieldUpdateRequestEvent>();
+            builder.RegisterEvent<ShieldUpdateResponseEvent>();
+            builder.RegisterEvent<DisableUpdateRequestEvent>();
+            builder.RegisterEvent<DisableUpdateResponseEvent>();
 
             builder.Register<ActionEventBundle>(Lifetime.Singleton);
+            builder.Register<ResourceUpdateEventBundle<CostUpdateRequestEvent, CostUpdateResponseEvent>>(Lifetime.Singleton);
+            builder.Register<ResourceUpdateEventBundle<HPUpdateRequestEvent, HPUpdateResponseEvent>>(Lifetime.Singleton);
+            builder.Register<ResourceUpdateEventBundle<ShieldUpdateRequestEvent, ShieldUpdateResponseEvent>>(Lifetime.Singleton);
+            builder.Register<ResourceUpdateEventBundle<DisableUpdateRequestEvent, DisableUpdateResponseEvent>>(Lifetime.Singleton);
             builder.Register<ResourceUpdateEventBundle>(Lifetime.Singleton);
             builder.Register<ProcessEventBundle>(Lifetime.Singleton);
         }

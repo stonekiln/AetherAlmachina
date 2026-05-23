@@ -8,6 +8,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     /// </summary>
     public abstract class ModifierParameter : ModifierStock
     {
+        //TODO:辞書型を直接参照する形にしないこと
         /// <summary>
         /// 付与されているModifierの種類
         /// </summary>

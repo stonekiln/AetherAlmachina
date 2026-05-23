@@ -25,7 +25,7 @@ namespace AetherAlmachina.Card.Hand
         DeckDrawEventBundle DeckDraw;
         CardActiveEventBundle CardActive;
         EventBus<SkillActivateEvent> SkillActivate;
-        Entity owner;
+        IEntityInteraction owner;
         List<int> selectedIndex;
         int Type => GetHandType();
         public List<ICardData> Hand { get; private set; }
@@ -82,12 +82,11 @@ namespace AetherAlmachina.Card.Hand
             int costSum = (int)MathF.Ceiling(selectedIndex.Aggregate(0, (previous, current) => previous + Hand[current].SkillData.Cost) / (float)selectedIndex.Count());
             if (costSum <= owner.Status.Resource.Cost)
             {
-                owner.Process.CostUpdate.OnNext(new(-costSum));
+                owner.Process.ResourceUpdate.Cost.Request.OnNext(new(-costSum));
                 float handPower = HandPowerTable.Get(Type, selectedIndex.Count());
                 foreach (SkillData skill in selectedIndex.Select(index => Hand[index].SkillData))
                 {
-                    skill.SetHandPower(handPower);
-                    SkillActivate.OnNext(new(skill));
+                    SkillActivate.OnNext(new(new(skill, handPower)));
                 }
                 Hand = RemoveHand();
                 Draw(selectedIndex.Count());

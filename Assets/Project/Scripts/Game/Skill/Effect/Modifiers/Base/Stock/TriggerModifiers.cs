@@ -1,8 +1,8 @@
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
-    public class TriggerModifiers : ModifierStock
+    public class TriggerModifierStock : ModifierStock
     {
-        public TriggerModifiers()
+        public TriggerModifierStock()
         {
             Modifiers = new();
         }

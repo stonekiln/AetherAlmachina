@@ -29,25 +29,32 @@ namespace DConfig.EntityLife.Event
     /// スキルが終了したことを宣言するイベントメッセージ
     /// </summary>
     public record SkillEndEvent : EventObject;
-    public record EntityDeathEvent : EventObject;
+
+    public record ResourceUpdateEventBundle<TReq, TRes>(EventBus<TReq> Request, EventBus<TRes> Response)
+        where TReq : EventObject
+        where TRes : EventObject;
     /// <summary>
     /// MPが変化したことを宣言するイベントメッセージ
     /// </summary>
     /// <param name="Delta">変化量</param>
-    public record CostUpdateEvent(int Delta) : EventObject;
-    public record HPUpdateEvent(int Delta) : EventObject;
-    public record ShieldUpdateEvent(int Delta) : EventObject;
-    public record DisableUpdateEvent(int Delta) : EventObject;
+    public record CostUpdateRequestEvent(int Delta) : EventObject;
+    public record CostUpdateResponseEvent(int Current) : EventObject;
+    public record HPUpdateRequestEvent(int Delta) : EventObject;
+    public record HPUpdateResponseEvent(int Current) : EventObject;
+    public record ShieldUpdateRequestEvent(int Delta) : EventObject;
+    public record ShieldUpdateResponseEvent(int Current) : EventObject;
+    public record DisableUpdateRequestEvent(int Delta) : EventObject;
+    public record DisableUpdateResponseEvent(int Current) : EventObject;
 
     public record ResourceUpdateEventBundle(
-        EventBus<HPUpdateEvent> HP,
-        EventBus<ShieldUpdateEvent> Shield,
-        EventBus<DisableUpdateEvent> Disable
+        ResourceUpdateEventBundle<CostUpdateRequestEvent, CostUpdateResponseEvent> Cost,
+        ResourceUpdateEventBundle<HPUpdateRequestEvent, HPUpdateResponseEvent> HP,
+        ResourceUpdateEventBundle<ShieldUpdateRequestEvent, ShieldUpdateResponseEvent> Shield,
+        ResourceUpdateEventBundle<DisableUpdateRequestEvent, DisableUpdateResponseEvent> Disable
     );
+
     public record ProcessEventBundle(
         EventBus<SkillEndEvent> SkillEnd,
-        EventBus<EntityDeathEvent> EntityDeath,
-        ResourceUpdateEventBundle ResourceUpdate,
-        EventBus<CostUpdateEvent> CostUpdate
+        ResourceUpdateEventBundle ResourceUpdate
     );
 }

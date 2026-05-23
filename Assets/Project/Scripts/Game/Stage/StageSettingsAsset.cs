@@ -1,3 +1,4 @@
+using System;
 using AetherAlmachina.Cost;
 using AetherAlmachina.Entities.Parameter;
 using UnityEngine;
@@ -10,7 +11,7 @@ namespace AetherAlmachina.Stage
     [CreateAssetMenu(fileName = "StageSettings", menuName = "GameSettings/StageSettings")]
     public class StageSettingsAsset : ScriptableObject
     {
-        [System.Serializable]
+        [Serializable]
         public class EntitySpawnData
         {
             /// <summary>

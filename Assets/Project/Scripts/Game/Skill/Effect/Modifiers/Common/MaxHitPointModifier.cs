@@ -6,6 +6,10 @@ using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
+    /// <summary>
+    /// 最大HP変化のModifierの定義
+    /// </summary>
+    /// <typeparam name="TMod">記録するModifierStockの形式</typeparam>
     public abstract class MaxHitPointModifier<TMod> : CommonModifier<TMod> where TMod : ModifierParameter
     {
         public override StatusType StatusTypeKey => StatusType.MaxHitPoint;
@@ -17,7 +21,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
                 if (ratio != 1)
                 {
                     int hpDelta = Mathf.RoundToInt(target.Status.Resource.HitPoint * (ratio - 1f));
-                    target.Process.ResourceUpdate.HP.OnNext(new(hpDelta));
+                    target.Process.ResourceUpdate.HP.Request.OnNext(new(hpDelta));
                 }
             }
 
@@ -45,7 +49,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     }
 }
 /// <summary>
-/// 定数攻撃力変化のModifierの定義
+/// 定数最大HP変化のModifierの定義
 /// </summary>
 [Serializable]
 public class MaxHitPointFlat : MaxHitPointModifier<FlatModifierParameter>
@@ -53,7 +57,7 @@ public class MaxHitPointFlat : MaxHitPointModifier<FlatModifierParameter>
     public override string DisplayUnit => "";
 }
 /// <summary>
-/// 割合攻撃力変化のModifierの定義
+/// 割合最大HP変化のModifierの定義
 /// </summary>
 [Serializable]
 public class MaxHitPointRate : MaxHitPointModifier<RateModifierParameter>

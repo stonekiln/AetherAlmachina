@@ -1,10 +1,14 @@
 using System;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Entities.Parameter;
+using R3;
 using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
+    /// <summary>
+    /// シールド付与のModifierの定義
+    /// </summary>
     public abstract class ShieldModifier : TriggerModifier
     {
         protected override ModifierData TransformData(IEntityEnchantInteraction user, IEntityEnchantInteraction target, ModifierRawData data)
@@ -15,7 +19,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
                     int addShield = Mathf.FloorToInt(data.ModifyValue);
                     if (target.Status.Resource.Shield < addShield)
                     {
-                        target.Process.ResourceUpdate.Shield.OnNext(new(addShield - target.Status.Resource.Shield));
+                        target.Process.ResourceUpdate.Shield.Request.OnNext(new(addShield - target.Status.Resource.Shield));
                     }
 
                     Debug.Log(data.TypeData.Name + ":" + data.Value + data.TypeData.DisplayUnit + " の効果が付与された。");
@@ -25,7 +29,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
                     int curShield = Mathf.FloorToInt(curMax);
                     if (curShield < target.Status.Resource.Shield)
                     {
-                        target.Process.ResourceUpdate.Shield.OnNext(new(curShield - target.Status.Resource.Shield));
+                        target.Process.ResourceUpdate.Shield.Request.OnNext(new(curShield - target.Status.Resource.Shield));
                     }
 
                     Debug.Log(data.TypeData.Name + ":" + data.Value + data.TypeData.DisplayUnit + " の効果が解除された。");
@@ -34,9 +38,13 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
                 ModifierType = typeof(ShieldModifier)
             };
         }
+        public override Observable<Unit> CreateContract(IEntityEnchantInteraction user, IEntityEnchantInteraction target)
+        {
+            return target.Process.ResourceUpdate.Shield.Response.Where(log => log.Current <= 0).Take(1).AsUnitObservable();
+        }
     }
     /// <summary>
-    /// 定数攻撃力変化のModifierの定義
+    /// 定数シールド付与のModifierの定義
     /// </summary>
     [Serializable]
     public class ShieldFlat : ShieldModifier
@@ -44,7 +52,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         public override string DisplayUnit => "";
     }
     /// <summary>
-    /// 割合攻撃力変化のModifierの定義
+    /// HP割合シールド付与のModifierの定義
     /// </summary>
     [Serializable]
     public class ShieldHPRate : ShieldModifier

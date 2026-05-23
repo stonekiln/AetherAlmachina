@@ -7,6 +7,7 @@ namespace AetherAlmachina.Entities
 {
     public interface IStatusReader
     {
+        ResourceStatusParameter Resource { get; }
         /// <summary>
         /// 指定した種類のステータスの数値を取得する
         /// </summary>
@@ -22,7 +23,11 @@ namespace AetherAlmachina.Entities
     }
     public interface IEnchantableStatus : IStatusReader
     {
-        ResourceStateParameter Resource { get; }
+        /// <summary>
+        /// ModifierStorageに保存されたModifierStockの派生インスタンスを取得する
+        /// </summary>
+        /// <typeparam name="T">ModifierStockの種類</typeparam>
+        /// <returns>辞書に登録されているTの型のインスタンス</returns>
         T GetModifiers<T>() where T : ModifierStock;
     }
     /// <summary>

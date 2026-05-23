@@ -8,9 +8,6 @@ using UnityEngine;
 
 namespace AetherAlmachina.Skill
 {
-    /// <summary>
-    /// スキルの情報を渡す
-    /// </summary>
     public class SkillData
     {
         /// <summary>
@@ -32,11 +29,9 @@ namespace AetherAlmachina.Skill
         /// <summary>
         /// スキルの使用者
         /// </summary>
-        public Entity Owner { get; init; }
-        EffectData[] EffectQueue { get; init; }
-        float handPower;
-        IEnumerable<Entity> targets;
-        int queueIndex = 0;
+        public IEntityInteraction User => Owner;
+        protected Entity Owner { get; init; }
+        protected EffectData[] EffectQueue { get; init; }
 
         public SkillData(SkillAsset skillAsset, Entity owner)
         {
@@ -47,7 +42,30 @@ namespace AetherAlmachina.Skill
             Owner = owner;
             //0番目にInitialLockOnを置いたEffectQueueの配列を渡す
             EffectQueue = new[] { new EffectData(Activator.CreateInstance(typeof(LockOn)) as LockOn, skillAsset.InitialLockOn) }.Concat(skillAsset.EffectQueue).ToArray();
-            Owner.Targeting.LockOn.Response.Subscribe(log => targets = log.Targets.OfType<Entity>()).AddTo(owner);
+        }
+        public SkillData(SkillData data)
+        {
+            Name = data.Name;
+            Cost = data.Cost;
+            Icon = data.Icon;
+            IsDeferrable = data.IsDeferrable;
+            Owner = data.Owner;
+            EffectQueue = data.EffectQueue;
+        }
+    }
+    /// <summary>
+    /// スキルの情報を渡す
+    /// </summary>
+    public class ActivatedSkillData : SkillData
+    {
+        float HandPower { get; init; }
+        IEnumerable<Entity> targets;
+        int queueIndex = 0;
+
+        public ActivatedSkillData(SkillData data, float power) : base(data)
+        {
+            HandPower = power;
+            Owner.Targeting.LockOn.Response.Subscribe(log => targets = log.Targets.OfType<Entity>()).AddTo(Owner);
         }
 
         /// <summary>
@@ -57,10 +75,12 @@ namespace AetherAlmachina.Skill
         public bool MoveNext()
         {
             EffectData current = EffectQueue[queueIndex];
-            //LockOnだった場合通常とは異なる処理を行う
-            if (current.Effect is LockOn targeting)
+            //HACK:LockOnだった場合targetを必要としないため少し特殊な処理を行う
+            // LockOnにキャストを行ってApplyを実行することもできるが、
+            // インターフェイスにキャストを行って、インターフェイス内にあるtargetを必要としないメソッドから実行する
+            if (current.Effect is ILockOnEffect targeting)
             {
-                targeting.Apply(Owner, null, current.Parameter);
+                targeting.Apply(Owner, current.Parameter);
                 queueIndex++;
                 //LockOnだった場合それはモーションを伴わないので自動で次の効果を発動させる
                 return queueIndex != EffectQueue.Length && MoveNext();
@@ -69,20 +89,11 @@ namespace AetherAlmachina.Skill
             {
                 foreach (Entity target in targets)
                 {
-                    target.Targeting.Hit.OnNext(
-                        new(entity => current.Effect.Apply(Owner, entity, current.Parameter.SetHandPower(handPower))));
+                    target.Targeting.Hit.OnNext(new(entity => current.Effect.Apply(Owner, entity, current.Parameter.SetHandPower(HandPower))));
                 }
                 queueIndex++;
                 return queueIndex != EffectQueue.Length;
             }
-        }
-        /// <summary>
-        /// スキルに役倍率を設定する
-        /// </summary>
-        /// <param name="power">設定する役倍率</param>
-        public void SetHandPower(float power)
-        {
-            handPower = power;
         }
     }
 }

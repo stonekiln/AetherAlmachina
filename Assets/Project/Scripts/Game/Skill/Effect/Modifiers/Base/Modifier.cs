@@ -1,10 +1,12 @@
 using System;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Entities.Parameter;
+using R3;
 using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
+    public record DispelData;
     /// <summary>
     /// Modifierの情報
     /// </summary>
@@ -20,11 +22,21 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         /// <param name="modifierData">Modifierの情報</param>
         /// <returns>解除を行うための動作</returns>
         public abstract Action MakeDispel(IEntityEnchantInteraction user, IEntityEnchantInteraction target, ModifierRawData data);
+        /// <summary>
+        /// それぞれのModifierで固有の解除の条件を定義する
+        /// </summary>
+        /// <param name="user">使用者</param>
+        /// <param name="target">付与対象者</param>
+        /// <returns>解除条件</returns>
+        public virtual Observable<Unit> CreateContract(IEntityEnchantInteraction user, IEntityEnchantInteraction target)
+        {
+            return Observable.Never<Unit>();
+        }
     }
     /// <summary>
     /// Modifierの情報
     /// </summary>
-    /// <typeparam name="TMod">Modifierの形式</typeparam>
+    /// <typeparam name="TMod">記録するModifierStockの形式</typeparam>
     public abstract class ModifierBase<TMod> : ModifierBase where TMod : ModifierStock
     {
         public sealed override Action MakeDispel(IEntityEnchantInteraction user, IEntityEnchantInteraction target, ModifierRawData data)
@@ -43,6 +55,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     /// <summary>
     /// ステータスに作用するModifierのEnchant方法
     /// </summary>
+    /// <typeparam name="TMod">記録するModifierStockの形式</typeparam>
     public abstract class CommonModifier<TMod> : ModifierBase<TMod> where TMod : ModifierParameter
     {
         public abstract StatusType StatusTypeKey { get; }
@@ -70,7 +83,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     /// <summary>
     /// ステータスに作用しないModifierのEnchant方法
     /// </summary>
-    public abstract class TriggerModifier : ModifierBase<TriggerModifiers> { }
+    public abstract class TriggerModifier : ModifierBase<TriggerModifierStock> { }
     /// <summary>
     /// 定数変化のModifierの定義
     /// </summary>

@@ -19,7 +19,7 @@ namespace AetherAlmachina.Cost
         {
             resolver.Inject(out owner);
 
-            owner.Process.CostUpdate.Subscribe(log => UpdateDisplay(owner.Status.Resource.Cost)).AddTo(this);
+            owner.Process.ResourceUpdate.Cost.Response.Subscribe(log => UpdateDisplay(log.Current)).AddTo(this);
         }
 
         void Awake()

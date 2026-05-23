@@ -21,7 +21,7 @@ namespace AetherAlmachina.ActGauge.Pointer
     public abstract class PointerSpawner : MonoBehaviour, ILifetimeSpawner
     {
         RectTransform rect;
-        Action<SkillData, PointerSpawnerData> pointerFactory;
+        Action<ActivatedSkillData, PointerSpawnerData> pointerFactory;
         protected abstract Color PointerColor { get; }
 
         public void SpawnConfigure(SpawnerBuilder builder)
@@ -38,6 +38,6 @@ namespace AetherAlmachina.ActGauge.Pointer
         /// ポインターを生成し、ゲージに乗せる
         /// </summary>
         /// <param name="skill">そのポインターに乗せるスキル</param>
-        public void MakePointer(SkillData skill) => pointerFactory(skill, new(rect, PointerColor));
+        public void MakePointer(ActivatedSkillData skill) => pointerFactory(skill, new(rect, PointerColor));
     }
 }

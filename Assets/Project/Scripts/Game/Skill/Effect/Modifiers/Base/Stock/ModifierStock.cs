@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
+    /// <summary>
+    /// Modifierの追加・削除を行う。また、付与済みのModifier一覧を記録する。
+    /// </summary>
     public abstract class ModifierStock
     {
+        //TODO:辞書型を直接参照する形にしないこと
         public Dictionary<Type, Dictionary<Type, ModifierValues>> Modifiers { get; init; }
         protected void CreateKey(Type modifier, Type polarity, ModifierTypeData data)
         {

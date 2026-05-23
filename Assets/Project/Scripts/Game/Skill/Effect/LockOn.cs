@@ -7,12 +7,34 @@ using UnityEngine;
 namespace AetherAlmachina.Skill.Effect
 {
     /// <summary>
+    /// LockOn専用のSkillEffect(targetを引数に取らない)
+    /// </summary>
+    public interface ILockOnEffect
+    {
+        /// <summary>
+        /// スキルの効果を実行する(LockOn専用)
+        /// </summary>
+        /// <param name="user">使用者</param>
+        /// <param name="parameter">エフェクトの設定値</param>
+        void Apply(Entity user, EffectParameter parameter);
+    }
+    /// <summary>
     /// スキルエフェクトの効果を及ぼす対象を抽出する
     /// </summary>
     [Serializable]
-    public class LockOn : SkillEffect<LockOnParameter>
+    public class LockOn : SkillEffect, ILockOnEffect
     {
-        protected override void ApplyTyped(IEntityInteraction user, IEntityInteraction target, LockOnParameter parameter)
+        public override Type ParameterType => typeof(LockOnParameter);
+
+        public void Apply(Entity user, EffectParameter parameter)
+        {
+            ApplyTyped(user, (LockOnParameter)parameter);
+        }
+        public override void Apply(Entity user, Entity target, EffectParameter parameter)
+        {
+            Apply(user, (LockOnParameter)parameter);
+        }
+        void ApplyTyped(IEntityInteraction user, LockOnParameter parameter)
         {
             user.Targeting.LockOn.Request.OnNext(new((friendly, hostile) => parameter.Selector.Targeting(friendly, hostile, user.LayoutIndex).Take(parameter.MaxTargets)));
         }

@@ -18,42 +18,40 @@ namespace AetherAlmachina.Entities
     /// </summary>
     public abstract class Entity : MonoBehaviour, IEntityEnchantInteraction, IInjectable
     {
-        TargetingEventBundle targeting;
-        ActionEventBundle action;
-        ProcessEventBundle process;
+        public TargetingEventBundle Targeting { get; private set; }
+        public ActionEventBundle Action { get; private set; }
+        public ProcessEventBundle Process { get; private set; }
+        public EventBus<LayoutIndexEvent> LayoutIndexGet => IndexGet;
+        public Vector2Int LayoutIndex { get; private set; }
+        public StatusParameter Status { get; private set; }
         protected EventBus<AutoIncreaseEvent> AutoIncrease;
         protected EventBus<DeckGetEvent> DeckGet;
         protected EventBus<LayoutIndexEvent> IndexGet;
         protected DeckListAsset deckList;
-        protected DeckController deckController;
-        public StatusParameter Status { get; private set; }
         IStatusReader IEntityInteraction.Status => Status;
         IEnchantableStatus IEntityEnchantInteraction.Status => Status;
-        public TargetingEventBundle Targeting => targeting;
-        public ActionEventBundle Action => action;
-        public ProcessEventBundle Process => process;
-        public EventBus<LayoutIndexEvent> LayoutIndexGet => IndexGet;
-        public Vector2Int LayoutIndex { get; private set; }
-
-        Action entryEnd;
 
         public virtual void Injection(InjectableResolver resolver)
         {
+            resolver.Inject(out TargetingEventBundle targeting);
+            resolver.Inject(out ActionEventBundle action);
+            resolver.Inject(out ProcessEventBundle process);
             resolver.Inject(out StatusAsset statusAsset);
+            resolver.Inject(out DeckController deckController);
             resolver.Inject(out AutoIncrease);
             resolver.Inject(out DeckGet);
             resolver.Inject(out IndexGet);
-            resolver.Inject(out deckController);
-            resolver.Inject(out targeting);
-            resolver.Inject(out action);
-            resolver.Inject(out process);
 
-            Status = new(statusAsset, new(Process, this), Process.ResourceUpdate.HP);
+            Targeting = targeting;
+            Action = action;
+            Process = process;
+            Status = new(statusAsset, new(Process, this), Process.ResourceUpdate.HP.Request);
             deckList = statusAsset.Deck;
 
-            AutoIncrease.Switch(Process.CostUpdate).Subscribe(log => new(log.Delta)).AddTo(this);
-            IndexGet.Subscribe(log => LayoutIndex = log.Index);
             deckController.Subscribe(this);
+            AutoIncrease.Switch(Process.ResourceUpdate.Cost.Request).Subscribe(log => new(log.Delta)).AddTo(this);
+            IndexGet.Subscribe(log => LayoutIndex = log.Index);
+
             Targeting.Hit.Subscribe(log => log.Apply(this)).AddTo(this);
 
             Action.Attack.Subscribe(log => Attack(log.Target, log.SkillPower)).AddTo(this);
@@ -61,10 +59,13 @@ namespace AetherAlmachina.Entities
             Action.Heal.Subscribe(log => Heal(log.Target, log.SkillPower)).AddTo(this);
             Action.Recovery.Subscribe(log => Recovery(log.Recovery, log.Power)).AddTo(this);
 
-            Process.EntityDeath.Subscribe(_ => DeathCheck());
+            Process.ResourceUpdate.HP.Response.Where(log => log.Current <= 0).Take(1).Subscribe(_ =>
+            {
+                Debug.Log(gameObject.name + "が死亡しました。");
+                resolver.EntryEndPoint();
+            }).AddTo(this);
 
             resolver.ActivePoint.Subscribe(_ => Get());
-            entryEnd = resolver.EntryEndPoint;
         }
 
         void Attack(IEntityInteraction target, float skillPower)
@@ -85,7 +86,7 @@ namespace AetherAlmachina.Entities
             int damageAmount = Mathf.FloorToInt(damage);
             if (Status.Resource.Disable > 0)
             {
-                Process.ResourceUpdate.Disable.OnNext(new(-1));
+                Process.ResourceUpdate.Disable.Request.OnNext(new(-1));
                 Debug.Log(gameObject.name + "がダメージを無効化しました。\n残り回数:" + Status.Resource.Disable);
             }
             else
@@ -96,15 +97,15 @@ namespace AetherAlmachina.Entities
                     if (Status.Resource.Shield > 0)
                     {
                         int shieldDamage = -Status.Resource.Shield;
-                        Process.ResourceUpdate.Shield.OnNext(new(shieldDamage));
+                        Process.ResourceUpdate.Shield.Request.OnNext(new(shieldDamage));
                         Debug.Log(gameObject.name + "が" + -shieldDamage + "のシールドを消費しました\n残りシールド:" + Status.Resource.Shield);
                     }
-                    Process.ResourceUpdate.HP.OnNext(new(remainingShield));
+                    Process.ResourceUpdate.HP.Request.OnNext(new(remainingShield));
                     Debug.Log(gameObject.name + "が" + -remainingShield + "ダメージを受けました。\n残りHP:" + Status.Resource.HitPoint);
                 }
                 else
                 {
-                    Process.ResourceUpdate.Shield.OnNext(new(damageAmount));
+                    Process.ResourceUpdate.Shield.Request.OnNext(new(damageAmount));
                     Debug.Log(gameObject.name + "が" + -damageAmount + "のシールドを消費しました\n残りシールド:" + Status.Resource.Shield);
                 }
             }
@@ -120,21 +121,13 @@ namespace AetherAlmachina.Entities
             {
                 healAmount = Status.GetInt(StatusType.MaxHitPoint) - Status.Resource.HitPoint;
             }
-            Process.ResourceUpdate.HP.OnNext(new(healAmount));
+            Process.ResourceUpdate.HP.Request.OnNext(new(healAmount));
             Debug.Log(gameObject.name + "のHPが" + healAmount + "回復しました。\n残りHP:" + Status.Resource.HitPoint);
         }
         void Get()
         {
             Debug.Log("デッキをセットしました");
             DeckGet.OnNext(new(deckList.ReadDeck(this).ToList()));
-        }
-        void DeathCheck()
-        {
-            if (Status.Resource.HitPoint <= 0)
-            {
-                Debug.Log(gameObject.name + "が死亡しました。");
-                entryEnd();
-            }
         }
     }
 }

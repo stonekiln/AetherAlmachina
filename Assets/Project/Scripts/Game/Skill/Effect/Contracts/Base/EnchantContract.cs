@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using AetherAlmachina.Entities;
+using R3;
 
 namespace AetherAlmachina.Skill.Effect.Contracts
 {
@@ -16,7 +17,17 @@ namespace AetherAlmachina.Skill.Effect.Contracts
         /// <param name="user">使用者</param>
         /// <param name="target">付与対象者</param>
         /// <param name="dispel">Modifierの解除動作を行う関数</param>
-        public abstract void Sign(IEntityInteraction user, IEntityInteraction target, Action dispel);
+        public void Sign(IEntityInteraction user, IEntityInteraction target, Observable<Unit> modifierContract, Action dispel)
+        {
+            Observable.Merge(modifierContract, Create(user, target)).Take(1).Subscribe(_ => dispel()).AddTo((Entity)target);
+        }
+        /// <summary>
+        /// Modifierの解除の条件を定義する
+        /// </summary>
+        /// <param name="user">使用者</param>
+        /// <param name="target">付与対象者</param>
+        /// <returns>解除条件</returns>
+        protected abstract Observable<Unit> Create(IEntityInteraction user, IEntityInteraction target);
     }
     /// <summary>
     /// Modifierの解除を行うための情報を渡す
@@ -25,12 +36,14 @@ namespace AetherAlmachina.Skill.Effect.Contracts
     {
         IEntityInteraction User { get; init; }
         IEntityInteraction Target { get; init; }
+        Observable<Unit> ModifierContract { get; init; }
         Action Dispel { get; init; }
 
-        public DispelModifier(IEntityInteraction user, IEntityInteraction target, Action dispel)
+        public DispelModifier(IEntityInteraction user, IEntityInteraction target, Observable<Unit> contract, Action dispel)
         {
             User = user;
             Target = target;
+            ModifierContract = contract;
             Dispel = dispel;
         }
 
@@ -40,7 +53,7 @@ namespace AetherAlmachina.Skill.Effect.Contracts
         /// <param name="contract">解除のタイミング</param>
         public void Signed(EnchantContract contract)
         {
-            contract.Sign(User, Target, Dispel);
+            contract.Sign(User, Target, ModifierContract, Dispel);
         }
     }
 }

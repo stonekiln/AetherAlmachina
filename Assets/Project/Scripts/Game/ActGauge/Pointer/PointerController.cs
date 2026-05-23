@@ -20,7 +20,7 @@ namespace AetherAlmachina.ActGauge.Pointer
         /// </summary>
         const float DisplayThresholdSeconds = 10f;
         readonly DelayFormula Formula = new();
-        SkillData skillData;
+        ActivatedSkillData skillData;
         Tween tween;
         PointerSpawnerData spawnerData;
         RectTransform rectTransform;
@@ -47,7 +47,7 @@ namespace AetherAlmachina.ActGauge.Pointer
 
             if (skillData.IsDeferrable)
             {
-                remainingTime = Formula.GetTime(skillData.Owner.Status.Get(StatusType.Speed));
+                remainingTime = Formula.GetTime(skillData.User.Status.Get(StatusType.Speed));
             }
             else
             {
@@ -69,7 +69,7 @@ namespace AetherAlmachina.ActGauge.Pointer
         {
             Debug.Log(skillData.Name + "が発動しました。");
             DoSkillEffectsImmediately();
-            skillData.Owner.Process.SkillEnd.OnNext(new());
+            skillData.User.Process.SkillEnd.OnNext(new());
             entryEnd();
         }
 

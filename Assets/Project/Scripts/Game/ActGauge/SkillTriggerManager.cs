@@ -31,13 +31,13 @@ namespace AetherAlmachina.Stage
         /// 発動に時間がかかるスキルは、このメソッドによって行動ゲージに乗せる
         /// </summary>
         /// <param name="data">ゲージに乗せるスキル</param>
-        public void GaugeOn(SkillData data)
+        public void GaugeOn(ActivatedSkillData data)
         {
-            if (data.Owner is Player)
+            if (data.User is Player)
             {
                 playerPointer.MakePointer(data);
             }
-            if (data.Owner is Enemy)
+            if (data.User is Enemy)
             {
                 enemyPointer.MakePointer(data);
             }

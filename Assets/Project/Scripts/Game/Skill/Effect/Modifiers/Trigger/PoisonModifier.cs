@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {
+    /// <summary>
+    /// 毒付与のModifierの定義
+    /// </summary>
     [Serializable]
     public class PoisonModifier : TriggerModifier
     {
@@ -19,10 +22,10 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
                     if (preMax == 0)
                     {
                         Observable.Interval(TimeSpan.FromSeconds(1f))
-                            .Select(_ => Mathf.FloorToInt(target.Status.GetModifiers<TriggerModifiers>().Modifiers[data.ModifierType][data.Polarity.GetType()].Max()))
+                            .Select(_ => Mathf.FloorToInt(target.Status.GetModifiers<TriggerModifierStock>().Modifiers[data.ModifierType][data.Polarity.GetType()].Max()))
                                 .TakeWhile(value => value != 0).Subscribe(value =>
                                     {
-                                        target.Process.ResourceUpdate.HP.OnNext(new(value));
+                                        target.Process.ResourceUpdate.HP.Request.OnNext(new(value));
                                         Debug.Log(entity.name + "が" + Mathf.Abs(value) + "ダメージを受けました。\n残りHP:" + entity.Status.Resource.HitPoint);
                                     }).AddTo(entity);
                     }

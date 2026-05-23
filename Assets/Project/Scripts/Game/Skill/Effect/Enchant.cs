@@ -18,8 +18,7 @@ namespace AetherAlmachina.Skill.Effect
         {
             ApplyTyped(user, target, (EnchantParameter)parameter);
         }
-
-        protected void ApplyTyped(IEntityEnchantInteraction user, IEntityEnchantInteraction target, EnchantParameter parameter)
+        void ApplyTyped(IEntityEnchantInteraction user, IEntityEnchantInteraction target, EnchantParameter parameter)
         {
             parameter.Modifier.Enchant(user, target).Signed(parameter.Contract);
         }
@@ -31,7 +30,7 @@ namespace AetherAlmachina.Skill.Effect
     public class ModifierEnchantData
     {
         [field: SerializeField] ModifierAsset Type { get; set; }
-        [field: SerializeField] public float Value { get; set; }
+        [field: SerializeField] float Value { get; set; }
 
         /// <summary>
         /// Modifierを付与する対象を決める
@@ -41,8 +40,7 @@ namespace AetherAlmachina.Skill.Effect
         /// <returns>解除を行うための情報</returns>
         public DispelModifier Enchant(IEntityEnchantInteraction user, IEntityEnchantInteraction target)
         {
-            Action dispel = Type.ModifierType.MakeDispel(user, target, new(Type, Value));
-            return new(user, target, dispel);
+            return new(user, target, Type.ModifierType.CreateContract(user, target), Type.ModifierType.MakeDispel(user, target, new(Type, Value)));
         }
     }
     /// <summary>
