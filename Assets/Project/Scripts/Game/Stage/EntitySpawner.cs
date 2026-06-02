@@ -55,14 +55,12 @@ namespace AetherAlmachina.Stage
         }
         void Start()
         {
-            var friends = Data.Friendly.Select(asset => playerFactory(asset)).ToList();
-            var enemies = Data.Hostile.Select(asset => enemyFactory(asset)).ToList();
+            friendlyEntity = Data.Friendly.Select(asset => (Entity)playerFactory(asset)).ToList();
+            hostileEntity = Data.Hostile.Select(asset => (Entity)enemyFactory(asset)).ToList();
 
-            friendlyLayoutEvent.OnNext(new(friends));
-            hostileLayoutEvent.OnNext(new(enemies));
+            friendlyLayoutEvent.OnNext(new(friendlyEntity));
+            hostileLayoutEvent.OnNext(new(hostileEntity));
 
-            friendlyEntity = new List<Entity>(friends);
-            hostileEntity = new List<Entity>(enemies);
             SetUpTargeting(friendlyEntity, hostileEntity);
         }
 

@@ -14,12 +14,12 @@ namespace AetherAlmachina.Skill.Effect.Selectors
     {
         public override bool IsDeferrable => false;
 
-        public override IEnumerable<IEntityInteraction> Targeting(IEnumerable<IEntityInteraction> friendly, IEnumerable<IEntityInteraction> hostile, Vector2Int layoutIndex)
+        public override IEnumerable<IEntityInteraction> SelectTarget(IEnumerable<IEntityInteraction> friendly, IEnumerable<IEntityInteraction> hostile, Vector2Int userIndex)
         {
             List<IEntityInteraction> list = friendly.ToList();
             for (int i = 0; i < friendly.Count(); i++)
             {
-                if (list[i].LayoutIndex == layoutIndex)
+                if (list[i].LayoutIndex == userIndex)
                 {
                     IEntityInteraction entity = list[i];
 

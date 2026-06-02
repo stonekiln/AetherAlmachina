@@ -18,6 +18,8 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
             return new(data,
                 preMax =>
                 {
+                    //FIX:付与された直後からTimeContractのカウントが始まるが
+                    //  こちらは付与された直後に毒ダメージが発生しないので10秒間の効果を付与しても9回分のダメージしか発生しない
                     Entity entity = (Entity)target;
                     if (preMax == 0)
                     {

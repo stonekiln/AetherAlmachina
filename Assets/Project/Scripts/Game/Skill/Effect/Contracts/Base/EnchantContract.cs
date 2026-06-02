@@ -19,7 +19,7 @@ namespace AetherAlmachina.Skill.Effect.Contracts
         /// <param name="dispel">Modifierの解除動作を行う関数</param>
         public void Sign(IEntityInteraction user, IEntityInteraction target, Observable<Unit> modifierContract, Action dispel)
         {
-            Observable.Merge(modifierContract, Create(user, target)).Take(1).Subscribe(_ => dispel()).AddTo((Entity)target);
+            Observable.Merge(modifierContract, CreateContract(user, target)).Take(1).Subscribe(_ => dispel()).AddTo((Entity)target);
         }
         /// <summary>
         /// Modifierの解除の条件を定義する
@@ -27,7 +27,7 @@ namespace AetherAlmachina.Skill.Effect.Contracts
         /// <param name="user">使用者</param>
         /// <param name="target">付与対象者</param>
         /// <returns>解除条件</returns>
-        protected abstract Observable<Unit> Create(IEntityInteraction user, IEntityInteraction target);
+        protected abstract Observable<Unit> CreateContract(IEntityInteraction user, IEntityInteraction target);
     }
     /// <summary>
     /// Modifierの解除を行うための情報を渡す

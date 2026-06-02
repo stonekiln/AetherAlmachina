@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using AetherAlmachina.Entities.Faction;
+using AetherAlmachina.Entities;
 using DIVFactor.Event;
 using UnityEngine;
 
@@ -9,12 +9,12 @@ namespace DConfig.StageLife.Event
     /// 味方側エンティティの整列をリクエストするイベント
     /// </summary>
     /// <param name="Friendly">味方側エンティティのリスト</param>
-    public record FriendlyLayoutEvent(List<Player> Friendly) : EventObject;
+    public record FriendlyLayoutEvent(List<Entity> Friendly) : EventObject;
     /// <summary>
     /// 敵側エンティティの整列をリクエストするイベント
     /// </summary>
     /// <param name="Hostile">敵側エンティティのリスト</param>
-    public record HostileLayoutEvent(List<Enemy> Hostile) : EventObject;
+    public record HostileLayoutEvent(List<Entity> Hostile) : EventObject;
     /// <summary>
     /// レイアウトのインデックスを通知するイベント
     /// </summary>

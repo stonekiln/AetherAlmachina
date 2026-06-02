@@ -12,7 +12,8 @@ namespace AetherAlmachina.Skill.Effect.Selectors
     public class EnemySelector : Selector
     {
         public override bool IsDeferrable => true;
-        public override IEnumerable<IEntityInteraction> Targeting(IEnumerable<IEntityInteraction> friendly, IEnumerable<IEntityInteraction> hostile, Vector2Int layoutIndex)
+
+        public override IEnumerable<IEntityInteraction> SelectTarget(IEnumerable<IEntityInteraction> friendly, IEnumerable<IEntityInteraction> hostile, Vector2Int userIndex)
         {
             return hostile;
         }

@@ -36,7 +36,8 @@ namespace AetherAlmachina.Skill.Effect
         }
         void ApplyTyped(IEntityInteraction user, LockOnParameter parameter)
         {
-            user.Targeting.LockOn.Request.OnNext(new((friendly, hostile) => parameter.Selector.Targeting(friendly, hostile, user.LayoutIndex).Take(parameter.MaxTargets)));
+            user.Targeting.LockOn.Request.OnNext(new((friendly, hostile) =>
+                parameter.Selector.Targeting(friendly, hostile, user.LayoutIndex).Take(parameter.MaxTargets)));
         }
     }
     /// <summary>

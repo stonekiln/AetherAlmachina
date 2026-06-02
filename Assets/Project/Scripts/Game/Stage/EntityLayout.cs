@@ -113,7 +113,7 @@ namespace AetherAlmachina.Stage
                     // 配置位置の適用
                     // 位置の変化量だけ移動させると、origin を中心とした配置になる
                     entities[index].transform.position = localPositions[i, j] + deltaCenter;
-                    entities[index].LayoutIndexGet.OnNext(new(new Vector2Int(i, j)));
+                    entities[index].LayoutIndexSet.OnNext(new(new Vector2Int(i, j)));
 
                     // 自分を親にしてグループ化
                     entities[index].transform.SetParent(transform);
