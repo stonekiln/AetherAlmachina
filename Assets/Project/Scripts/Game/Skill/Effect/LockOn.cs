@@ -22,22 +22,12 @@ namespace AetherAlmachina.Skill.Effect
     /// スキルエフェクトの効果を及ぼす対象を抽出する
     /// </summary>
     [Serializable]
-    public class LockOn : SkillEffect, ILockOnEffect
+    public class LockOn : SkillEffect<LockOnParameter>
     {
-        public override Type ParameterType => typeof(LockOnParameter);
-
-        public void Apply(Entity user, EffectParameter parameter)
+        protected override void ApplyTyped(SkillExecutionContext context, LockOnParameter parameter)
         {
-            ApplyTyped(user, (LockOnParameter)parameter);
-        }
-        public override void Apply(Entity user, Entity target, EffectParameter parameter)
-        {
-            Apply(user, (LockOnParameter)parameter);
-        }
-        void ApplyTyped(IEntityInteraction user, LockOnParameter parameter)
-        {
-            user.Targeting.LockOn.Request.OnNext(new((friendly, hostile) =>
-                parameter.Selector.Targeting(friendly, hostile, user.LayoutIndex).Take(parameter.MaxTargets)));
+            context.User.Interaction.LockOn.OnNext(new((friendly, hostile) =>
+                parameter.Selector.Targeting(friendly, hostile, context.User.LayoutIndex).Take(parameter.MaxTargets)));
         }
     }
     /// <summary>

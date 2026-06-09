@@ -14,33 +14,33 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     {
         public override StatusType StatusTypeKey => StatusType.MaxHitPoint;
 
-        protected override ModifierData TransformData(IEntityEnchantInteraction user, IEntityEnchantInteraction target, ModifierRawData rawData)
+        protected override ModifierData TransformData(EnchantExecutionContext context, ModifierRawData data)
         {
             void KeepRatioHpConvert(float ratio)
             {
                 if (ratio != 1)
                 {
-                    int hpDelta = Mathf.RoundToInt(target.Status.Resource.HitPoint * (ratio - 1f));
-                    target.Process.ResourceUpdate.HP.Request.OnNext(new(hpDelta));
+                    int hpDelta = Mathf.RoundToInt(context.Target.Status.Resource.HitPoint * (ratio - 1f));
+                    context.Target.Interaction.ResourceUpdate.HP.Request.OnNext(new(hpDelta));
                 }
             }
 
-            ModifierData data = base.TransformData(user, target, rawData);
+            ModifierData newData = base.TransformData(context, data);
 
-            return new(rawData,
+            return new(data,
                 preMax =>
                 {
-                    float preMaxHP = target.Status.Get(StatusTypeKey);
-                    data.AddCallBack(preMax);
-                    float curMaxHP = target.Status.Get(StatusTypeKey);
+                    float preMaxHP = context.Target.Status.Get(StatusTypeKey);
+                    newData.AddCallBack(preMax);
+                    float curMaxHP = context.Target.Status.Get(StatusTypeKey);
 
                     KeepRatioHpConvert(curMaxHP / preMaxHP);
                 },
                 curMax =>
                 {
-                    float preMaxHP = target.Status.Get(StatusTypeKey);
-                    data.RemoveCallBack(curMax);
-                    float curMaxHP = target.Status.Get(StatusTypeKey);
+                    float preMaxHP = context.Target.Status.Get(StatusTypeKey);
+                    newData.RemoveCallBack(curMax);
+                    float curMaxHP = context.Target.Status.Get(StatusTypeKey);
 
                     KeepRatioHpConvert(curMaxHP / preMaxHP);
                 }

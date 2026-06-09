@@ -11,7 +11,7 @@ namespace EditorExtends
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            SerializedProperty modifierAssetProp = property.FindPropertyRelative(BackingField.Get("Type"));
+            SerializedProperty modifierAssetProp = property.FindPropertyRelative(BackingField.Get("DefinitionAsset"));
 
             float height = EditorGUIUtility.singleLineHeight;
             //Modifierの種類が指定されている場合そのパラメータを設定するためのスペースを確保する
@@ -33,14 +33,14 @@ namespace EditorExtends
             };
 
             EditorGUI.BeginChangeCheck();
-            SerializedProperty modifierAssetProp = property.FindPropertyRelative(BackingField.Get("Type"));
+            SerializedProperty modifierAssetProp = property.FindPropertyRelative(BackingField.Get("DefinitionAsset"));
             EditorGUI.PropertyField(rect, modifierAssetProp, label, true);
             //Modifierの種類が設定されているか(1項目)
             if (modifierAssetProp.objectReferenceValue is ModifierAsset modifierAsset)
             {
                 SerializedProperty valueProp = property.FindPropertyRelative(BackingField.Get("Value"));
                 rect.y += EditorGUIUtility.singleLineHeight;
-                EditorGUI.PropertyField(rect, valueProp, new GUIContent(modifierAsset.Polarity.DisplaySign + valueProp.displayName + modifierAsset.ModifierType.DisplayUnit), true);
+                EditorGUI.PropertyField(rect, valueProp, new GUIContent(modifierAsset.Polarity.DisplaySign + valueProp.displayName + modifierAsset.Definition.DisplayUnit), true);
                 if (EditorGUI.EndChangeCheck())
                 {
                     valueProp.floatValue = Mathf.Clamp(valueProp.floatValue, 0, float.PositiveInfinity);

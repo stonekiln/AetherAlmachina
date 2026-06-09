@@ -32,28 +32,15 @@ namespace DConfig.EntityLife.Installer
             builder.Register<CardActiveEventBundle>(Lifetime.Singleton);
         }
     }
-    public class TargetingEventInstaller : IInstaller
-    {
-        public void Install(IContainerBuilder builder)
-        {
-            builder.RegisterEvent<LockOnRequestEvent>();
-            builder.RegisterEvent<LockOnResponseEvent>();
-            builder.RegisterEvent<HitEvent>();
-
-            builder.Register<LockOnEventBundle>(Lifetime.Singleton);
-            builder.Register<TargetingEventBundle>(Lifetime.Singleton);
-        }
-    }
     public class CommandEventInstaller : IInstaller
     {
         public void Install(IContainerBuilder builder)
         {
-            builder.RegisterEvent<AttackEvent>();
-            builder.RegisterEvent<DamageEvent>();
-            builder.RegisterEvent<HealEvent>();
-            builder.RegisterEvent<RecoveryEvent>();
-
             builder.RegisterEvent<SkillEndEvent>();
+
+            builder.RegisterEvent<LockOnRequestEvent>();
+            builder.RegisterEvent<LockOnResponseEvent>();
+            builder.Register<LockOnEventBundle>(Lifetime.Singleton);
 
             builder.RegisterEvent<CostUpdateRequestEvent>();
             builder.RegisterEvent<CostUpdateResponseEvent>();
@@ -64,13 +51,13 @@ namespace DConfig.EntityLife.Installer
             builder.RegisterEvent<DisableUpdateRequestEvent>();
             builder.RegisterEvent<DisableUpdateResponseEvent>();
 
-            builder.Register<ActionEventBundle>(Lifetime.Singleton);
             builder.Register<ResourceUpdateEventBundle<CostUpdateRequestEvent, CostUpdateResponseEvent>>(Lifetime.Singleton);
             builder.Register<ResourceUpdateEventBundle<HPUpdateRequestEvent, HPUpdateResponseEvent>>(Lifetime.Singleton);
             builder.Register<ResourceUpdateEventBundle<ShieldUpdateRequestEvent, ShieldUpdateResponseEvent>>(Lifetime.Singleton);
             builder.Register<ResourceUpdateEventBundle<DisableUpdateRequestEvent, DisableUpdateResponseEvent>>(Lifetime.Singleton);
             builder.Register<ResourceUpdateEventBundle>(Lifetime.Singleton);
-            builder.Register<ProcessEventBundle>(Lifetime.Singleton);
+
+            builder.Register<InteractionEventBundle>(Lifetime.Singleton);
         }
     }
 }

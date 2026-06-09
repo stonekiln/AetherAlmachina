@@ -2,46 +2,43 @@ using System;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Skill.Effect.Contracts;
 using AetherAlmachina.Skill.Effect.Modifiers;
+using R3;
 using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect
 {
+    public record EnchantExecutionContext(IEntityInteraction User, IEntityInteraction Target, ActivatedSkillData SkillData);
+
     /// <summary>
     /// 相手にModifierを付与する効果
     /// </summary>
     [Serializable]
-    public class EnchantEffect : SkillEffect
+    public class EnchantEffect : SkillEffect<EnchantParameter>
     {
-        public override Type ParameterType => typeof(EnchantParameter);
+        protected override void ApplyTyped(SkillExecutionContext context, EnchantParameter parameter)
+        {
+            foreach (IEntityInteraction target in context.Targets)
+            {
+                EnchantExecutionContext enchantContext = new(context.User, target, context.SkillData);
+                Action dispel = parameter.EnchantData.Definition.ApplyModifier(enchantContext, parameter.EnchantData.RawData);
+                Observable<Unit> contractFromDefinition = parameter.EnchantData.Definition.Create(enchantContext);
+                Observable<Unit> contractFromParameter = parameter.Contract.Create(enchantContext);
 
-        public override void Apply(Entity user, Entity target, EffectParameter parameter)
-        {
-            ApplyTyped(user, target, (EnchantParameter)parameter);
-        }
-        void ApplyTyped(IEntityEnchantInteraction user, IEntityEnchantInteraction target, EnchantParameter parameter)
-        {
-            parameter.Modifier.Enchant(user, target).Signed(parameter.Contract);
+                Observable.Merge(contractFromParameter, contractFromDefinition).Take(1).Subscribe(_ => dispel()).AddTo((Entity)target);
+            }
         }
     }
+
     /// <summary>
     /// Modifierの種類と効果量をインスペクター上で指定できるようにする
     /// </summary>
     [Serializable]
     public class ModifierEnchantData
     {
-        [field: SerializeField] ModifierAsset Type { get; set; }
+        [field: SerializeField] ModifierAsset DefinitionAsset { get; set; }
         [field: SerializeField] float Value { get; set; }
-
-        /// <summary>
-        /// Modifierを付与する対象を決める
-        /// </summary>
-        /// <param name="user">使用者</param>
-        /// <param name="target">付与対象候補</param>
-        /// <returns>解除を行うための情報</returns>
-        public DispelModifier Enchant(IEntityEnchantInteraction user, IEntityEnchantInteraction target)
-        {
-            return new(user, target, Type.ModifierType.CreateContract(user, target), Type.ModifierType.MakeDispel(user, target, new(Type, Value)));
-        }
+        public ModifierBase Definition => DefinitionAsset.Definition;
+        public ModifierRawData RawData => new(DefinitionAsset, Value);
     }
     /// <summary>
     /// EnchantEffectに必要なパラメータ
@@ -52,7 +49,7 @@ namespace AetherAlmachina.Skill.Effect
         /// <summary>
         /// Modifierの情報
         /// </summary>
-        [field: SerializeField] public ModifierEnchantData Modifier { get; private set; }
+        [field: SerializeField] public ModifierEnchantData EnchantData { get; private set; }
         /// <summary>
         /// エフェクト解除のタイミング
         /// </summary>

@@ -82,7 +82,7 @@ namespace AetherAlmachina.Card.Hand
             int costSum = (int)MathF.Ceiling(selectedIndex.Aggregate(0, (previous, current) => previous + Hand[current].SkillData.Cost) / (float)selectedIndex.Count());
             if (costSum <= owner.Status.Resource.Cost)
             {
-                owner.Process.ResourceUpdate.Cost.Request.OnNext(new(-costSum));
+                owner.Interaction.ResourceUpdate.Cost.Request.OnNext(new(-costSum));
                 float handPower = HandPowerTable.Get(Type, selectedIndex.Count());
                 foreach (SkillData skill in selectedIndex.Select(index => Hand[index].SkillData))
                 {

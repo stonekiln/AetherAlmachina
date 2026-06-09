@@ -10,7 +10,6 @@ namespace DConfig.EnemyLife
         {
             installer.Install<CardEventInstaller>();
             installer.Install<DeckEventInstaller>();
-            installer.Install<TargetingEventInstaller>();
             installer.Install<CommandEventInstaller>();
         }
 

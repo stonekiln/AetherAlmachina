@@ -12,15 +12,16 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     public class DisableTimesModifier : TriggerModifier
     {
         public override string DisplayUnit => "(回)";
-        protected override ModifierData TransformData(IEntityEnchantInteraction user, IEntityEnchantInteraction target, ModifierRawData data)
+        protected override ModifierData TransformData(EnchantExecutionContext context, ModifierRawData data)
         {
             return new(data,
                 preMax =>
                 {
                     int addDisable = Mathf.FloorToInt(data.ModifyValue);
-                    if (target.Status.Resource.Disable < addDisable)
+                    if (context.Target.Status.Resource.Disable < addDisable)
                     {
-                        target.Process.ResourceUpdate.Disable.Request.OnNext(new(addDisable - target.Status.Resource.Disable));
+                        context.Target.Interaction.ResourceUpdate.Disable.Request
+                            .OnNext(new(addDisable - context.Target.Status.Resource.Disable));
                     }
 
                     Debug.Log(data.TypeData.Name + ":" + data.Value + data.TypeData.DisplayUnit + " の効果が付与された。");
@@ -28,9 +29,10 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
                 curMax =>
                 {
                     int curDisable = Mathf.FloorToInt(curMax);
-                    if (curDisable < target.Status.Resource.Disable)
+                    if (curDisable < context.Target.Status.Resource.Disable)
                     {
-                        target.Process.ResourceUpdate.Disable.Request.OnNext(new(curDisable - target.Status.Resource.Disable));
+                        context.Target.Interaction.ResourceUpdate.Disable.Request
+                            .OnNext(new(curDisable - context.Target.Status.Resource.Disable));
                     }
 
                     Debug.Log(data.TypeData.Name + ":" + data.Value + data.TypeData.DisplayUnit + " の効果が解除された。");
@@ -39,9 +41,9 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
                 ModifierType = typeof(DisableTimesModifier)
             };
         }
-        public override Observable<Unit> CreateContract(IEntityEnchantInteraction user, IEntityEnchantInteraction target)
+        public override Observable<Unit> Create(EnchantExecutionContext context)
         {
-            return target.Process.ResourceUpdate.Disable.Response.Where(log => log.Current <= 0).Take(1).AsUnitObservable();
+            return context.Target.Interaction.ResourceUpdate.Disable.Response.Where(log => log.Current <= 0).Take(1).AsUnitObservable();
         }
     }
 }

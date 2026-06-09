@@ -1,30 +1,10 @@
+using System;
+using System.Collections.Generic;
 using AetherAlmachina.Entities;
 using DIVFactor.Event;
 
 namespace DConfig.EntityLife.Event
 {
-    /// <summary>
-    /// 攻撃を宣言するイベントメッセージ
-    /// </summary>
-    /// <param name="Target">対象</param>
-    /// <param name="SkillPower">スキル威力</param>
-    public record AttackEvent(IEntityInteraction Target, float SkillPower) : EventObject;
-    public record DamageEvent(int Attack, float Power) : EventObject;
-    /// <summary>
-    /// 回復を宣言するイベントメッセージ
-    /// </summary>
-    /// <param name="Target">対象</param>
-    /// <param name="SkillPower">スキル威力</param>
-    public record HealEvent(IEntityInteraction Target, float SkillPower) : EventObject;
-    public record RecoveryEvent(int Recovery, float Power) : EventObject;
-
-    public record ActionEventBundle(
-        EventBus<AttackEvent> Attack,
-        EventBus<DamageEvent> Damage,
-        EventBus<HealEvent> Heal,
-        EventBus<RecoveryEvent> Recovery
-    );
-
     /// <summary>
     /// スキルが終了したことを宣言するイベントメッセージ
     /// </summary>
@@ -46,6 +26,21 @@ namespace DConfig.EntityLife.Event
     public record DisableUpdateRequestEvent(int Delta) : EventObject;
     public record DisableUpdateResponseEvent(int Current) : EventObject;
 
+    /// <summary>
+    /// ロックオンを行うためのイベントオブジェクト
+    /// </summary>
+    public record LockOnEventBundle(EventBus<LockOnRequestEvent> Request, EventBus<LockOnResponseEvent> Response);
+    /// <summary>
+    /// ロックオンを宣言するイベントメッセージ
+    /// </summary>
+    /// <param name="Selector"></param>
+    public record LockOnRequestEvent(Func<IEnumerable<IEntityInteraction>, IEnumerable<IEntityInteraction>, IEnumerable<IEntityInteraction>> Selector) : EventObject;
+    /// <summary>
+    /// ロックオンの結果を渡すためのイベントメッセージ
+    /// </summary>
+    /// <param name="Targets"></param>
+    public record LockOnResponseEvent(IEnumerable<IEntityInteraction> Targets) : EventObject;
+
     public record ResourceUpdateEventBundle(
         ResourceUpdateEventBundle<CostUpdateRequestEvent, CostUpdateResponseEvent> Cost,
         ResourceUpdateEventBundle<HPUpdateRequestEvent, HPUpdateResponseEvent> HP,
@@ -53,8 +48,9 @@ namespace DConfig.EntityLife.Event
         ResourceUpdateEventBundle<DisableUpdateRequestEvent, DisableUpdateResponseEvent> Disable
     );
 
-    public record ProcessEventBundle(
-        EventBus<SkillEndEvent> SkillEnd,
-        ResourceUpdateEventBundle ResourceUpdate
+    public record InteractionEventBundle(
+        ResourceUpdateEventBundle ResourceUpdate,
+        EventBus<LockOnRequestEvent> LockOn,
+        EventBus<SkillEndEvent> SkillEnd
     );
 }

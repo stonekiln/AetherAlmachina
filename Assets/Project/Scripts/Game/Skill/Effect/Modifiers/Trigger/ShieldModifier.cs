@@ -11,15 +11,16 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     /// </summary>
     public abstract class ShieldModifier : TriggerModifier
     {
-        protected override ModifierData TransformData(IEntityEnchantInteraction user, IEntityEnchantInteraction target, ModifierRawData data)
+        protected override ModifierData TransformData(EnchantExecutionContext context, ModifierRawData data)
         {
             return new(data,
                 preMax =>
                 {
                     int addShield = Mathf.FloorToInt(data.ModifyValue);
-                    if (target.Status.Resource.Shield < addShield)
+                    if (context.Target.Status.Resource.Shield < addShield)
                     {
-                        target.Process.ResourceUpdate.Shield.Request.OnNext(new(addShield - target.Status.Resource.Shield));
+                        context.Target.Interaction.ResourceUpdate.Shield.Request
+                            .OnNext(new(addShield - context.Target.Status.Resource.Shield));
                     }
 
                     Debug.Log(data.TypeData.Name + ":" + data.Value + data.TypeData.DisplayUnit + " の効果が付与された。");
@@ -27,9 +28,9 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
                 curMax =>
                 {
                     int curShield = Mathf.FloorToInt(curMax);
-                    if (curShield < target.Status.Resource.Shield)
+                    if (curShield < context.Target.Status.Resource.Shield)
                     {
-                        target.Process.ResourceUpdate.Shield.Request.OnNext(new(curShield - target.Status.Resource.Shield));
+                        context.Target.Interaction.ResourceUpdate.Shield.Request.OnNext(new(curShield - context.Target.Status.Resource.Shield));
                     }
 
                     Debug.Log(data.TypeData.Name + ":" + data.Value + data.TypeData.DisplayUnit + " の効果が解除された。");
@@ -38,9 +39,9 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
                 ModifierType = typeof(ShieldModifier)
             };
         }
-        public override Observable<Unit> CreateContract(IEntityEnchantInteraction user, IEntityEnchantInteraction target)
+        public override Observable<Unit> Create(EnchantExecutionContext context)
         {
-            return target.Process.ResourceUpdate.Shield.Response.Where(log => log.Current <= 0).Take(1).AsUnitObservable();
+            return context.Target.Interaction.ResourceUpdate.Shield.Response.Where(log => log.Current <= 0).Take(1).AsUnitObservable();
         }
     }
     /// <summary>
@@ -58,13 +59,13 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     public class ShieldHPRate : ShieldModifier
     {
         public override string DisplayUnit => "%";
-        protected override ModifierData TransformData(IEntityEnchantInteraction user, IEntityEnchantInteraction target, ModifierRawData data)
+        protected override ModifierData TransformData(EnchantExecutionContext context, ModifierRawData data)
         {
             ModifierRawData modifiedValueData = new(data)
             {
-                ModifyValue = user.Status.Get(StatusType.MaxHitPoint) * data.ModifyValue / 100f
+                ModifyValue = context.User.Status.Get(StatusType.MaxHitPoint) * data.ModifyValue / 100f
             };
-            return base.TransformData(user, target, modifiedValueData);
+            return base.TransformData(context, modifiedValueData);
         }
     }
 }

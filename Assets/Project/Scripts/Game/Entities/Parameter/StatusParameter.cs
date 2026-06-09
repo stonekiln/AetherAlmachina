@@ -31,17 +31,17 @@ namespace AetherAlmachina.Entities.Parameter
         /// </summary>
         public int Disable { get; private set; }
 
-        public ResourceStatusParameter(ProcessEventBundle Process, MonoBehaviour monoBehaviour)
+        public ResourceStatusParameter(ResourceUpdateEventBundle ResourceUpdate, MonoBehaviour monoBehaviour)
         {
             Cost = 0;
             HitPoint = 0;
             Shield = 0;
             Disable = 0;
 
-            Process.ResourceUpdate.Cost.Request.Switch(Process.ResourceUpdate.Cost.Response).Subscribe(log => new(CostUpdate(log.Delta))).AddTo(monoBehaviour);
-            Process.ResourceUpdate.HP.Request.Switch(Process.ResourceUpdate.HP.Response).Subscribe(log => new(HPUpdate(log.Delta))).AddTo(monoBehaviour);
-            Process.ResourceUpdate.Shield.Request.Switch(Process.ResourceUpdate.Shield.Response).Subscribe(log => new(ShieldUpdate(log.Delta))).AddTo(monoBehaviour);
-            Process.ResourceUpdate.Disable.Request.Switch(Process.ResourceUpdate.Disable.Response).Subscribe(log => new(DisableUpdate(log.Delta))).AddTo(monoBehaviour);
+            ResourceUpdate.Cost.Request.Switch(ResourceUpdate.Cost.Response).Subscribe(log => new(CostUpdate(log.Delta))).AddTo(monoBehaviour);
+            ResourceUpdate.HP.Request.Switch(ResourceUpdate.HP.Response).Subscribe(log => new(HPUpdate(log.Delta))).AddTo(monoBehaviour);
+            ResourceUpdate.Shield.Request.Switch(ResourceUpdate.Shield.Response).Subscribe(log => new(ShieldUpdate(log.Delta))).AddTo(monoBehaviour);
+            ResourceUpdate.Disable.Request.Switch(ResourceUpdate.Disable.Response).Subscribe(log => new(DisableUpdate(log.Delta))).AddTo(monoBehaviour);
         }
 
         int HPUpdate(int delta)
@@ -64,7 +64,7 @@ namespace AetherAlmachina.Entities.Parameter
     /// <summary>
     /// ステータスのパラメータをコピーして変更可能にするためのクラス
     /// </summary>
-    public class StatusParameter : IEnchantableStatus
+    public class StatusParameter
     {
         public ResourceStatusParameter Resource { get; init; }
         Dictionary<StatusType, float> BaseStatus { get; init; }

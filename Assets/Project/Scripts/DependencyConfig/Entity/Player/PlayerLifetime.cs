@@ -12,7 +12,6 @@ namespace DConfig.PlayerLife
         {
             installer.Install<CardEventInstaller>();
             installer.Install<DeckEventInstaller>();
-            installer.Install<TargetingEventInstaller>();
             installer.Install<CommandEventInstaller>();
         }
 

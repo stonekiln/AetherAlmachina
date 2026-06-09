@@ -11,7 +11,7 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
         /// <summary>
         /// Modifierの種類
         /// </summary>
-        [field: SerializeReference] public ModifierBase ModifierType { get; private set; }
+        [field: SerializeReference] public ModifierBase Definition { get; private set; }
         /// <summary>
         /// バフ・デバフの定義
         /// </summary>

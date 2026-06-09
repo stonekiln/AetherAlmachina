@@ -27,7 +27,7 @@ namespace AetherAlmachina.Skill
         /// </summary>
         public bool IsDeferrable { get; init; }
         /// <summary>
-        /// スキルの使用者
+        /// スキル保持者の情報
         /// </summary>
         public IEntityInteraction User => Owner;
         protected Entity Owner { get; init; }
@@ -58,14 +58,14 @@ namespace AetherAlmachina.Skill
     /// </summary>
     public class ActivatedSkillData : SkillData
     {
-        float HandPower { get; init; }
-        IEnumerable<Entity> targets;
+        public float HandPower { get; init; }
+        IEnumerable<IEntityInteraction> targets;
         int queueIndex = 0;
 
         public ActivatedSkillData(SkillData data, float power) : base(data)
         {
             HandPower = power;
-            Owner.Targeting.LockOn.Response.Subscribe(log => targets = log.Targets.OfType<Entity>()).AddTo(Owner);
+            Owner.LockOn.Response.Subscribe(log => targets = log.Targets).AddTo(Owner);
         }
 
         /// <summary>
@@ -74,26 +74,9 @@ namespace AetherAlmachina.Skill
         /// <returns>効果が終了したかどうか</returns>
         public bool MoveNext()
         {
-            EffectData current = EffectQueue[queueIndex];
-            //HACK:LockOnだった場合targetを必要としないため少し特殊な処理を行う
-            // LockOnにキャストを行ってApplyを実行することもできるが、
-            // インターフェイスにキャストを行って、インターフェイス内にあるtargetを必要としないメソッドから実行する
-            if (current.Effect is ILockOnEffect targeting)
-            {
-                targeting.Apply(Owner, current.Parameter);
-                queueIndex++;
-                //LockOnだった場合それはモーションを伴わないので自動で次の効果を発動させる
-                return queueIndex != EffectQueue.Length && MoveNext();
-            }
-            else
-            {
-                foreach (Entity target in targets)
-                {
-                    target.Targeting.Hit.OnNext(new(entity => current.Effect.Apply(Owner, entity, current.Parameter.SetHandPower(HandPower))));
-                }
-                queueIndex++;
-                return queueIndex != EffectQueue.Length;
-            }
+            EffectData current = EffectQueue[queueIndex++];
+            current.Effect.Apply(new(Owner, targets, this), current.Parameter);
+            return queueIndex == EffectQueue.Length;
         }
     }
 }

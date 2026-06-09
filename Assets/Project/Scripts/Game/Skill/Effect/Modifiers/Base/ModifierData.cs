@@ -81,11 +81,11 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
 
         public ModifierRawData(ModifierAsset asset, float value)
         {
-            ModifierType = asset.ModifierType.GetType();
+            ModifierType = asset.Definition.GetType();
             Polarity = asset.Polarity;
             Value = value;
             ModifyValue = Polarity.ApplySign(value);
-            TypeData = new(asset.Name, asset.Icon, asset.ModifierType.DisplayUnit);
+            TypeData = new(asset.Name, asset.Icon, asset.Definition.DisplayUnit);
         }
         public ModifierRawData(ModifierRawData data)
         {

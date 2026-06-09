@@ -69,7 +69,7 @@ namespace AetherAlmachina.ActGauge.Pointer
         {
             Debug.Log(skillData.Name + "が発動しました。");
             DoSkillEffectsImmediately();
-            skillData.User.Process.SkillEnd.OnNext(new());
+            skillData.User.Interaction.SkillEnd.OnNext(new());
             entryEnd();
         }
 
@@ -79,7 +79,7 @@ namespace AetherAlmachina.ActGauge.Pointer
         /// </summary>
         void DoSkillEffectsImmediately()
         {
-            while (skillData.MoveNext()) ;
+            while (!skillData.MoveNext()) ;
         }
     }
 }

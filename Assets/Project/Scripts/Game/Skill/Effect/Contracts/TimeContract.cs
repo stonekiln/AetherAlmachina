@@ -1,5 +1,4 @@
 using System;
-using AetherAlmachina.Entities;
 using R3;
 
 namespace AetherAlmachina.Skill.Effect.Contracts
@@ -10,7 +9,7 @@ namespace AetherAlmachina.Skill.Effect.Contracts
     [Serializable]
     public class TimeContract : EnchantContract
     {
-        protected override Observable<Unit> CreateContract(IEntityInteraction user, IEntityInteraction target)
+        public override Observable<Unit> Create(EnchantExecutionContext context)
         {
             return Observable.Timer(TimeSpan.FromSeconds(During)).AsUnitObservable();
         }

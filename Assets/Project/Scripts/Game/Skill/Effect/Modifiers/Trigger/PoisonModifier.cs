@@ -13,23 +13,22 @@ namespace AetherAlmachina.Skill.Effect.Modifiers
     {
         public override string DisplayUnit => "";
 
-        protected override ModifierData TransformData(IEntityEnchantInteraction user, IEntityEnchantInteraction target, ModifierRawData data)
+        protected override ModifierData TransformData(EnchantExecutionContext context, ModifierRawData data)
         {
             return new(data,
                 preMax =>
                 {
                     //FIX:付与された直後からTimeContractのカウントが始まるが
                     //  こちらは付与された直後に毒ダメージが発生しないので10秒間の効果を付与しても9回分のダメージしか発生しない
-                    Entity entity = (Entity)target;
                     if (preMax == 0)
                     {
                         Observable.Interval(TimeSpan.FromSeconds(1f))
-                            .Select(_ => Mathf.FloorToInt(target.Status.GetModifiers<TriggerModifierStock>().Modifiers[data.ModifierType][data.Polarity.GetType()].Max()))
+                            .Select(_ => Mathf.FloorToInt(context.Target.Status.GetModifiers<TriggerModifierStock>().Modifiers[data.ModifierType][data.Polarity.GetType()].Max()))
                                 .TakeWhile(value => value != 0).Subscribe(value =>
                                     {
-                                        target.Process.ResourceUpdate.HP.Request.OnNext(new(value));
-                                        Debug.Log(entity.name + "が" + Mathf.Abs(value) + "ダメージを受けました。\n残りHP:" + entity.Status.Resource.HitPoint);
-                                    }).AddTo(entity);
+                                        context.Target.Interaction.ResourceUpdate.HP.Request.OnNext(new(value));
+                                        Debug.Log(context.Target.Name + "が" + Mathf.Abs(value) + "ダメージを受けました。\n残りHP:" + context.Target.Status.Resource.HitPoint);
+                                    }).AddTo((Entity)context.Target);
                     }
 
                     Debug.Log(data.TypeData.Name + ":" + data.Value + data.TypeData.DisplayUnit + " の効果が付与された。");

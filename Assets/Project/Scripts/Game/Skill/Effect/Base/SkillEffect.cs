@@ -1,8 +1,16 @@
 using System;
+using System.Collections.Generic;
 using AetherAlmachina.Entities;
 
 namespace AetherAlmachina.Skill.Effect
 {
+    /// <summary>
+    /// スキルの効果の実行用データ
+    /// </summary>
+    /// <param name="User">使用者</param>
+    /// <param name="Targets">効果対象</param>
+    /// <param name="SkillData">そのエフェクトの親となるスキル効果</param>
+    public record SkillExecutionContext(IEntityInteraction User, IEnumerable<IEntityInteraction> Targets, ActivatedSkillData SkillData);
     /// <summary>
     /// スキルの効果の実行部分を担うクラス
     /// </summary>
@@ -12,21 +20,19 @@ namespace AetherAlmachina.Skill.Effect
         /// <summary>
         /// スキルの効果を実行する(1対1対応)
         /// </summary>
-        /// <param name="user">使用者</param>
-        /// <param name="target">対象者</param>
-        /// <param name="parameter">エフェクトの設定値</param>
-        public abstract void Apply(Entity user, Entity target, EffectParameter parameter);
+        /// <param name="context">実行用コンテキスト</param>
+        public abstract void Apply(SkillExecutionContext context, EffectParameter parameter);
     }
     /// <summary>
     /// ジェネリックでパラメータと実行部を紐づける
     /// </summary>
-    /// <typeparam name="TParameter">使用するパラメータ</typeparam>
-    public abstract class SkillEffect<TParameter> : SkillEffect where TParameter : EffectParameter
+    /// <typeparam name="TParam">使用するパラメータ</typeparam>
+    public abstract class SkillEffect<TParam> : SkillEffect where TParam : EffectParameter
     {
-        public sealed override Type ParameterType => typeof(TParameter);
-        public sealed override void Apply(Entity user, Entity target, EffectParameter parameter)
+        public sealed override Type ParameterType => typeof(TParam);
+        public sealed override void Apply(SkillExecutionContext context, EffectParameter parameter)
         {
-            ApplyTyped(user, target, (TParameter)parameter);
+            ApplyTyped(context, (TParam)parameter);
         }
         /// <summary>
         /// スキルの効果を実行する(1対1対応)(引数とするパラメータを指定した型にキャスト済み)
@@ -34,24 +40,11 @@ namespace AetherAlmachina.Skill.Effect
         /// <param name="user">使用者</param>
         /// <param name="target">対象者</param>
         /// <param name="parameter">エフェクトの設定値</param>
-        protected abstract void ApplyTyped(IEntityInteraction user, IEntityInteraction target, TParameter parameter);
+        protected abstract void ApplyTyped(SkillExecutionContext context, TParam parameter);
     }
 
     /// <summary>
     /// エフェクトの実行に必要なパラメータ
     /// </summary>
-    public abstract class EffectParameter
-    {
-        public float HandPower { get; private set; }
-        /// <summary>
-        /// 使用者の役倍率を設定し自身のインスタンスを返す
-        /// </summary>
-        /// <param name="power">設定する役倍率</param>
-        /// <returns>更新後のパラメータ</returns>
-        public EffectParameter SetHandPower(float power)
-        {
-            HandPower = power;
-            return this;
-        }
-    }
+    public abstract class EffectParameter { }
 }
