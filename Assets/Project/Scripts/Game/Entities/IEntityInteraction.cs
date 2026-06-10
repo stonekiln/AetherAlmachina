@@ -1,6 +1,5 @@
 using AetherAlmachina.Entities.Parameter;
 using DConfig.EntityLife.Event;
-using DIVFactor.Event;
 using UnityEngine;
 
 namespace AetherAlmachina.Entities

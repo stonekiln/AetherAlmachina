@@ -8,8 +8,6 @@ using DIVFactor.Injectable;
 using AetherAlmachina.Deck;
 using AetherAlmachina.Entities.Parameter;
 using DIVFactor.Extensions;
-using System;
-using Tools.Helpers;
 
 namespace AetherAlmachina.Entities
 {

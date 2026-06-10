@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa4d77b4a1bfaa648b28b66263362a58, type: 3}
   m_Name: PoisonModifier
   m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.Skill.Effect.Modifiers.ModifierAsset
-  <ModifierType>k__BackingField:
-    rid: 948703817609773131
+  <Definition>k__BackingField:
+    rid: 3998792075372396637
   <Polarity>k__BackingField:
     rid: 948703817609773132
   <Name>k__BackingField: "\u6BD2"
@@ -21,9 +21,9 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 948703817609773131
-      type: {class: PoisonModifier, ns: AetherAlmachina.Skill.Effect.Modifiers, asm: Assembly-CSharp}
-      data: 
     - rid: 948703817609773132
       type: {class: NegativeModifier, ns: AetherAlmachina.Skill.Effect.Modifiers, asm: Assembly-CSharp}
+      data: 
+    - rid: 3998792075372396637
+      type: {class: PoisonModifier, ns: AetherAlmachina.Skill.Effect.Modifiers, asm: Assembly-CSharp}
       data: 

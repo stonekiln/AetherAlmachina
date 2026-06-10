@@ -1,5 +1,4 @@
 using System;
-using AetherAlmachina.Entities;
 using AetherAlmachina.Entities.Parameter;
 using R3;
 using UnityEngine;

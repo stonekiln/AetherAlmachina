@@ -41,9 +41,9 @@ MonoBehaviour:
     - rid: 948704240296788054
       type: {class: EnchantParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data:
-        <Modifier>k__BackingField:
-          <Type>k__BackingField: {fileID: 11400000, guid: 02dc99e46e83ee945ab3d91803a99873, type: 2}
-          <Value>k__BackingField: 10
+        <EnchantData>k__BackingField:
+          <DefinitionAsset>k__BackingField: {fileID: 11400000, guid: e560cd3994f43794fb603b67762a4342, type: 2}
+          <Value>k__BackingField: 1
         <Contract>k__BackingField:
           rid: 948704241663606784
     - rid: 948704241663606784
@@ -56,9 +56,9 @@ MonoBehaviour:
     - rid: 4576090723573301332
       type: {class: EnchantParameter, ns: AetherAlmachina.Skill.Effect, asm: Assembly-CSharp}
       data:
-        <Modifier>k__BackingField:
-          <Type>k__BackingField: {fileID: 11400000, guid: e560cd3994f43794fb603b67762a4342, type: 2}
-          <Value>k__BackingField: 1
+        <EnchantData>k__BackingField:
+          <DefinitionAsset>k__BackingField: {fileID: 11400000, guid: 02dc99e46e83ee945ab3d91803a99873, type: 2}
+          <Value>k__BackingField: 10
         <Contract>k__BackingField:
           rid: 4576090723573301333
     - rid: 4576090723573301333
