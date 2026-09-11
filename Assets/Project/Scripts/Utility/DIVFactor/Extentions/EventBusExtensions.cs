@@ -13,7 +13,7 @@ namespace DIVFactor.Extensions
         /// <param name="current">受信用イベント</param>
         /// <param name="next">発振用イベント</param>
         /// <returns>作成されたイベントオブジェクト</returns>
-        public static EventChannel<TReq, TRes> Switch<TReq, TRes>(this Observable<TReq> current, Subject<TRes> next)
+        public static EventPair<TReq, TRes> Switch<TReq, TRes>(this Observable<TReq> current, Subject<TRes> next)
         {
             return new(current, next);
         }

@@ -14,7 +14,7 @@ namespace AetherAlmachina.Cost
     /// </summary>
     public class CostManager : MonoBehaviour, IInjectable
     {
-        EventBus<AutoIncreaseEvent> AutoIncrease;
+        EventPort<AutoIncreaseEvent> AutoIncrease;
         CostSettingsAsset costSettings;
 
         public void Injection(InjectableResolver resolver)

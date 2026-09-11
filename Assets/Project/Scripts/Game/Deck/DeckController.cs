@@ -14,11 +14,11 @@ namespace AetherAlmachina.Deck
     /// </summary>
     public class DeckController
     {
-        readonly EventBus<DeckGetEvent> DeckGet;
-        readonly DeckDrawEventBundle DeckDraw;
+        readonly EventPort<DeckGetEvent> DeckGet;
+        readonly DeckDrawEventHub DeckDraw;
         public List<SkillData> Deck { get; private set; }
 
-        public DeckController(EventBus<DeckGetEvent> deckGet, DeckDrawEventBundle deckDraw)
+        public DeckController(EventPort<DeckGetEvent> deckGet, DeckDrawEventHub deckDraw)
         {
             DeckGet = deckGet;
             DeckDraw = deckDraw;

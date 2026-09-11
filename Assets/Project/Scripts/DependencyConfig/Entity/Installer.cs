@@ -17,7 +17,7 @@ namespace DConfig.EntityLife.Installer
             builder.RegisterEvent<DeckDrawRequestEvent>();
             builder.RegisterEvent<DeckDrawResponseEvent>();
 
-            builder.Register<DeckDrawEventBundle>(Lifetime.Singleton);
+            builder.Register<DeckDrawEventHub>(Lifetime.Singleton);
             builder.Register<DeckController>(Lifetime.Singleton);
         }
     }
@@ -29,7 +29,7 @@ namespace DConfig.EntityLife.Installer
             builder.RegisterEvent<CardCancelEvent>();
             builder.RegisterEvent<CardInvokeEvent>();
 
-            builder.Register<CardActiveEventBundle>(Lifetime.Singleton);
+            builder.Register<CardActiveEventHub>(Lifetime.Singleton);
         }
     }
     public class CommandEventInstaller : IInstaller
@@ -40,7 +40,7 @@ namespace DConfig.EntityLife.Installer
 
             builder.RegisterEvent<LockOnRequestEvent>();
             builder.RegisterEvent<LockOnResponseEvent>();
-            builder.Register<LockOnEventBundle>(Lifetime.Singleton);
+            builder.Register<LockOnEventHub>(Lifetime.Singleton);
 
             builder.RegisterEvent<CostUpdateRequestEvent>();
             builder.RegisterEvent<CostUpdateResponseEvent>();
@@ -51,13 +51,13 @@ namespace DConfig.EntityLife.Installer
             builder.RegisterEvent<DisableUpdateRequestEvent>();
             builder.RegisterEvent<DisableUpdateResponseEvent>();
 
-            builder.Register<ResourceUpdateEventBundle<CostUpdateRequestEvent, CostUpdateResponseEvent>>(Lifetime.Singleton);
-            builder.Register<ResourceUpdateEventBundle<HPUpdateRequestEvent, HPUpdateResponseEvent>>(Lifetime.Singleton);
-            builder.Register<ResourceUpdateEventBundle<ShieldUpdateRequestEvent, ShieldUpdateResponseEvent>>(Lifetime.Singleton);
-            builder.Register<ResourceUpdateEventBundle<DisableUpdateRequestEvent, DisableUpdateResponseEvent>>(Lifetime.Singleton);
-            builder.Register<ResourceUpdateEventBundle>(Lifetime.Singleton);
+            builder.Register<ResourceUpdateEventHub<CostUpdateRequestEvent, CostUpdateResponseEvent>>(Lifetime.Singleton);
+            builder.Register<ResourceUpdateEventHub<HPUpdateRequestEvent, HPUpdateResponseEvent>>(Lifetime.Singleton);
+            builder.Register<ResourceUpdateEventHub<ShieldUpdateRequestEvent, ShieldUpdateResponseEvent>>(Lifetime.Singleton);
+            builder.Register<ResourceUpdateEventHub<DisableUpdateRequestEvent, DisableUpdateResponseEvent>>(Lifetime.Singleton);
+            builder.Register<ResourceUpdateEventHub>(Lifetime.Singleton);
 
-            builder.Register<InteractionEventBundle>(Lifetime.Singleton);
+            builder.Register<InteractionEventHub>(Lifetime.Singleton);
         }
     }
 }

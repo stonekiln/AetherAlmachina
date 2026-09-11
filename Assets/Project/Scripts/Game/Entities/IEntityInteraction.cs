@@ -21,6 +21,6 @@ namespace AetherAlmachina.Entities
         /// <summary>
         /// エンティティの内部処理を制御するためのイベント群
         /// </summary>
-        InteractionEventBundle Interaction { get; }
+        InteractionEventHub Interaction { get; }
     }
 }

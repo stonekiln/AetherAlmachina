@@ -13,7 +13,7 @@ namespace AetherAlmachina.Card.Object
     [RequireComponent(typeof(RectTransform))]
     public class CardSelector : ButtonBase, IInjectable
     {
-        CardActiveEventBundle CardActive;
+        CardActiveEventHub CardActive;
         CardBase parent;
         CardDesign design;
         RectTransform rectTransform;

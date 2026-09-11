@@ -31,7 +31,7 @@ namespace AetherAlmachina.Entities.Parameter
         /// </summary>
         public int Disable { get; private set; }
 
-        public ResourceStatusParameter(ResourceUpdateEventBundle ResourceUpdate, MonoBehaviour monoBehaviour)
+        public ResourceStatusParameter(ResourceUpdateEventHub ResourceUpdate, MonoBehaviour monoBehaviour)
         {
             Cost = 0;
             HitPoint = 0;
@@ -70,7 +70,7 @@ namespace AetherAlmachina.Entities.Parameter
         Dictionary<StatusType, float> BaseStatus { get; init; }
         Dictionary<Type, ModifierStock> ModifierStorage { get; init; }
 
-        public StatusParameter(StatusBase status, ResourceStatusParameter resourceState, EventBus<HPUpdateRequestEvent> hpUpdate)
+        public StatusParameter(StatusBase status, ResourceStatusParameter resourceState, EventPort<HPUpdateRequestEvent> hpUpdate)
         {
             BaseStatus = new(status.BaseStatus);
             ModifierStorage = new()

@@ -14,7 +14,7 @@ namespace AetherAlmachina.Stage
     /// </summary>
     public class SkillTriggerManager : MonoBehaviour, IInjectable
     {
-        EventBus<SkillActivateEvent> skillActivate;
+        EventPort<SkillActivateEvent> skillActivate;
         PointerSpawner playerPointer;
         PointerSpawner enemyPointer;
 

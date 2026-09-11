@@ -17,9 +17,9 @@ namespace DIVFactor.Lifetime
     public abstract class LifetimeObject : LifetimeScope
     {
         public List<GameObject> ChildObjects { get; private set; }
-        readonly EventBus<BindEvent> BindPoint = new();
-        readonly EventBus<ActiveEvent> ActivePoint = new();
-        readonly EventBus<EndEvent> EndPoint = new();
+        readonly EventPort<BindEvent> BindPoint = new();
+        readonly EventPort<ActiveEvent> ActivePoint = new();
+        readonly EventPort<EndEvent> EndPoint = new();
 
         /// <summary>
         /// Spawnerから受け取った追加のDI登録をするためのコールバック

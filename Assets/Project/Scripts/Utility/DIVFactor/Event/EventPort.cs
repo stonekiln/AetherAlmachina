@@ -11,17 +11,17 @@ namespace DIVFactor.Event
     /// イベントを発行するためのクラス
     /// </summary>
     /// <typeparam name="T">イベントメッセージ</typeparam>
-    public class EventBus<T> : Subject<T> where T : EventObject { }
+    public class EventPort<T> : Subject<T> where T : EventObject { }
 
     /// <summary>
     /// イベントから別のイベントへ処理を連結させるためのイベントオブジェクト
     /// </summary>
-    public class EventChannel<TReq, TRes>
+    public class EventPair<TReq, TRes>
     {
         Observable<TReq> Request { get; init; }
         Subject<TRes> Response { get; init; }
 
-        public EventChannel(Observable<TReq> req, Subject<TRes> res)
+        public EventPair(Observable<TReq> req, Subject<TRes> res)
         {
             Request = req;
             Response = res;

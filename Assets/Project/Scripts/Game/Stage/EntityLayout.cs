@@ -21,11 +21,11 @@ namespace AetherAlmachina.Stage
         /// <summary>
         /// エンティティを配置するためのイベントバス
         /// </summary>
-        protected EventBus<TEvent> layoutEvent;
+        protected EventPort<TEvent> layoutEvent;
         /// <summary>
         /// エンティティのレイアウトインデックスを通知するためのイベントバス
         /// </summary>
-        protected EventBus<LayoutIndexEvent> indexEvent;
+        protected EventPort<LayoutIndexEvent> indexEvent;
         /// <summary>
         /// エンティティを配置する領域のサイズ
         /// </summary>

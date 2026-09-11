@@ -10,7 +10,7 @@ namespace DConfig.EntityLife.Event
     /// </summary>
     public record SkillEndEvent : EventObject;
 
-    public record ResourceUpdateEventBundle<TReq, TRes>(EventBus<TReq> Request, EventBus<TRes> Response)
+    public record ResourceUpdateEventHub<TReq, TRes>(EventPort<TReq> Request, EventPort<TRes> Response)
         where TReq : EventObject
         where TRes : EventObject;
     /// <summary>
@@ -29,7 +29,7 @@ namespace DConfig.EntityLife.Event
     /// <summary>
     /// ロックオンを行うためのイベントオブジェクト
     /// </summary>
-    public record LockOnEventBundle(EventBus<LockOnRequestEvent> Request, EventBus<LockOnResponseEvent> Response);
+    public record LockOnEventHub(EventPort<LockOnRequestEvent> Request, EventPort<LockOnResponseEvent> Response);
     /// <summary>
     /// ロックオンを宣言するイベントメッセージ
     /// </summary>
@@ -41,16 +41,16 @@ namespace DConfig.EntityLife.Event
     /// <param name="Targets"></param>
     public record LockOnResponseEvent(IEnumerable<IEntityInteraction> Targets) : EventObject;
 
-    public record ResourceUpdateEventBundle(
-        ResourceUpdateEventBundle<CostUpdateRequestEvent, CostUpdateResponseEvent> Cost,
-        ResourceUpdateEventBundle<HPUpdateRequestEvent, HPUpdateResponseEvent> HP,
-        ResourceUpdateEventBundle<ShieldUpdateRequestEvent, ShieldUpdateResponseEvent> Shield,
-        ResourceUpdateEventBundle<DisableUpdateRequestEvent, DisableUpdateResponseEvent> Disable
+    public record ResourceUpdateEventHub(
+        ResourceUpdateEventHub<CostUpdateRequestEvent, CostUpdateResponseEvent> Cost,
+        ResourceUpdateEventHub<HPUpdateRequestEvent, HPUpdateResponseEvent> HP,
+        ResourceUpdateEventHub<ShieldUpdateRequestEvent, ShieldUpdateResponseEvent> Shield,
+        ResourceUpdateEventHub<DisableUpdateRequestEvent, DisableUpdateResponseEvent> Disable
     );
 
-    public record InteractionEventBundle(
-        ResourceUpdateEventBundle ResourceUpdate,
-        EventBus<LockOnRequestEvent> LockOn,
-        EventBus<SkillEndEvent> SkillEnd
+    public record InteractionEventHub(
+        ResourceUpdateEventHub ResourceUpdate,
+        EventPort<LockOnRequestEvent> LockOn,
+        EventPort<SkillEndEvent> SkillEnd
     );
 }

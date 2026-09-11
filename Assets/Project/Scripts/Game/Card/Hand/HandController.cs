@@ -22,9 +22,9 @@ namespace AetherAlmachina.Card.Hand
         const int Stack = 1;
         const int Chain = 2;
         [field: SerializeField] HandPowerTable HandPowerTable { get; set; }
-        DeckDrawEventBundle DeckDraw;
-        CardActiveEventBundle CardActive;
-        EventBus<SkillActivateEvent> SkillActivate;
+        DeckDrawEventHub DeckDraw;
+        CardActiveEventHub CardActive;
+        EventPort<SkillActivateEvent> SkillActivate;
         IEntityInteraction owner;
         List<int> selectedIndex;
         int Type => GetHandType();

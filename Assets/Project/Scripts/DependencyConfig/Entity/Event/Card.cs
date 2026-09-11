@@ -3,7 +3,7 @@ using DIVFactor.Event;
 
 namespace DConfig.EntityLife.Event
 {
-    public record CardActiveEventBundle(EventBus<CardSelectEvent> Select, EventBus<CardCancelEvent> Cancel, EventBus<CardInvokeEvent> Invoke);
+    public record CardActiveEventHub(EventPort<CardSelectEvent> Select, EventPort<CardCancelEvent> Cancel, EventPort<CardInvokeEvent> Invoke);
 
     /// <summary>
     /// カードが選択されたことを宣言するイベントメッセージ

@@ -26,7 +26,7 @@
 
 - `Assets/Project/Scripts/Tools/DIVFactor` には、このプロジェクト固有の DI + イベント駆動フレームワークがある。
 - DIVFactor は VContainer の DI スコープと R3 のイベントを併用する。
-- 機能単位のイベントは `EventBus<TEvent>` を Singleton 登録し、必要なスクリプトへ DI で注入する。
+- 機能単位のイベントは `EventPort<TEvent>` を Singleton 登録し、必要なスクリプトへ DI で注入する。
 - 全てのイベントメッセージは `DIVFactor.Event.EventObject` を継承する record として定義する。
 - Request/Response 型のイベント連結には `EventChannel<TReq, TRes>` と `Switch` 拡張を使う。
 
@@ -46,7 +46,7 @@
 1. まず、その機能がどの DI スコープに属するかを決める。
 2. 新しいイベントが必要なら、該当する `DependencyConfig/<Scope>/Event` に `EventObject` 派生 record を追加する。
 3. イベントを使う場合は、該当する Installer で `builder.RegisterEvent<TEvent>()` を追加する。
-4. 複数の EventBus をまとめて注入したい場合は、既存の `ActionEventBundle`, `ResourceUpdateEventBundle`, `DeckDrawEventBundle` のような bundle record を使う。
+4. 複数の EventPort をまとめて注入したい場合は、既存の `ActionEventHub`, `ResourceUpdateEventHub`, `DeckDrawEventHub` のような hub record を使う。
 5. MonoBehaviour が依存解決を受ける場合は `IInjectable` を実装し、`Injection(InjectableResolver resolver)` 内で `resolver.Inject(out value)` または `resolver.GetComponent<T>()` を使う。
 6. Hierarchy 上の Component を登録する場合は、`LifetimeObject.Register(ComponentRegister register)` で `register.ComponentInChild<T>()` または `register.BinderInChild<T>()` を使う。
 7. Prefab を生成してスコープを作る場合は `ILifetimeSpawner.SpawnConfigure(SpawnerBuilder builder)` で `builder.Register<TLifetime>(prefab)` を使う。
@@ -60,7 +60,7 @@
 
 ## 既存コードを変更・レビューするときの注意
 
-1.  既存の DIVFactor の流れを崩さない。新しい Singleton や static 状態を増やす前に、既存の EventBus + DI で表現できないか確認する。
+1.  既存の DIVFactor の流れを崩さない。新しい Singleton や static 状態を増やす前に、既存の EventPort + DI で表現できないか確認する。
 2.  関数など機能はイベントでラップし、インジェクトによって外部に呼び出すこと。
 3.  外部に露出する役割が単一であるように実装すること。
 4.  原則クラスのメンバはprivateととし、外部からアクセス可能とする場合はゲッターなど読み取り専用にすること。

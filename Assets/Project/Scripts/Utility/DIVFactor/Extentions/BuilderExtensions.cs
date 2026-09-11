@@ -7,7 +7,7 @@ namespace DIVFactor.Extensions
     {
         public static RegistrationBuilder RegisterEvent<TEvent>(this IContainerBuilder container, VContainer.Lifetime lifetime = VContainer.Lifetime.Singleton) where TEvent : EventObject
         {
-            return container.Register<EventBus<TEvent>>(lifetime);
+            return container.Register<EventPort<TEvent>>(lifetime);
         }
     }
 }

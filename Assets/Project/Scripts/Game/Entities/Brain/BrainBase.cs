@@ -10,7 +10,7 @@ namespace AetherAlmachina.Entities.Brain
 {
     public abstract class BrainBase : MonoBehaviour, IInjectable
     {
-        CardActiveEventBundle CardActive;
+        CardActiveEventHub CardActive;
         Func<List<ICardData>> GetHand;
         List<ICardData> Hand => GetHand();
         public virtual void Injection(InjectableResolver resolver)

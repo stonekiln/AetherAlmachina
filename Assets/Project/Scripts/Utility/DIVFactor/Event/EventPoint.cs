@@ -18,5 +18,5 @@ namespace DIVFactor.Event
     /// <summary>
     /// 各種EventPointを実装する
     /// </summary>
-    public record EventPoint(EventBus<BindEvent> BindPoint,EventBus<ActiveEvent> ActivePoint,EventBus<EndEvent> EndPoint);
+    public record EventPoint(EventPort<BindEvent> BindPoint, EventPort<ActiveEvent> ActivePoint, EventPort<EndEvent> EndPoint);
 }
