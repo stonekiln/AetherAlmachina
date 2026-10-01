@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using AetherAlmachina.Entities;
 using DIVFactor.Event;
+using DIVFactor.Extensions;
 using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
 namespace DConfig.StageLife.Event
 {
@@ -21,4 +24,17 @@ namespace DConfig.StageLife.Event
     /// <param name="Index">レイアウトされているときのインデックス</param>
     // HACK: 現時点でレイアウトインデックスが頻繁に変わるケースがないため、送信専用で、SiblingIndexからの変換は考えない
     public record LayoutIndexEvent(Vector2Int Index) : EventObject;
+
+    /// <summary>
+    /// レイアウトに関するイベントのDI登録
+    /// </summary>
+    public class LayoutEventInstaller : IInstaller
+    {
+        public void Install(IContainerBuilder builder)
+        {
+            builder.RegisterEvent<FriendlyLayoutEvent>();
+            builder.RegisterEvent<HostileLayoutEvent>();
+            builder.RegisterEvent<LayoutIndexEvent>();
+        }
+    }
 }

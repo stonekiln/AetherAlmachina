@@ -71,8 +71,8 @@ namespace AetherAlmachina.Stage
         /// <param name="hostileEntity">敵対的なエンティティ</param>
         void SetUpTargeting(List<Entity> friendlyEntity, List<Entity> hostileEntity)
         {
-            void SetLockOn(LockOnEventHub lockOn) =>
-                lockOn.Request.Switch(lockOn.Response).Subscribe(log => new(log.Selector(friendlyEntity, hostileEntity))).AddTo(this);
+            void SetLockOn(LockOnEventHub lockOn) => lockOn.AsObservable()
+                .Subscribe(log => new(log.Selector(friendlyEntity, hostileEntity))).AddTo(this);
 
             friendlyEntity.ForEach(friendly => SetLockOn(friendly.LockOn));
             hostileEntity.ForEach(hostile => SetLockOn(hostile.LockOn));

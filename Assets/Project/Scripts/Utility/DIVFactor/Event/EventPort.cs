@@ -1,5 +1,6 @@
 using System;
 using R3;
+using VContainer;
 
 namespace DIVFactor.Event
 {
@@ -7,6 +8,9 @@ namespace DIVFactor.Event
     /// 全てのイベントメッセージはこれを継承すること
     /// </summary>
     public abstract record EventObject;
+    public abstract record RequestEvent : EventObject;
+    public abstract record ResponseEvent : EventObject;
+
     /// <summary>
     /// イベントを発行するためのクラス
     /// </summary>
@@ -16,12 +20,12 @@ namespace DIVFactor.Event
     /// <summary>
     /// イベントから別のイベントへ処理を連結させるためのイベントオブジェクト
     /// </summary>
-    public class EventPair<TReq, TRes>
+    public class EventExchangerObservable<TReq, TRes>
     {
         Observable<TReq> Request { get; init; }
         Subject<TRes> Response { get; init; }
 
-        public EventPair(Observable<TReq> req, Subject<TRes> res)
+        public EventExchangerObservable(Observable<TReq> req, Subject<TRes> res)
         {
             Request = req;
             Response = res;
@@ -34,6 +38,27 @@ namespace DIVFactor.Event
         public IDisposable Subscribe(Func<TReq, TRes> func)
         {
             return Request.Subscribe(req => Response.OnNext(func(req)));
+        }
+    }
+
+    [EventHub]
+    public class EventExchanger<TReq, TRes>
+        where TReq : RequestEvent
+        where TRes : ResponseEvent
+    {
+        public EventPort<TReq> Request { get; private set; }
+        public EventPort<TRes> Response { get; private set; }
+
+        [Inject]
+        void Construct(EventPort<TReq> request, EventPort<TRes> response)
+        {
+            Request = request;
+            Response = response;
+        }
+
+        public EventExchangerObservable<TReq, TRes> AsObservable()
+        {
+            return new(Request, Response);
         }
     }
 }

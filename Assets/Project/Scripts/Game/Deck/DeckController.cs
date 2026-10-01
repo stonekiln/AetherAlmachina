@@ -31,7 +31,7 @@ namespace AetherAlmachina.Deck
         public void Subscribe(MonoBehaviour monoBehaviour)
         {
             DeckGet.Subscribe(log => Deck = log.Deck.Shuffle()).AddTo(monoBehaviour);
-            DeckDraw.Request.Switch(DeckDraw.Response).Subscribe(log => new(Draw(log.Count))).AddTo(monoBehaviour);
+            DeckDraw.AsObservable().Subscribe(log => new(Draw(log.Count))).AddTo(monoBehaviour);
         }
         /// <summary>
         /// カードをドローする

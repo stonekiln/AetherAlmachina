@@ -58,6 +58,7 @@
     },
     "dotnet.defaultSolution": "AetherAlmachina.slnx",
     "cSpell.words": [
-        "Almachina"
+        "Almachina",
+        "asmdef"
     ]
 }

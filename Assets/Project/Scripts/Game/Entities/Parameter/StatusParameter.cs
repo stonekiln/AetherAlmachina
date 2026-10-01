@@ -38,10 +38,10 @@ namespace AetherAlmachina.Entities.Parameter
             Shield = 0;
             Disable = 0;
 
-            ResourceUpdate.Cost.Request.Switch(ResourceUpdate.Cost.Response).Subscribe(log => new(CostUpdate(log.Delta))).AddTo(monoBehaviour);
-            ResourceUpdate.HP.Request.Switch(ResourceUpdate.HP.Response).Subscribe(log => new(HPUpdate(log.Delta))).AddTo(monoBehaviour);
-            ResourceUpdate.Shield.Request.Switch(ResourceUpdate.Shield.Response).Subscribe(log => new(ShieldUpdate(log.Delta))).AddTo(monoBehaviour);
-            ResourceUpdate.Disable.Request.Switch(ResourceUpdate.Disable.Response).Subscribe(log => new(DisableUpdate(log.Delta))).AddTo(monoBehaviour);
+            ResourceUpdate.Cost.AsObservable().Subscribe(log => new(CostUpdate(log.Delta))).AddTo(monoBehaviour);
+            ResourceUpdate.HP.AsObservable().Subscribe(log => new(HPUpdate(log.Delta))).AddTo(monoBehaviour);
+            ResourceUpdate.Shield.AsObservable().Subscribe(log => new(ShieldUpdate(log.Delta))).AddTo(monoBehaviour);
+            ResourceUpdate.Disable.AsObservable().Subscribe(log => new(DisableUpdate(log.Delta))).AddTo(monoBehaviour);
         }
 
         int HPUpdate(int delta)

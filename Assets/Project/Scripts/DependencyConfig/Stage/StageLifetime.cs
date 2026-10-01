@@ -1,7 +1,7 @@
 using AetherAlmachina.ActGauge.Pointer;
 using AetherAlmachina.Cost;
 using AetherAlmachina.Stage;
-using DConfig.StageLife.Installer;
+using DConfig.StageLife.Event;
 using DIVFactor.Lifetime;
 
 namespace DConfig.StageLife

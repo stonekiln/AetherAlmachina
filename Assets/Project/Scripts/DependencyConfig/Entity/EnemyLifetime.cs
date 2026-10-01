@@ -1,12 +1,10 @@
-using AetherAlmachina.Card.Hand;
-using AetherAlmachina.Cost;
 using AetherAlmachina.Entities.Faction;
-using DConfig.EntityLife.Installer;
+using DConfig.EntityLife.Event;
 using DIVFactor.Lifetime;
 
-namespace DConfig.PlayerLife
+namespace DConfig.EnemyLife
 {
-    public class PlayerLifetime : LifetimeObject
+    public class EnemyLifetime : LifetimeObject
     {
         protected override void Install(ContainerInstaller installer)
         {
@@ -17,9 +15,7 @@ namespace DConfig.PlayerLife
 
         protected override void Register(ComponentRegister register)
         {
-            register.ComponentInChild<Player>();
-            register.ComponentInChild<HandVisualizer>();
-            register.ComponentInChild<CostDisplay>();
+            register.ComponentInChild<Enemy>();
         }
     }
 }

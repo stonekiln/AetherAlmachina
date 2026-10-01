@@ -1,10 +1,11 @@
 using AetherAlmachina.Card;
 using DIVFactor.Event;
+using DIVFactor.Extensions;
+using VContainer;
+using VContainer.Unity;
 
 namespace DConfig.EntityLife.Event
 {
-    public record CardActiveEventHub(EventPort<CardSelectEvent> Select, EventPort<CardCancelEvent> Cancel, EventPort<CardInvokeEvent> Invoke);
-
     /// <summary>
     /// カードが選択されたことを宣言するイベントメッセージ
     /// </summary>
@@ -21,4 +22,14 @@ namespace DConfig.EntityLife.Event
     /// カードの効果を発動することを宣言するイベントメッセージ
     /// </summary>
     public record CardInvokeEvent : EventObject;
+    [EventHub]
+    public record CardActiveEventHub(EventPort<CardSelectEvent> Select, EventPort<CardCancelEvent> Cancel, EventPort<CardInvokeEvent> Invoke);
+
+    public class CardEventInstaller : IInstaller
+    {
+        public void Install(IContainerBuilder builder)
+        {
+            builder.RegisterEventHub<CardActiveEventHub>();
+        }
+    }
 }

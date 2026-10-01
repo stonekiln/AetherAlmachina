@@ -28,7 +28,7 @@
 - DIVFactor は VContainer の DI スコープと R3 のイベントを併用する。
 - 機能単位のイベントは `EventPort<TEvent>` を Singleton 登録し、必要なスクリプトへ DI で注入する。
 - 全てのイベントメッセージは `DIVFactor.Event.EventObject` を継承する record として定義する。
-- Request/Response 型のイベント連結には `EventChannel<TReq, TRes>` と `Switch` 拡張を使う。
+- Request/Response 型のイベント連結には `EventExchanger<TReq, TRes>` と `Switch` 拡張を使う。
 
 ## DI 設定の置き場所
 
