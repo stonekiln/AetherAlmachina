@@ -30,14 +30,12 @@ namespace DIVFactor.Event
 
             const BindingFlags memberFlags = BindingFlags.Instance | BindingFlags.Public |
                                              BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
-            bool hasHubConstructor = false;
             bool hasInjectConstructor = false;
             ConstructorInfo injectionConstructor = null;
             ParameterInfo[] constructorParameters = null;
             foreach (ConstructorInfo constructor in hubType.GetConstructors(memberFlags))
             {
                 ParameterInfo[] parameters = constructor.GetParameters();
-                hasHubConstructor |= constructor.IsPublic && parameters.Length >= 2;
 
                 // VContainerと同じく、[Inject]を優先し、未指定なら最大引数数のコンストラクタを使う。
                 if (constructor.IsDefined(typeof(VContainer.InjectAttribute), false))
@@ -73,10 +71,11 @@ namespace DIVFactor.Event
                 }
             }
 
-            // 注入処理を複数のメソッドに分けても、合計2引数以上ならHubとして扱う。
-            if (!hasHubConstructor && injectMethodParameterCount < 2)
+            // 注入箇所が分かれていても、実際に注入される引数が合計2つ以上ならHubとして扱う。
+            int injectionParameterCount = (constructorParameters?.Length ?? 0) + injectMethodParameterCount;
+            if (injectionParameterCount < 2)
                 throw new InvalidOperationException(
-                    $"{hubType} には2つ以上の引数を持つpublicコンストラクタ、または引数が合計2つ以上の[Inject]付きインスタンスメソッドが必要です。");
+                    $"{hubType} は、選択されたコンストラクタと基底型を含む[Inject]付きインスタンスメソッドの引数が合計2つ以上必要です。");
 
             List<Type> dependencies = new();
             HashSet<Type> dependencyTypes = new();

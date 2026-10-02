@@ -231,13 +231,74 @@ namespace AetherAlmachina.Editor.DIVFactor
         }
 
         [Test]
-        public void MissingPublicConstructorAndInjectMethodIsRejected() => AssertInvalidHub<NoPublicConstructor>();
+        public void ZeroArgumentNonPublicConstructorIsRejected() => AssertInvalidHub<NoPublicConstructor>();
 
         [Test]
         public void MultipleInjectConstructorsAreRejected() => AssertInvalidHub<MultipleInjectConstructors>();
 
         [Test]
-        public void ConstructorAndSingleInjectArgumentAreNotCombined() => AssertInvalidHub<SingleParameterMembers>();
+        public void ConstructorAndSingleInjectArgumentRegisterBothPorts()
+        {
+            ContainerBuilder builder = new();
+            builder.RegisterEventHub<SingleParameterMembers>();
+            using IObjectResolver container = builder.Build();
+            SingleParameterMembers hub = container.Resolve<SingleParameterMembers>();
+            Assert.That(hub.Shared, Is.SameAs(container.Resolve<EventPort<SharedEvent>>()));
+            Assert.That(hub.Left, Is.SameAs(container.Resolve<EventPort<LeftEvent>>()));
+            Assert.That(builder.Count, Is.EqualTo(3));
+
+            XDocument document = EventHubLinkerProcessor.CreateDocument(new[] { typeof(SingleParameterMembers) });
+            Assert.That(document.Descendants("type").Select(element => (string)element.Attribute("fullname")),
+                Does.Contain(typeof(SingleParameterMembers).FullName.Replace('+', '/')));
+        }
+
+        [Test]
+        public void ConstructorAndInheritedPrivateInjectArgumentAreCombined()
+        {
+            ContainerBuilder builder = new();
+            builder.RegisterEventHub<InheritedConstructorHub>();
+            using IObjectResolver container = builder.Build();
+            InheritedConstructorHub hub = container.Resolve<InheritedConstructorHub>();
+            Assert.That(hub.Shared, Is.SameAs(container.Resolve<EventPort<SharedEvent>>()));
+            Assert.That(hub.Left, Is.SameAs(container.Resolve<EventPort<LeftEvent>>()));
+            Assert.That(builder.Count, Is.EqualTo(3));
+
+            XDocument document = EventHubLinkerProcessor.CreateDocument(new[] { typeof(InheritedConstructorHub) });
+            Assert.That(document.Descendants("type").Select(element => (string)element.Attribute("fullname")),
+                Does.Contain(typeof(SingleInjectionBase).FullName.Replace('+', '/')));
+        }
+
+        [Test]
+        public void SharedPortAcrossConstructorAndInjectMethodCountsBothArguments()
+        {
+            ContainerBuilder builder = new();
+            builder.RegisterEventHub<RepeatedConstructorInjectionHub>();
+            using IObjectResolver container = builder.Build();
+            RepeatedConstructorInjectionHub hub = container.Resolve<RepeatedConstructorInjectionHub>();
+            Assert.That(hub.First, Is.SameAs(container.Resolve<EventPort<SharedEvent>>()));
+            Assert.That(hub.Second, Is.SameAs(hub.First));
+            Assert.That(builder.Count, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void UnselectedConstructorDoesNotSatisfyTheHubCondition()
+        {
+            AssertInvalidHub<UnusedConstructorHub>();
+            Assert.Throws<InvalidOperationException>(() =>
+                EventHubLinkerProcessor.CreateDocument(new[] { typeof(UnusedConstructorHub) }));
+        }
+
+        [Test]
+        public void SelectedNonPublicConstructorArgumentsSatisfyTheHubCondition()
+        {
+            ContainerBuilder builder = new();
+            builder.RegisterEventHub<PrivateConstructorHub>();
+            using IObjectResolver container = builder.Build();
+            PrivateConstructorHub hub = container.Resolve<PrivateConstructorHub>();
+            Assert.That(hub.Shared, Is.SameAs(container.Resolve<EventPort<SharedEvent>>()));
+            Assert.That(hub.Left, Is.SameAs(container.Resolve<EventPort<LeftEvent>>()));
+            Assert.That(builder.Count, Is.EqualTo(3));
+        }
 
         [Test]
         public void SeparateSingleArgumentInjectMethodsRegisterBothPorts()
@@ -477,9 +538,50 @@ namespace AetherAlmachina.Editor.DIVFactor
         [EventHub]
         public class SingleParameterMembers
         {
-            public SingleParameterMembers(EventPort<SharedEvent> shared) { }
+            public EventPort<SharedEvent> Shared { get; }
+            public EventPort<LeftEvent> Left { get; private set; }
+            public SingleParameterMembers(EventPort<SharedEvent> shared) => Shared = shared;
             [Inject]
-            void Construct(EventPort<LeftEvent> left) { }
+            void Construct(EventPort<LeftEvent> left) => Left = left;
+        }
+
+        [EventHub]
+        public class InheritedConstructorHub : SingleInjectionBase
+        {
+            public EventPort<LeftEvent> Left { get; }
+            [Inject]
+            public InheritedConstructorHub(EventPort<LeftEvent> left) => Left = left;
+            public InheritedConstructorHub(EventPort<LeftEvent> left, string unused) { }
+        }
+
+        [EventHub]
+        public class RepeatedConstructorInjectionHub
+        {
+            public EventPort<SharedEvent> First { get; }
+            public EventPort<SharedEvent> Second { get; private set; }
+            public RepeatedConstructorInjectionHub(EventPort<SharedEvent> shared) => First = shared;
+            [Inject]
+            void Construct(EventPort<SharedEvent> shared) => Second = shared;
+        }
+
+        [EventHub]
+        public class UnusedConstructorHub
+        {
+            [Inject]
+            public UnusedConstructorHub(EventPort<SharedEvent> shared) { }
+            public UnusedConstructorHub(EventPort<SharedEvent> shared, EventPort<LeftEvent> left) { }
+        }
+
+        [EventHub]
+        public class PrivateConstructorHub
+        {
+            public EventPort<SharedEvent> Shared { get; }
+            public EventPort<LeftEvent> Left { get; }
+            PrivateConstructorHub(EventPort<SharedEvent> shared, EventPort<LeftEvent> left)
+            {
+                Shared = shared;
+                Left = left;
+            }
         }
 
         [EventHub]
