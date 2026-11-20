@@ -24,7 +24,7 @@
 
 ## DIVFactor の前提
 
-- `Assets/Project/Scripts/Tools/DIVFactor` には、このプロジェクト固有の DI + イベント駆動フレームワークがある。
+- `Assets/Project/Scripts/Utility/DIVFactor` には、このプロジェクト固有の DI + イベント駆動フレームワークがある。
 - DIVFactor は VContainer の DI スコープと R3 のイベントを併用する。
 - 機能単位のイベントは `EventPort<TEvent>` を Singleton 登録し、必要なスクリプトへ DI で注入する。
 - 全てのイベントメッセージは `DIVFactor.Event.EventObject` を継承する record として定義する。

@@ -23,17 +23,16 @@ namespace AetherAlmachina.Editor.DIVFactor
 
         public string GenerateAdditionalLinkXmlFile(BuildReport report, UnityLinkerBuildPipelineData buildData)
         {
-            UnityEditor.Compilation.Assembly[] playerAssemblies = CompilationPipeline.GetAssemblies(AssembliesType.Player);
+            Assembly[] playerAssemblies = CompilationPipeline.GetAssemblies(AssembliesType.Player);
             HashSet<string> playerAssemblyNames = new(playerAssemblies.Select(assembly => assembly.name));
-            foreach (UnityEditor.Compilation.Assembly assembly in playerAssemblies)
+            foreach (Assembly assembly in playerAssemblies)
             {
                 foreach (string referencePath in assembly.compiledAssemblyReferences)
                     playerAssemblyNames.Add(Path.GetFileNameWithoutExtension(referencePath));
             }
 
             Type[] hubTypes = TypeCache.GetTypesWithAttribute<EventHubAttribute>()
-                .Where(hubType => playerAssemblyNames.Contains(hubType.Assembly.GetName().Name))
-                .ToArray();
+                .Where(hubType => playerAssemblyNames.Contains(hubType.Assembly.GetName().Name)).ToArray();
 
             XDocument document;
             try
