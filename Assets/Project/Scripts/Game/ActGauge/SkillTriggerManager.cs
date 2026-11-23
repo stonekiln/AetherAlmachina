@@ -1,3 +1,4 @@
+using DIVFactor.Lifecycle;
 using AetherAlmachina.ActGauge.Pointer;
 using AetherAlmachina.Entities.Faction;
 using AetherAlmachina.Skill;
@@ -12,7 +13,7 @@ namespace AetherAlmachina.Stage
     /// <summary>
     /// スキルを発動させるための処理を行うためのクラス
     /// </summary>
-    public class SkillTriggerManager : MonoBehaviour, IInjectable
+    public class SkillTriggerManager : MonoBehaviour, ISubscriberComponent
     {
         EventPort<SkillActivateEvent> skillActivate;
         PointerSpawner playerPointer;
@@ -24,7 +25,11 @@ namespace AetherAlmachina.Stage
             playerPointer = resolver.GetComponent<FriendlyPointer>();
             enemyPointer = resolver.GetComponent<HostilePointer>();
 
-            skillActivate.Subscribe(log => GaugeOn(log.Data)).AddTo(this);
+        }
+
+        public void Subscribe(UsageLifetime lifetime)
+        {
+            skillActivate.Subscribe(log => GaugeOn(log.Data)).AddTo(lifetime);
         }
 
         /// <summary>

@@ -1,106 +1,190 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using DIVFactor.Event;
+using DIVFactor.Extensions;
 using DIVFactor.Injectable;
+using DIVFactor.Lifecycle;
+using DIVFactor.Pooling;
 using DIVFactor.Spawner;
-using R3;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
 namespace DIVFactor.Lifetime
 {
-    /// <summary>
-    /// オブジェクトにLifetimeScopeを付加する
-    /// </summary>
     public abstract class LifetimeObject : LifetimeScope
     {
-        public List<GameObject> ChildObjects { get; private set; }
-        readonly EventPort<BindEvent> BindPoint = new();
-        readonly EventPort<ActiveEvent> ActivePoint = new();
-        readonly EventPort<EndEvent> EndPoint = new();
+        readonly LifetimeOwnership ownership = new();
+        readonly List<LifetimeObject> children = new();
+        readonly List<LifetimePool> pools = new();
+        LifetimeObject parentOwner;
+        LifetimePool poolOwner;
+        LifetimeArguments arguments;
+        GameObject model;
+        Transform modelParent;
+        bool deferStart;
+        bool closed;
+        bool destroyScheduled;
+        bool finalized;
+        Action<IContainerBuilder> callback;
+        LifecycleRunner lifecycle;
+        public IReadOnlyList<GameObject> ChildObjects => ownership.Objects;
+        internal bool IsInitialized => lifecycle?.State == LifecycleState.Active;
+        internal bool IsUsable => !closed && Container != null && lifecycle != null;
+        internal bool AcceptsSpawning => !closed && (lifecycle?.State == LifecycleState.Starting || lifecycle?.State == LifecycleState.Active);
 
-        /// <summary>
-        /// Spawnerから受け取った追加のDI登録をするためのコールバック
-        /// </summary>
-        Action<IContainerBuilder> Callback;
         protected override void Awake()
         {
-            //初期化情報を受け取る
-            LifetimeSeed seed = gameObject.GetComponent<LifetimeSeed>();
-            //ルートの場合は親がnullに設定される
-            // ルートの場合は初期値でルートのLifetimeScopeが設定されているため何もしない
-            if (seed.Parent) EnqueueParent(seed.Parent);
-            Callback = seed.CallBack;
-            //必要ないので初期化情報を削除する
-            Destroy(seed);
-            base.Awake();
+            LifetimeSeed seed = GetComponent<LifetimeSeed>();
+            using (IDisposable parentOverride = seed != null && seed.Parent ? EnqueueParent(seed.Parent) : null)
+            {
+                if (seed != null)
+                {
+                    callback = seed.CallBack;
+                    arguments = seed.Arguments;
+                    poolOwner = seed.Pool;
+                    deferStart = seed.DeferStart;
+                    modelParent = seed.SpawnParent;
+                    Destroy(seed);
+                }
+                arguments ??= LifetimeArguments.Create();
+                base.Awake();
+            }
         }
+
         protected override void OnDestroy()
         {
-            base.OnDestroy();
-            ChildObjects.ForEach(obj => Destroy(obj));
+            destroyScheduled = true;
+            finalized = true;
+            try { CloseOwned(); }
+            catch (Exception exception) { Debug.LogException(exception); }
+            finally
+            {
+                try { base.OnDestroy(); }
+                finally { ownership.Dispose(); NotifyDestroyed(); }
+            }
         }
-        /// <summary>
-        /// ここでIInstallerが実装されたコンテナクラスをインストールする
-        /// </summary>
-        /// <param name="installer">インストールするためのフィールド</param>
+
         protected abstract void Install(ContainerInstaller installer);
-        /// <summary>
-        /// ここでヒエラルキー上のインスタンスをDI登録する
-        /// </summary>
-        /// <param name="register">DI登録するためのフィールド</param>
         protected abstract void Register(ComponentRegister register);
 
         protected sealed override void Configure(IContainerBuilder builder)
         {
+            builder.RegisterEventHub<LifecycleEventHub>();
+            builder.RegisterInstance(ownership);
+            arguments ??= LifetimeArguments.Create();
+            arguments.Register(builder);
             Install(new(builder));
             Register(new(builder, transform));
-            Callback(builder);
-            builder.RegisterBuildCallback(container => BuildCallback(container));
+            callback?.Invoke(builder);
+            callback = null;
+            builder.RegisterBuildCallback(BuildCallback);
         }
-        /// <summary>
-        /// コンテナ完成後のコールバック処理
-        /// </summary>
-        /// <param name="container">完成したコンテナ</param>
+
         void BuildCallback(IObjectResolver container)
         {
-            foreach (Component component in GetComponentsInChildren<MonoBehaviour>(true))
-            {
-                //Injectableを探してそれにコンテナを渡す
-                if (component is IInjectable injectable) injectable.Injection(new(container, new(BindPoint, ActivePoint, EndPoint)));
-                //スポナーを探してそれに自身のTransformとLifetimeScopeを渡す
-                //引数に渡したインスタンスがそのスポナーの親となる
-                if (component is ILifetimeSpawner spawner) spawner.SpawnConfigure(new SpawnerBuilder(component.transform, this));
-            }
-            //LifetimeObjectの直下のオブジェクトは生成したGameObjectのルートである
-            ChildObjects = new() { transform.GetChild(0).gameObject };
-            //LifetimeObjectを親のLifetimeObjectのTransformの子に配置する
-            ChildObjects[0].transform.SetParent(transform.parent, false);
-            //生成したオブジェクトをスポナーの子に配置する
-            transform.SetParent(Parent.transform, false);
-            //EndPointを購買する
-            EndPoint.Take(1).Subscribe(_ => Destroy(gameObject));
-            //BindPointの実行後にActivePointをフックして実行
-            BindPoint.Take(1).Do(onCompleted: _ =>
-            {
-                //ActivePointを発行する
-                ActivePoint.OnNext(new());
-                ActivePoint.OnCompleted();
-            }).Subscribe();
-            //BindPointを発行する
-            BindPoint.OnNext(new(this));
-            BindPoint.OnCompleted();
-            //配下のコンポーネントを有効化し、本来のMonoBehaviourのライフサイクルに入る
-            ChildObjects.ForEach(obj => obj.SetActive(true));
+            MonoBehaviour[] components = GetComponentsInChildren<MonoBehaviour>(true);
+            model = transform.GetChild(0).gameObject;
+            ownership.Track(model);
+            modelParent ??= transform.parent;
+            model.transform.SetParent(modelParent, false);
+            if (Parent) transform.SetParent(Parent.transform, false);
+            parentOwner = Parent as LifetimeObject;
+            parentOwner?.children.Add(this);
+            foreach (MonoBehaviour component in components)
+                if (component is ILifetimeSpawner spawner) spawner.SpawnConfigure(new(component.transform, this));
+
+            lifecycle = new LifecycleRunner(components, container.Resolve<LifecycleEventHub>(),
+                () => ownership.SetVisible(true), () => ownership.SetVisible(false), ScheduleDestroy,
+                EndChildUses, poolOwner ? ReturnToPool : null, arguments.Clear);
+            if (!deferStart) BeginUse(arguments);
         }
-        /// <summary>
-        /// EndPointを発行する
-        /// </summary>
-        public void EntryEndPoint()
+
+        internal void BeginUse(LifetimeArguments next)
         {
-            EndPoint.OnNext(new());
+            if (!IsUsable) throw new ObjectDisposedException(GetType().Name);
+            arguments.Replace(next);
+            if (model && model.transform.parent != modelParent) model.transform.SetParent(modelParent, false);
+            lifecycle.Run(new InjectableResolver(Container));
+            if (!IsInitialized) throw new InvalidOperationException($"{GetType().Name} の使用開始が完了しませんでした。");
+        }
+
+        internal void TrackPool(LifetimePool pool)
+        {
+            if (closed) throw new ObjectDisposedException(GetType().Name);
+            pools.Add(pool);
+        }
+
+        internal void UntrackPool(LifetimePool pool) => pools.Remove(pool);
+
+        void ReturnToPool()
+        {
+            if (!poolOwner || !poolOwner.Return(this)) DestroyForOwner();
+        }
+
+        void EndChildUses()
+        {
+            List<Exception> failures = new();
+            foreach (LifetimeObject child in children.ToArray())
+            {
+                if (!child || child.closed) continue;
+                try { child.lifecycle?.EndForOwner(); }
+                catch (Exception exception) { failures.Add(exception); }
+            }
+            if (failures.Count != 0) throw new AggregateException(failures);
+        }
+
+        void CloseOwned()
+        {
+            if (closed) return;
+            closed = true;
+            List<Exception> failures = new();
+            try { lifecycle?.Dispose(); }
+            catch (Exception exception) { failures.Add(exception); }
+            foreach (LifetimePool pool in pools.ToArray())
+            {
+                if (!pool) continue;
+                try { pool.Dispose(); }
+                catch (Exception exception) { failures.Add(exception); }
+            }
+            pools.Clear();
+            foreach (LifetimeObject child in children.ToArray())
+            {
+                if (!child) continue;
+                try { child.DestroyForOwner(); }
+                catch (Exception exception) { failures.Add(exception); }
+            }
+            children.Clear();
+            arguments?.Clear();
+            if (failures.Count != 0) throw new AggregateException(failures);
+        }
+
+        internal void DestroyForOwner()
+        {
+            if (finalized) return;
+            finalized = true;
+            destroyScheduled = true;
+            try { CloseOwned(); }
+            finally
+            {
+                try { DisposeCore(); }
+                finally { ownership.Dispose(); NotifyDestroyed(); Destroy(gameObject); }
+            }
+        }
+
+        void ScheduleDestroy()
+        {
+            if (destroyScheduled) return;
+            destroyScheduled = true;
+            try { CloseOwned(); }
+            finally { ownership.Dispose(); NotifyDestroyed(); Destroy(gameObject); }
+        }
+
+        void NotifyDestroyed()
+        {
+            callback = null;
+            parentOwner?.children.Remove(this);
+            if (poolOwner) poolOwner.NotifyDestroyed(this);
+            poolOwner = null;
         }
     }
 }

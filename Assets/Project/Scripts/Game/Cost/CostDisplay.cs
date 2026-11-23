@@ -1,3 +1,4 @@
+using DIVFactor.Lifecycle;
 using AetherAlmachina.Entities.Faction;
 using DIVFactor.Injectable;
 using R3;
@@ -10,7 +11,7 @@ namespace AetherAlmachina.Cost
     /// あるエンティティのコストを表示するためのクラス
     /// </summary>
     [RequireComponent(typeof(TextMeshProUGUI))]
-    public class CostDisplay : MonoBehaviour, IInjectable
+    public class CostDisplay : MonoBehaviour, IReactiveView
     {
         TextMeshProUGUI textMeshPro;
         Player owner;
@@ -19,13 +20,19 @@ namespace AetherAlmachina.Cost
         {
             resolver.Inject(out owner);
 
-            owner.Interaction.ResourceUpdate.Cost.Response.Subscribe(log => UpdateDisplay(log.Current)).AddTo(this);
         }
 
-        void Awake()
+        public void Subscribe(UsageLifetime lifetime)
+        {
+            owner.Interaction.ResourceUpdate.Cost.Response.Subscribe(log => UpdateDisplay(log.Current)).AddTo(lifetime);
+        }
+
+        public void Initialize()
         {
             textMeshPro = GetComponent<TextMeshProUGUI>();
         }
+
+        public void UpdateView() => UpdateDisplay(owner.Status.Resource.Cost);
 
         /// <summary>
         /// 画面に現在のMPを表示する

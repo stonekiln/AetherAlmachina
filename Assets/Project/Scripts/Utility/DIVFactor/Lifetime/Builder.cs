@@ -1,4 +1,3 @@
-using DIVFactor.Binder;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -44,14 +43,6 @@ namespace DIVFactor.Lifetime
         public ComponentRegistrationBuilder ComponentInChild<T>() where T : MonoBehaviour
         {
             return Builder.RegisterComponentInHierarchy<T>().UnderTransform(LifetimeTransform);
-        }
-        /// <summary>
-        /// そのLifetimeObjectの配下にあるBinderを探してDI登録する
-        /// </summary>
-        /// <typeparam name="T">Binderの種類</typeparam>
-        public void BinderInChild<T>() where T : MonoBehaviour, IObjectBinderBase
-        {
-            Builder.RegisterComponentInHierarchy<T>().UnderTransform(LifetimeTransform).AsImplementedInterfaces();
         }
     }
 }

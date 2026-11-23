@@ -1,109 +1,75 @@
 using System;
+using DIVFactor.Lifecycle;
 using DIVFactor.Lifetime;
+using DIVFactor.Pooling;
 using VContainer;
 
 namespace DIVFactor.Spawner
 {
-    /// <summary>
-    /// スポナー生成しフィールドにインジェクトするためのクラス
-    /// </summary>
-    /// <typeparam name="TScope">生成するLifetimeObject</typeparam>
+    /// <summary>型付きファクトリーの呼び出し方を維持し、取得方法を生成またはプールへ委譲する。</summary>
     public class SpawnerInjector<TScope> where TScope : LifetimeObject
     {
-        Func<LifetimeSeed> MakeSeed { get; init; }
-        Func<LifetimeSeed, IObjectResolver> GetResolver { get; init; }
+        readonly Func<Func<LifetimeArguments, IObjectResolver>> bind;
+
+        internal SpawnerInjector(Func<Func<LifetimeArguments, IObjectResolver>> bind) => this.bind = bind;
+
         public SpawnerInjector(Func<LifetimeSeed> makeSeed, Func<LifetimeSeed, IObjectResolver> makeResolver)
         {
-            MakeSeed = makeSeed;
-            GetResolver = makeResolver;
+            if (makeSeed == null) throw new ArgumentNullException(nameof(makeSeed));
+            if (makeResolver == null) throw new ArgumentNullException(nameof(makeResolver));
+            bind = () => arguments => makeResolver(makeSeed().SetArguments(arguments));
         }
-        /// <summary>
-        /// 任意のフィールドにインジェクトを行う、LifetimeObjectに登録するパラメータはなし
-        /// </summary>
-        /// <param name="action">インジェクトの対象</param>
+
         public void Inject(out Action action)
         {
-            action = () => GetResolver(MakeSeed());
+            var factory = bind();
+            action = () => factory(LifetimeArguments.Create());
         }
-        /// <summary>
-        /// 任意のフィールドにインジェクトを行う、LifetimeObjectに登録するパラメータはなし
-        /// </summary>
-        /// <typeparam name="TResult">LifetimeScopeに登録したインスタンスを返す</typeparam>
-        /// <param name="factory">インジェクトの対象</param>
         public void Inject<TResult>(out Func<TResult> factory)
         {
-            factory = () => GetResolver(MakeSeed()).Resolve<TResult>();
+            var rent = bind();
+            factory = () => ResolveResult<TResult>(rent(LifetimeArguments.Create()));
         }
-        /// <summary>
-        /// 任意のフィールドにインジェクトを行う、LifetimeObjectに登録するパラメータは1個
-        /// </summary>
-        /// <param name="action">インジェクトの対象</param>
         public void Inject<TParam>(out Action<TParam> action)
         {
-            action = param => GetResolver(MakeSeed().SetCallback(builder => builder.RegisterInstance(param)));
+            var factory = bind();
+            action = value => factory(LifetimeArguments.Create(value));
         }
-        /// <summary>
-        /// 任意のフィールドにインジェクトを行う、LifetimeObjectに登録するパラメータは1個
-        /// </summary>
-        /// <typeparam name="TResult">LifetimeScopeに登録したインスタンスを返す</typeparam>
-        /// <param name="factory">インジェクトの対象</param>
         public void Inject<TParam, TResult>(out Func<TParam, TResult> factory)
         {
-            factory = param => GetResolver(MakeSeed().SetCallback(builder => builder.RegisterInstance(param))).Resolve<TResult>();
+            var rent = bind();
+            factory = value => ResolveResult<TResult>(rent(LifetimeArguments.Create(value)));
         }
-        /// <summary>
-        /// 任意のフィールドにインジェクトを行う、LifetimeObjectに登録するパラメータは2個
-        /// </summary>
-        /// <param name="action">インジェクトの対象</param>
-        public void Inject<TParam1, TParam2>(out Action<TParam1, TParam2> action)
+        public void Inject<T1, T2>(out Action<T1, T2> action)
         {
-            action = (param1, param2) => GetResolver(MakeSeed().SetCallback(builder =>
-            {
-                builder.RegisterInstance(param1);
-                builder.RegisterInstance(param2);
-            }));
+            var factory = bind();
+            action = (first, second) => factory(LifetimeArguments.Create(first, second));
         }
-        /// <summary>
-        /// 任意のフィールドにインジェクトを行う、LifetimeObjectに登録するパラメータは2個
-        /// </summary>
-        /// <typeparam name="TResult">LifetimeScopeに登録したインスタンスを返す</typeparam>
-        /// <param name="factory">インジェクトの対象</param>
-        public void Inject<TParam1, TParam2, TResult>(out Func<TParam1, TParam2, TResult> factory)
+        public void Inject<T1, T2, TResult>(out Func<T1, T2, TResult> factory)
         {
-            factory = (param1, param2) =>
-            GetResolver(MakeSeed().SetCallback(builder =>
-            {
-                builder.RegisterInstance(param1);
-                builder.RegisterInstance(param2);
-            })).Resolve<TResult>();
+            var rent = bind();
+            factory = (first, second) => ResolveResult<TResult>(rent(LifetimeArguments.Create(first, second)));
         }
-        /// <summary>
-        /// 任意のフィールドにインジェクトを行う、LifetimeObjectに登録するパラメータは3個
-        /// </summary>
-        /// <param name="action">インジェクトの対象</param>
-        public void Inject<TParam1, TParam2, TParam3>(out Action<TParam1, TParam2, TParam3> action)
+        public void Inject<T1, T2, T3>(out Action<T1, T2, T3> action)
         {
-            action = (param1, param2, param3) => GetResolver(MakeSeed().SetCallback(builder =>
-            {
-                builder.RegisterInstance(param1);
-                builder.RegisterInstance(param2);
-                builder.RegisterInstance(param3);
-            }));
+            var factory = bind();
+            action = (first, second, third) => factory(LifetimeArguments.Create(first, second, third));
         }
-        /// <summary>
-        /// 任意のフィールドにインジェクトを行う、LifetimeObjectに登録するパラメータは3個
-        /// </summary>
-        /// <typeparam name="TResult">LifetimeScopeに登録したインスタンスを返す</typeparam>
-        /// <param name="factory">インジェクトの対象</param>
-        public void Inject<TParam1, TParam2, TParam3, TResult>(out Func<TParam1, TParam2, TParam3, TResult> factory)
+        public void Inject<T1, T2, T3, TResult>(out Func<T1, T2, T3, TResult> factory)
         {
-            factory = (param1, param2, param3) =>
-            GetResolver(MakeSeed().SetCallback(builder =>
+            var rent = bind();
+            factory = (first, second, third) => ResolveResult<TResult>(rent(LifetimeArguments.Create(first, second, third)));
+        }
+
+        static TResult ResolveResult<TResult>(IObjectResolver resolver)
+        {
+            try { return resolver.Resolve<TResult>(); }
+            catch
             {
-                builder.RegisterInstance(param1);
-                builder.RegisterInstance(param2);
-                builder.RegisterInstance(param3);
-            })).Resolve<TResult>();
+                // 戻り値の登録ミスでも、生成済みの個体を貸出中のまま残さない。
+                resolver.Resolve<LifecycleEventHub>().Destroy.OnNext(new());
+                throw;
+            }
         }
     }
 }

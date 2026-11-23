@@ -1,11 +1,9 @@
+using DIVFactor.Lifecycle;
 using System;
 using System.Collections.Generic;
 using AetherAlmachina.Skill.Effect.Modifiers;
 using DConfig.EntityLife.Event;
-using DIVFactor.Event;
-using DIVFactor.Extensions;
 using R3;
-using UnityEngine;
 
 namespace AetherAlmachina.Entities.Parameter
 {
@@ -31,17 +29,12 @@ namespace AetherAlmachina.Entities.Parameter
         /// </summary>
         public int Disable { get; private set; }
 
-        public ResourceStatusParameter(ResourceUpdateEventHub ResourceUpdate, MonoBehaviour monoBehaviour)
+        public void Subscribe(ResourceUpdateEventHub resourceUpdate, UsageLifetime lifetime)
         {
-            Cost = 0;
-            HitPoint = 0;
-            Shield = 0;
-            Disable = 0;
-
-            ResourceUpdate.Cost.AsObservable().Subscribe(log => new(CostUpdate(log.Delta))).AddTo(monoBehaviour);
-            ResourceUpdate.HP.AsObservable().Subscribe(log => new(HPUpdate(log.Delta))).AddTo(monoBehaviour);
-            ResourceUpdate.Shield.AsObservable().Subscribe(log => new(ShieldUpdate(log.Delta))).AddTo(monoBehaviour);
-            ResourceUpdate.Disable.AsObservable().Subscribe(log => new(DisableUpdate(log.Delta))).AddTo(monoBehaviour);
+            resourceUpdate.Cost.AsObservable().Subscribe(log => new(CostUpdate(log.Delta))).AddTo(lifetime);
+            resourceUpdate.HP.AsObservable().Subscribe(log => new(HPUpdate(log.Delta))).AddTo(lifetime);
+            resourceUpdate.Shield.AsObservable().Subscribe(log => new(ShieldUpdate(log.Delta))).AddTo(lifetime);
+            resourceUpdate.Disable.AsObservable().Subscribe(log => new(DisableUpdate(log.Delta))).AddTo(lifetime);
         }
 
         int HPUpdate(int delta)
@@ -70,7 +63,7 @@ namespace AetherAlmachina.Entities.Parameter
         Dictionary<StatusType, float> BaseStatus { get; init; }
         Dictionary<Type, ModifierStock> ModifierStorage { get; init; }
 
-        public StatusParameter(StatusBase status, ResourceStatusParameter resourceState, EventPort<HPUpdateRequestEvent> hpUpdate)
+        public StatusParameter(StatusBase status, ResourceStatusParameter resourceState)
         {
             BaseStatus = new(status.BaseStatus);
             ModifierStorage = new()
@@ -81,7 +74,6 @@ namespace AetherAlmachina.Entities.Parameter
             };
             Resource = resourceState;
 
-            hpUpdate.OnNext(new(GetInt(StatusType.MaxHitPoint)));
         }
 
         public T GetModifiers<T>() where T : ModifierStock

@@ -1,3 +1,4 @@
+using DIVFactor.Lifecycle;
 using System.Collections.Generic;
 using AetherAlmachina.Skill;
 using DConfig.EntityLife.Event;
@@ -5,7 +6,6 @@ using DIVFactor.Event;
 using DIVFactor.Extensions;
 using R3;
 using Tools.Extensions;
-using UnityEngine;
 
 namespace AetherAlmachina.Deck
 {
@@ -27,11 +27,11 @@ namespace AetherAlmachina.Deck
         /// <summary>
         /// 各種イベントの購読を行う
         /// </summary>
-        /// <param name="monoBehaviour">イベントの購読期間を決定する</param>
-        public void Subscribe(MonoBehaviour monoBehaviour)
+        /// <param name="lifetime">イベントの購読期間を決定する</param>
+        public void Subscribe(UsageLifetime lifetime)
         {
-            DeckGet.Subscribe(log => Deck = log.Deck.Shuffle()).AddTo(monoBehaviour);
-            DeckDraw.AsObservable().Subscribe(log => new(Draw(log.Count))).AddTo(monoBehaviour);
+            DeckGet.Subscribe(log => Deck = log.Deck.Shuffle()).AddTo(lifetime);
+            DeckDraw.AsObservable().Subscribe(log => new(Draw(log.Count))).AddTo(lifetime);
         }
         /// <summary>
         /// カードをドローする

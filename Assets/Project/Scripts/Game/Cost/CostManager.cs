@@ -1,3 +1,4 @@
+using DIVFactor.Lifecycle;
 using System;
 using AetherAlmachina.Stage;
 using DConfig.StageLife.Event;
@@ -12,18 +13,25 @@ namespace AetherAlmachina.Cost
     /// <summary>
     /// 各エンティティにコストを設定するためのクラス
     /// </summary>
-    public class CostManager : MonoBehaviour, IInjectable
+    public class CostManager : MonoBehaviour, IReactiveComponent
     {
         EventPort<AutoIncreaseEvent> AutoIncrease;
         CostSettingsAsset costSettings;
+        StageSettingsAsset settings;
 
         public void Injection(InjectableResolver resolver)
         {
-            costSettings = resolver.GetComponent<StageSettingsAsset>().CostSettings;
+            resolver.Inject(out settings);
             resolver.Inject(out AutoIncrease);
 
+        }
+
+        public void Initialize() => costSettings = settings.CostSettings;
+
+        public void Subscribe(UsageLifetime lifetime)
+        {
             Observable.Interval(TimeSpan.FromSeconds(costSettings.TimeSpan))
-                .Switch(AutoIncrease).Subscribe(_ => new(costSettings.Delta)).AddTo(this);
+                .Switch(AutoIncrease).Subscribe(_ => new(costSettings.Delta)).AddTo(lifetime);
         }
     }
 }

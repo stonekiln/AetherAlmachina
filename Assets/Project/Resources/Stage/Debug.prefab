@@ -1065,7 +1065,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a59474b27c4dff4da103c1bcce48c4c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerUIBinder
+  m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.Stage.UI.PlayerUIRoot
 --- !u!1 &4091789693137833091
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using AetherAlmachina.Card;
 using AetherAlmachina.Card.Hand;
@@ -11,12 +10,12 @@ namespace AetherAlmachina.Entities.Brain
     public abstract class BrainBase : MonoBehaviour, IInjectable
     {
         CardActiveEventHub CardActive;
-        Func<List<ICardData>> GetHand;
-        List<ICardData> Hand => GetHand();
+        HandController handController;
+        List<ICardData> Hand => handController.Hand;
         public virtual void Injection(InjectableResolver resolver)
         {
             resolver.Inject(out CardActive);
-            GetHand = () => resolver.GetComponent<HandController>().Hand;
+            resolver.Inject(out handController);
         }
 
         protected void Select(int index)

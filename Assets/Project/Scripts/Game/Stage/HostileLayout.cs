@@ -1,4 +1,4 @@
-using DIVFactor.Injectable;
+using DIVFactor.Lifecycle;
 using DConfig.StageLife.Event;
 using R3;
 
@@ -7,13 +7,11 @@ namespace AetherAlmachina.Stage
     /// <summary>
     /// 敵側エンティティを配置するクラス
     /// </summary>
-    public class HostileLayout : EntityLayout<HostileLayoutEvent>
+    public class HostileLayout : EntityLayout<HostileLayoutEvent>, ISubscriberComponent
     {
-        public override void Injection(InjectableResolver resolver)
+        public void Subscribe(UsageLifetime lifetime)
         {
-            base.Injection(resolver);
-
-            layoutEvent.Subscribe(req => Arrange(req.Hostile, transform.position, settings.Hostile.layoutSize, false)).AddTo(this);
+            layoutEvent.Subscribe(req => Arrange(req.Hostile, transform.position, settings.Hostile.layoutSize, false)).AddTo(lifetime);
         }
     }
 }

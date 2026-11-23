@@ -1,8 +1,5 @@
-using DIVFactor.Binder;
-using DIVFactor.Event;
-using R3;
-using UnityEngine;
 using VContainer;
+using DIVFactor.Lifecycle;
 
 namespace DIVFactor.Injectable
 {
@@ -23,18 +20,20 @@ namespace DIVFactor.Injectable
     public class InjectableResolver
     {
         IObjectResolver Resolver { get; init; }
-        EventPoint EventPoint { get; init; }
-        /// <summary>
-        /// ActivePointのObservableを返す
-        /// </summary>
-        /// <returns>ActivePointのObservable</returns>
-        public Observable<ActiveEvent> ActivePoint => EventPoint.ActivePoint.AsObservable();
-
-        public InjectableResolver(IObjectResolver resolver, EventPoint eventPoint)
+        readonly LifecycleEventHub usageEvents;
+        public InjectableResolver(IObjectResolver resolver)
         {
             Resolver = resolver;
-            EventPoint = eventPoint;
         }
+
+        InjectableResolver(IObjectResolver resolver, LifecycleEventHub usageEvents)
+        {
+            Resolver = resolver;
+            this.usageEvents = usageEvents;
+        }
+
+        internal InjectableResolver WithLifecycleEvents(LifecycleEventHub events)
+            => new(Resolver, events);
 
         /// <summary>
         /// 引数にとった変数に依存関係を解決した状態のインスタンスを渡す
@@ -43,7 +42,8 @@ namespace DIVFactor.Injectable
         /// <param name="value">注入する変数</param>
         public void Inject<T>(out T value)
         {
-            value = Resolver.Resolve<T>();
+            value = usageEvents != null && typeof(T) == typeof(LifecycleEventHub)
+                ? (T)(object)usageEvents : Resolver.Resolve<T>();
         }
         /// <summary>
         /// DI登録された種類のインスタンスを取得する
@@ -52,28 +52,8 @@ namespace DIVFactor.Injectable
         /// <returns>依存解決済みのインスタンス</returns>
         public T GetComponent<T>()
         {
-            return Resolver.Resolve<T>();
-        }
-        /// <summary>
-        /// 指定したMonoBehaviourの種類のBinderにそのMonoBehaviourをバインドする
-        /// </summary>
-        /// <typeparam name="T">バインドするMonoBehaviourの種類</typeparam>
-        /// <param name="monoBehaviour">バインドするMonoBehaviour</param>
-        public void Bind<T>(T monoBehaviour) where T : MonoBehaviour
-        {
-            EventPoint.BindPoint.Subscribe(log =>
-            {
-                monoBehaviour.gameObject.SetActive(false);
-                log.Lifetime.ChildObjects.Add(monoBehaviour.gameObject);
-                GetComponent<IObjectBinder<T>>().Bind(monoBehaviour);
-            });
-        }
-        /// <summary>
-        /// EndPointを発行する
-        /// </summary>
-        public void EntryEndPoint()
-        {
-            EventPoint.EndPoint.OnNext(new());
+            Inject(out T value);
+            return value;
         }
     }
 }

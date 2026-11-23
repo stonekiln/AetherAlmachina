@@ -4,10 +4,10 @@ using UnityEngine.SceneManagement;
 
 public class LifetimeSceneProcessor : IProcessSceneWithReport
 {
-    public int callbackOrder => throw new System.NotImplementedException();
+    public int callbackOrder => 0;
 
     public void OnProcessScene(Scene scene, BuildReport report)
     {
-        throw new System.NotImplementedException();
+        // シーンのスコープ自動構築は未導入のため、現在は加工しない。
     }
 }

@@ -1,3 +1,4 @@
+using DIVFactor.Lifecycle;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace AetherAlmachina.Card.Hand
     /// <summary>
     /// 手札を制御するためのクラス
     /// </summary>
-    public class HandController : MonoBehaviour, IInjectable
+    public class HandController : MonoBehaviour, IActiveComponent
     {
         const int HandLimit = 5;
         const int Stack = 1;
@@ -36,18 +37,25 @@ namespace AetherAlmachina.Card.Hand
             resolver.Inject(out CardActive);
             resolver.Inject(out SkillActivate);
             owner = resolver.GetComponent<Player>();
-            selectedIndex = new();
-
-            DeckDraw.Response.Subscribe(log => Hand = AddHand(log.DrawCard)).AddTo(this);
-            CardActive.Select.Subscribe(log => log.Data.SetSelect(Select(log.Index))).AddTo(this);
-            CardActive.Cancel.Subscribe(log => log.Data.SetSelect(!SelectCancel(log.Index))).AddTo(this);
-            CardActive.Invoke.Subscribe(_ => Invoke()).AddTo(this);
         }
 
-        void Start()
+        public void Initialize()
+        {
+            selectedIndex = new();
+            Hand = new();
+        }
+
+        public void Subscribe(UsageLifetime lifetime)
+        {
+            DeckDraw.Response.Subscribe(log => Hand = AddHand(log.DrawCard)).AddTo(lifetime);
+            CardActive.Select.Subscribe(log => log.Data.SetSelect(Select(log.Index))).AddTo(lifetime);
+            CardActive.Cancel.Subscribe(log => log.Data.SetSelect(!SelectCancel(log.Index))).AddTo(lifetime);
+            CardActive.Invoke.Subscribe(_ => Invoke()).AddTo(lifetime);
+        }
+
+        public void Activate()
         {
             Debug.Log("カードをドローします");
-            Hand = new();
             Draw(HandLimit);
         }
 

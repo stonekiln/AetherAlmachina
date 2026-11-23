@@ -1,3 +1,4 @@
+using DIVFactor.Lifecycle;
 using R3;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,13 +12,15 @@ namespace AetherAlmachina.Card.Object
     /// カードを画面から選択するためのクラス
     /// </summary>
     [RequireComponent(typeof(RectTransform))]
-    public class CardSelector : ButtonBase, IInjectable
+    public class CardSelector : ButtonBase, IReactiveComponent, IReleasable
     {
         CardActiveEventHub CardActive;
         CardBase parent;
         CardDesign design;
         RectTransform rectTransform;
         Vector2 initialPosition;
+        Vector3 initialScale;
+        bool layoutCaptured;
         readonly Vector2 ExtraSpacing = new(40f, 0);
         readonly Vector2 Offset = new(0, 20f);
 
@@ -27,24 +30,41 @@ namespace AetherAlmachina.Card.Object
             resolver.Inject(out parent);
             resolver.Inject(out design);
 
-            resolver.ActivePoint.Subscribe(_ => Initialize()).AddTo(this);
         }
 
         /// <summary>
         /// 初期化処理
         /// </summary>
-        void Initialize()
+        public void Initialize()
         {
             rectTransform = GetComponent<RectTransform>();
-            initialPosition = rectTransform.anchoredPosition;
+            if (!layoutCaptured)
+            {
+                initialPosition = rectTransform.anchoredPosition;
+                initialScale = transform.localScale;
+                layoutCaptured = true;
+            }
+            ResetInteraction();
         }
-        void OnEnable()
+
+        // ButtonBase.Releaseはポインターを離した処理なので、使用終了とは分ける。
+        void IReleasable.Release() => ResetInteraction();
+
+        void ResetInteraction()
         {
-            OnPointerClickAsObservable().Subscribe(eventData => MyPointerClick(eventData)).AddTo(this);
-            OnPointerDownAsObservable().Subscribe(eventData => Push()).AddTo(this);
-            OnPointerUpAsObservable().Subscribe(eventData => Release()).AddTo(this);
-            OnPointerEnterAsObservable().Subscribe(eventData => Hover()).AddTo(this);
-            OnPointerExitAsObservable().Subscribe(eventData => UnHover()).AddTo(this);
+            isHover = false;
+            isSelect = false;
+            if (!layoutCaptured || !rectTransform) return;
+            rectTransform.anchoredPosition = initialPosition;
+            transform.localScale = initialScale;
+        }
+        public void Subscribe(UsageLifetime lifetime)
+        {
+            OnPointerClickAsObservable().Subscribe(eventData => MyPointerClick(eventData)).AddTo(lifetime);
+            OnPointerDownAsObservable().Subscribe(eventData => Push()).AddTo(lifetime);
+            OnPointerUpAsObservable().Subscribe(eventData => Release()).AddTo(lifetime);
+            OnPointerEnterAsObservable().Subscribe(eventData => Hover()).AddTo(lifetime);
+            OnPointerExitAsObservable().Subscribe(eventData => UnHover()).AddTo(lifetime);
         }
 
         public override void SetActive()

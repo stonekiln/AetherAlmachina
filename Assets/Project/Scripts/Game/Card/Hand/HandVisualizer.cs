@@ -26,7 +26,7 @@ namespace AetherAlmachina.Card.Hand
 
         public void SpawnConfigure(SpawnerBuilder builder)
         {
-            builder.Register<CardLifetime>(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")))
+            builder.RegisterPooled<CardLifetime>(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")))
                     .Inject(out spawner);
         }
 
@@ -36,7 +36,14 @@ namespace AetherAlmachina.Card.Hand
         }
         protected override List<ICardData> RemoveHand()
         {
-            return Hand.Select(card => card.IsSelect ? card.RemoveCard() : card).Where(card => !card.IsSelect).ToList();
+            // 返却で選択状態がリセットされる前に、残すカードを確定する。
+            List<ICardData> remaining = new();
+            foreach (ICardData card in Hand)
+            {
+                if (card.IsSelect) card.RemoveCard();
+                else remaining.Add(card);
+            }
+            return remaining;
         }
     }
 }

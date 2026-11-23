@@ -1,3 +1,4 @@
+using AetherAlmachina.Stage.UI;
 using AetherAlmachina.ActGauge.Pointer;
 using AetherAlmachina.Cost;
 using AetherAlmachina.Stage;
@@ -23,7 +24,7 @@ namespace DConfig.StageLife
             register.ComponentInChild<HostilePointer>();
             register.ComponentInChild<FriendlyLayout>();
             register.ComponentInChild<HostileLayout>();
-            register.BinderInChild<PlayerUIBinder>();
+            register.ComponentInChild<PlayerUIRoot>();
         }
     }
 }

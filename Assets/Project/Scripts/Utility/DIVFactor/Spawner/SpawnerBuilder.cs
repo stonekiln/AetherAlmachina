@@ -1,50 +1,77 @@
+using System;
 using DIVFactor.Lifetime;
-using Unity.VisualScripting;
+using DIVFactor.Pooling;
 using UnityEngine;
 
 namespace DIVFactor.Spawner
 {
-    /// <summary>
-    /// スポナーの設定と生成するためのクラス
-    /// </summary>
     public class SpawnerBuilder
     {
-        Transform SpawnerTransform { get; init; }
-        LifetimeObject Parent { get; init; }
+        readonly Transform spawnerTransform;
+        readonly LifetimeObject parent;
 
         public SpawnerBuilder(Transform transform, LifetimeObject scope)
         {
-            SpawnerTransform = transform;
-            Parent = scope;
+            spawnerTransform = transform;
+            parent = scope;
         }
-        /// <summary>
-        /// 生成するGameObjectとそのGameObjectが持つLifetimeObjectを設定する
-        /// </summary>
-        /// <typeparam name="TScope">使用するLifetimeObject</typeparam>
-        /// <param name="prefabObject">生成するGameObject</param>
-        /// <returns></returns>
+
         public SpawnerInjector<TScope> Register<TScope>(GameObject prefabObject) where TScope : LifetimeObject
         {
+            Validate(prefabObject);
+            return new(() => arguments =>
+            {
+                TScope scope = CreateScope<TScope>(prefabObject, arguments, null);
+                try { scope.BeginUse(arguments); return scope.Container; }
+                catch { scope.DestroyForOwner(); throw; }
+            });
+        }
+
+        public SpawnerInjector<TScope> RegisterPooled<TScope>(GameObject prefabObject, int maxRetained = 64) where TScope : LifetimeObject
+        {
+            Validate(prefabObject);
+            if (!parent) throw new InvalidOperationException("プールは所有するLifetimeObjectのSpawnConfigureで登録してください。");
+            if (maxRetained <= 0) throw new ArgumentOutOfRangeException(nameof(maxRetained));
             return new(() =>
             {
-                //LifetimeObjectを生成するための初期化情報を作る
-                LifetimeSeed seed = new GameObject(typeof(TScope).Name).AddComponent<LifetimeSeed>();
-                //MonoBehaviourのライフサイクルを一時停止
-                seed.gameObject.SetActive(false);
-                //スポナーの子に配置する
-                seed.transform.SetParent(SpawnerTransform, false);
-                //初期化情報を渡す
-                seed.Create(Parent, prefabObject);
-                return seed;
-            },
-            seed =>
-            {
-                //LifetimeSeedが付与されたMonoBehaviourに指定したLifetimeObjectのコンポーネントを追加する
-                TScope scope = seed.AddComponent<TScope>();
-                //自身を有効化しDIVFactorのライフサイクルに入る
-                scope.gameObject.SetActive(true);
-                return scope.Container;
+                LifetimePool pool = spawnerTransform.gameObject.AddComponent<LifetimePool>();
+                pool.Configure(parent, arguments => CreateScope<TScope>(prefabObject, arguments, pool), maxRetained);
+                return pool.Rent;
             });
+        }
+
+        void Validate(GameObject prefabObject)
+        {
+            if (!spawnerTransform) throw new InvalidOperationException("生成先のTransformがありません。");
+            if (!prefabObject) throw new ArgumentNullException(nameof(prefabObject));
+        }
+
+        TScope CreateScope<TScope>(GameObject prefabObject, LifetimeArguments arguments, LifetimePool pool) where TScope : LifetimeObject
+        {
+            GameObject scopeObject = new(typeof(TScope).Name);
+            scopeObject.SetActive(false);
+            LifetimeSeed seed = scopeObject.AddComponent<LifetimeSeed>();
+            try
+            {
+                // 非表示のUI配下でもAwakeを実行できるよう、制御用Scopeは有効な親Scopeの下に置く。
+                seed.transform.SetParent(parent ? parent.transform : spawnerTransform, false);
+                seed.SpawnParent = spawnerTransform;
+                seed.SetArguments(arguments);
+                seed.Pool = pool;
+                seed.DeferStart = true;
+                seed.Create(parent, prefabObject);
+                TScope scope = scopeObject.AddComponent<TScope>();
+                scopeObject.SetActive(true);
+                if (!scope.IsUsable) throw new InvalidOperationException($"{typeof(TScope)} のコンテナ構築に失敗しました。");
+                return scope;
+            }
+            catch
+            {
+                TScope scope = scopeObject.GetComponent<TScope>();
+                if (scope) scope.DestroyForOwner();
+                else UnityEngine.Object.Destroy(scopeObject);
+                throw;
+            }
         }
     }
 }

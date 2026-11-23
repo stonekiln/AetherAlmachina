@@ -48,15 +48,16 @@
 3. イベントを使う場合は、該当する Installer で `builder.RegisterEvent<TEvent>()` を追加する。
 4. 複数の EventPort をまとめて注入したい場合は、既存の `ActionEventHub`, `ResourceUpdateEventHub`, `DeckDrawEventHub` のような hub record を使う。
 5. MonoBehaviour が依存解決を受ける場合は `IInjectable` を実装し、`Injection(InjectableResolver resolver)` 内で `resolver.Inject(out value)` または `resolver.GetComponent<T>()` を使う。
-6. Hierarchy 上の Component を登録する場合は、`LifetimeObject.Register(ComponentRegister register)` で `register.ComponentInChild<T>()` または `register.BinderInChild<T>()` を使う。
+6. Hierarchy 上の Component を登録する場合は、`LifetimeObject.Register(ComponentRegister register)` で `register.ComponentInChild<T>()` を使う。表示上の親変更は `IViewUpdatable.UpdateView()` で行い、元Lifetimeの管理が必要なオブジェクトは注入した `LifetimeOwnership.Track()` に登録する。
 7. Prefab を生成してスコープを作る場合は `ILifetimeSpawner.SpawnConfigure(SpawnerBuilder builder)` で `builder.Register<TLifetime>(prefab)` を使う。
 
 ## Lifetime とイベント購読
 
 - `LifetimeObject` はスコープの作成、DI 登録、Injectable への注入、子オブジェクトの有効化を管理する。
-- `ActivePoint` は DIVFactor のバインド後に発行される。通常の Unity `Start` より前提が多い初期化は `resolver.ActivePoint.Subscribe(...)` で行う。
-- R3 の購読は、MonoBehaviour の寿命に紐づく場合 `AddTo(this)` を付ける。
-- `EndPoint` / `EntryEndPoint` はスコープ終了のために使う。直接 `Destroy` で代替しない。
+- `Injection`は依存インスタンスの代入だけにする。使用開始はスコープ内の全対象をInjection、Initialize、UpdateView、Subscribe、Activateの順に進める。必要なインターフェイスだけを実装する。
+- 使用ごとの購読は `Subscribe(UsageLifetime lifetime)` 内で `.AddTo(lifetime)` に登録する。登録済みの購読を解除してから `Release` を実行する。個体全体の寿命が必要な購読は `AddTo(this)` を使える。
+- `LifecycleEventHub`はRootと各LifetimeObjectに自動登録される。Release要求はRegisterPooledで生成した個体をプールへ返し、それ以外は最終破棄する。Destroy要求は最終破棄、Spawn要求は既存ファクトリーの実行を行う。プールは親スコープとファクトリーごとに分け、空なら新規生成する。詳細は `Docs/Pooling.md` を参照する。
+- ActivePoint、BindPoint、EndPoint、resolver.Bindは廃止。詳細と使用例は `Docs/Lifecycle.md` を参照する。
 
 ## 既存コードを変更・レビューするときの注意
 

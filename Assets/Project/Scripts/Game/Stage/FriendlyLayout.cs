@@ -1,4 +1,4 @@
-using DIVFactor.Injectable;
+using DIVFactor.Lifecycle;
 using DConfig.StageLife.Event;
 using R3;
 
@@ -7,13 +7,11 @@ namespace AetherAlmachina.Stage
     /// <summary>
     /// 味方側エンティティを配置するクラス
     /// </summary>
-    public class FriendlyLayout : EntityLayout<FriendlyLayoutEvent>
+    public class FriendlyLayout : EntityLayout<FriendlyLayoutEvent>, ISubscriberComponent
     {
-        public override void Injection(InjectableResolver resolver)
+        public void Subscribe(UsageLifetime lifetime)
         {
-            base.Injection(resolver);
-
-            layoutEvent.Subscribe(req => Arrange(req.Friendly, transform.position, settings.Friendly.layoutSize, true)).AddTo(this);
+            layoutEvent.Subscribe(req => Arrange(req.Friendly, transform.position, settings.Friendly.layoutSize, true)).AddTo(lifetime);
         }
     }
 }

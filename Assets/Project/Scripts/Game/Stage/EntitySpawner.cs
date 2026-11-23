@@ -1,3 +1,4 @@
+using DIVFactor.Lifecycle;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,7 +22,7 @@ namespace AetherAlmachina.Stage
     /// <summary>
     /// エンティティをスポーンさせるスポナー
     /// </summary>
-    public class EntitySpawner : MonoBehaviour, IInjectable, ILifetimeSpawner
+    public class EntitySpawner : MonoBehaviour, IActiveComponent, ILifetimeSpawner
     {
         /// <summary>
         /// スポーンできるエンティティの情報を渡す
@@ -33,6 +34,8 @@ namespace AetherAlmachina.Stage
         Func<StatusAsset, Player> playerFactory;
         Func<StatusAsset, Enemy> enemyFactory;
         EntityList Data;
+        StageSettingsAsset settings;
+        UsageLifetime targeting;
         List<Entity> friendlyEntity;
         List<Entity> hostileEntity;
         EventPort<FriendlyLayoutEvent> friendlyLayoutEvent;
@@ -40,12 +43,13 @@ namespace AetherAlmachina.Stage
 
         public void Injection(InjectableResolver resolver)
         {
-            resolver.Inject(out StageSettingsAsset settings);
-            Data = new(settings.Friendly.Entities, settings.Hostile.Entities);
+            resolver.Inject(out settings);
 
             resolver.Inject(out friendlyLayoutEvent);
             resolver.Inject(out hostileLayoutEvent);
         }
+        public void Initialize() => Data = new(settings.Friendly.Entities, settings.Hostile.Entities);
+
         public void SpawnConfigure(SpawnerBuilder builder)
         {
             builder.Register<PlayerLifetime>(Resources.Load<GameObject>(Path.Combine("EntityObject", "PlayerMock")))
@@ -53,7 +57,9 @@ namespace AetherAlmachina.Stage
             builder.Register<EnemyLifetime>(Resources.Load<GameObject>(Path.Combine("EntityObject", "EnemyMock")))
                     .Inject(out enemyFactory);
         }
-        void Start()
+        public void Subscribe(UsageLifetime lifetime) => targeting = lifetime;
+
+        public void Activate()
         {
             friendlyEntity = Data.Friendly.Select(asset => (Entity)playerFactory(asset)).ToList();
             hostileEntity = Data.Hostile.Select(asset => (Entity)enemyFactory(asset)).ToList();
@@ -72,7 +78,7 @@ namespace AetherAlmachina.Stage
         void SetUpTargeting(List<Entity> friendlyEntity, List<Entity> hostileEntity)
         {
             void SetLockOn(LockOnEventHub lockOn) => lockOn.AsObservable()
-                .Subscribe(log => new(log.Selector(friendlyEntity, hostileEntity))).AddTo(this);
+                .Subscribe(log => new(log.Selector(friendlyEntity, hostileEntity))).AddTo(targeting);
 
             friendlyEntity.ForEach(friendly => SetLockOn(friendly.LockOn));
             hostileEntity.ForEach(hostile => SetLockOn(hostile.LockOn));

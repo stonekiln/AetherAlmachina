@@ -1,3 +1,4 @@
+using DIVFactor.Lifecycle;
 using R3;
 using UnityEngine;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace AetherAlmachina.Entities
     /// <summary>
     /// エンティティのMonoBehaviour
     /// </summary>
-    public abstract class Entity : MonoBehaviour, IEntityInteraction, IInjectable
+    public abstract class Entity : MonoBehaviour, IEntityInteraction, IActiveComponent
     {
         public string Name { get; private set; }
         public LockOnEventHub LockOn { get; private set; }
@@ -26,34 +27,53 @@ namespace AetherAlmachina.Entities
         protected EventPort<DeckGetEvent> DeckGet;
         protected DeckListAsset deckList;
 
+        StatusAsset statusAsset;
+        DeckController deckController;
+        LifecycleEventHub lifecycle;
+
         public virtual void Injection(InjectableResolver resolver)
         {
             resolver.Inject(out LockOnEventHub lockOn);
             resolver.Inject(out InteractionEventHub interaction);
-            resolver.Inject(out StatusAsset statusAsset);
-            resolver.Inject(out DeckController deckController);
+            resolver.Inject(out statusAsset);
+            resolver.Inject(out deckController);
             resolver.Inject(out AutoIncrease);
             resolver.Inject(out DeckGet);
             resolver.Inject(out EventPort<LayoutIndexEvent> layoutIndexSet);
 
-            Name = gameObject.name;
+            resolver.Inject(out lifecycle);
             LockOn = lockOn;
             Interaction = interaction;
-            Status = new(statusAsset, new(Interaction.ResourceUpdate, this), Interaction.ResourceUpdate.HP.Request);
-            deckList = statusAsset.Deck;
             LayoutIndexSet = layoutIndexSet;
+        }
 
-            deckController.Subscribe(this);
-            AutoIncrease.Switch(Interaction.ResourceUpdate.Cost.Request).Subscribe(log => new(log.Delta)).AddTo(this);
-            LayoutIndexSet.Subscribe(log => LayoutIndex = log.Index);
+        public virtual void Initialize()
+        {
+            Name = gameObject.name;
+            Status = new(statusAsset, new ResourceStatusParameter());
+            deckList = statusAsset.Deck;
+        }
+
+        public virtual void Subscribe(UsageLifetime lifetime)
+        {
+            Status.Resource.Subscribe(Interaction.ResourceUpdate, lifetime);
+            deckController.Subscribe(lifetime);
+            AutoIncrease.Switch(Interaction.ResourceUpdate.Cost.Request).Subscribe(log => new(log.Delta)).AddTo(lifetime);
+            LayoutIndexSet.Subscribe(log => LayoutIndex = log.Index).AddTo(lifetime);
 
             Interaction.ResourceUpdate.HP.Response.Where(log => log.Current <= 0).Take(1).Subscribe(_ =>
             {
                 Debug.Log(gameObject.name + "が死亡しました。");
-                resolver.EntryEndPoint();
-            }).AddTo(this);
+                lifecycle.Release.OnNext(new());
+            }).AddTo(lifetime);
 
-            resolver.ActivePoint.Subscribe(_ => Get());
+        }
+
+        public virtual void Activate()
+        {
+            // 初期通知は、同じLifetime内の全購読が揃ってから発行する。
+            Interaction.ResourceUpdate.HP.Request.OnNext(new(Status.GetInt(StatusType.MaxHitPoint)));
+            Get();
         }
 
         void Get()
