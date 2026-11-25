@@ -46,7 +46,7 @@ namespace DIVFactor.Lifetime
             LifetimeArguments arguments, LifetimePool pool, Transform displayParent, bool sceneRoot = false)
         {
             if (prepared || Container != null) throw new InvalidOperationException("Lifetimeは設定済みです。");
-            if (!metadata || !metadata.IsBaked) throw new InvalidOperationException("事前生成情報がありません。");
+            if (!metadata || !metadata.IsBaked) throw new InvalidOperationException("Moldの事前生成情報がないか旧形式です。Editorで DIVFactor/Rebuild open scenes を実行してください。");
             this.metadata = metadata;
             this.catalog = catalog;
             this.arguments = arguments ?? LifetimeArguments.Create();

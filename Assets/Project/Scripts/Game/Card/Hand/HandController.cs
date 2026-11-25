@@ -37,6 +37,7 @@ namespace AetherAlmachina.Card.Hand
             resolver.Inject(out CardActive);
             resolver.Inject(out SkillActivate);
             owner = resolver.GetComponent<Player>();
+            resolver.Injected.SubscribeLifecycle(Initialize, resolver.Fail);
         }
 
         public void Initialize()
@@ -45,12 +46,13 @@ namespace AetherAlmachina.Card.Hand
             Hand = new();
         }
 
-        public void Subscribe(UsageLifetime lifetime)
+        public void Subscribe(SubscriptionContext context)
         {
-            DeckDraw.Response.Subscribe(log => Hand = AddHand(log.DrawCard)).AddTo(lifetime);
-            CardActive.Select.Subscribe(log => log.Data.SetSelect(Select(log.Index))).AddTo(lifetime);
-            CardActive.Cancel.Subscribe(log => log.Data.SetSelect(!SelectCancel(log.Index))).AddTo(lifetime);
-            CardActive.Invoke.Subscribe(_ => Invoke()).AddTo(lifetime);
+            DeckDraw.Response.Subscribe(log => Hand = AddHand(log.DrawCard)).AddTo(context.Lifetime);
+            CardActive.Select.Subscribe(log => log.Data.SetSelect(Select(log.Index))).AddTo(context.Lifetime);
+            CardActive.Cancel.Subscribe(log => log.Data.SetSelect(!SelectCancel(log.Index))).AddTo(context.Lifetime);
+            CardActive.Invoke.Subscribe(_ => Invoke()).AddTo(context.Lifetime);
+            context.Subscribed.SubscribeLifecycle(Activate, context.Fail);
         }
 
         public void Activate()

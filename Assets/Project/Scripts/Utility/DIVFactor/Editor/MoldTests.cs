@@ -42,6 +42,17 @@ namespace AetherAlmachina.Editor.DIVFactor
                 Does.Contain(message));
 
         [Test]
+        public void OldLifecycleTableIsRejectedUntilRebaked()
+        {
+            MoldMetadata metadata = MakeMetadata("scope");
+            var format = typeof(MoldMetadata).GetField("format", BindingFlags.Instance | BindingFlags.NonPublic);
+            format.SetValue(metadata, 1);
+            Assert.That(metadata.IsBaked, Is.False);
+            metadata.EditorBake(Array.Empty<MonoBehaviour>(), Array.Empty<FactoryBinding>());
+            Assert.That(metadata.IsBaked, Is.True);
+        }
+
+        [Test]
         public void BasePrivateFieldsAreValidatedAndSaved()
         {
             Assert.DoesNotThrow(() => MoldBaker.ValidateType(typeof(InheritedMold), known));

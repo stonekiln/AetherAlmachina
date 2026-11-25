@@ -275,7 +275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a37fa24c605a4c759d82ae6b8d36937e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DIVFactor.Mold.MoldMetadata
-  format: 1
+  format: 2
   components:
   - {fileID: 5691585636181366722}
   - {fileID: 4768210018024843201}
@@ -292,10 +292,6 @@ MonoBehaviour:
   - {fileID: 4439293233988536395}
   - {fileID: 7292304086174974144}
   - {fileID: 2217797668417799610}
-  initializables:
-  - {fileID: 5691585636181366722}
-  - {fileID: 7292304086174974144}
-  - {fileID: 2217797668417799610}
   views:
   - {fileID: 4439293233988536395}
   - {fileID: 2217797668417799610}
@@ -303,9 +299,6 @@ MonoBehaviour:
   - {fileID: 5691585636181366722}
   - {fileID: 7292304086174974144}
   - {fileID: 2217797668417799610}
-  activatables:
-  - {fileID: 5691585636181366722}
-  - {fileID: 7292304086174974144}
   releasables: []
   bindings:
   - owner: {fileID: 7292304086174974144}

@@ -9,9 +9,9 @@ namespace AetherAlmachina.Stage
     /// </summary>
     public class HostileLayout : EntityLayout<HostileLayoutEvent>, ISubscriberComponent
     {
-        public void Subscribe(UsageLifetime lifetime)
+        public void Subscribe(SubscriptionContext context)
         {
-            layoutEvent.Subscribe(req => Arrange(req.Hostile, transform.position, settings.Hostile.layoutSize, false)).AddTo(lifetime);
+            layoutEvent.Subscribe(req => Arrange(req.Hostile, transform.position, settings.Hostile.layoutSize, false)).AddTo(context.Lifetime);
         }
     }
 }

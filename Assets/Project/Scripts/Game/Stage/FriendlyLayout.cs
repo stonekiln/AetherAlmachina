@@ -9,9 +9,9 @@ namespace AetherAlmachina.Stage
     /// </summary>
     public class FriendlyLayout : EntityLayout<FriendlyLayoutEvent>, ISubscriberComponent
     {
-        public void Subscribe(UsageLifetime lifetime)
+        public void Subscribe(SubscriptionContext context)
         {
-            layoutEvent.Subscribe(req => Arrange(req.Friendly, transform.position, settings.Friendly.layoutSize, true)).AddTo(lifetime);
+            layoutEvent.Subscribe(req => Arrange(req.Friendly, transform.position, settings.Friendly.layoutSize, true)).AddTo(context.Lifetime);
         }
     }
 }

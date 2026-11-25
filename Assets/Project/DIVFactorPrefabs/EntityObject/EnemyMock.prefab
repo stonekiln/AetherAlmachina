@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a37fa24c605a4c759d82ae6b8d36937e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DIVFactor.Mold.MoldMetadata
-  format: 1
+  format: 2
   components:
   - {fileID: 8558657584637604171}
   - {fileID: 3178666361502938917}
@@ -82,12 +82,8 @@ MonoBehaviour:
   spawners: []
   injectables:
   - {fileID: 8558657584637604171}
-  initializables:
-  - {fileID: 8558657584637604171}
   views: []
   subscribers:
-  - {fileID: 8558657584637604171}
-  activatables:
   - {fileID: 8558657584637604171}
   releasables: []
   bindings: []

@@ -28,7 +28,7 @@ namespace AetherAlmachina.Editor.DIVFactor
                 () => trace.Add("show"), null, () => trace.Add("destroy"));
             runner.Run(new(container));
             Assert.That(trace, Is.EqualTo(new[] { "A.inject", "B.inject", "A.initialize", "B.initialize",
-                "A.view", "B.view", "A.subscribe", "B.subscribe", "show", "A.activate", "B.activate" }));
+                "A.view", "B.view", "A.updated", "B.updated", "A.subscribe", "B.subscribe", "A.activate", "B.activate", "show" }));
             Assert.That(runner.State, Is.EqualTo(LifecycleState.Active));
         }
 
@@ -72,6 +72,7 @@ namespace AetherAlmachina.Editor.DIVFactor
         }
 
         [TestCase("initialize")]
+        [TestCase("updated")]
         [TestCase("activate")]
         public void SynchronousEndRequestStopsRemainingWorkWithoutReentry(string phase)
         {
@@ -87,15 +88,20 @@ namespace AetherAlmachina.Editor.DIVFactor
             Assert.That(trace.IndexOf("A.release"), Is.GreaterThan(trace.IndexOf("A." + phase)));
         }
 
-        [Test]
-        public void FailedInitializationStillReleasesAndDestroysTheInstance()
+        [TestCase("initialize")]
+        [TestCase("updated")]
+        [TestCase("activate")]
+        public void FailedCallbackStopsOtherCallbacksAndDiscardsTheInstance(string failingPhase)
         {
             using IObjectResolver container = Build();
             List<string> trace = new();
-            Probe probe = new("A", trace) { Action = phase => { if (phase == "initialize") throw new InvalidOperationException("failed"); } };
-            using LifecycleRunner runner = new(new[] { probe }, container.Resolve<LifecycleEventHub>(), null, null, () => trace.Add("destroy"));
+            Probe probe = new("A", trace) { Action = phase => { if (phase == failingPhase) throw new InvalidOperationException("failed"); } };
+            using LifecycleRunner runner = new(new[] { probe, new Probe("B", trace) }, container.Resolve<LifecycleEventHub>(),
+                () => trace.Add("show"), null, () => trace.Add("destroy"), returnToPool: () => trace.Add("pool"));
             Assert.Throws<InvalidOperationException>(() => runner.Run(new(container)));
-            Assert.That(trace, Does.Not.Contain("A.view"));
+            Assert.That(trace, Does.Not.Contain("B." + failingPhase));
+            Assert.That(trace, Does.Not.Contain("show"));
+            Assert.That(trace, Does.Not.Contain("pool"));
             Assert.That(trace, Does.Contain("A.release").And.Contain("destroy"));
         }
 
@@ -203,7 +209,67 @@ namespace AetherAlmachina.Editor.DIVFactor
             Assert.DoesNotThrow(lifetime.Dispose);
         }
 
-        sealed class Probe : IActiveComponent, IReactiveView, IReleasable
+        [Test]
+        public void StartupSpawnRequestsAreAcceptedOnlyAfterAllSubscriptionsAreReady()
+        {
+            using IObjectResolver container = Build();
+            LifecycleEventHub events = container.Resolve<LifecycleEventHub>();
+            List<string> spawned = new();
+            Probe sender = new("sender", new()) { Action = phase => events.Spawn.OnNext(new(() => spawned.Add(phase))) };
+            using LifecycleRunner runner = new(new[] { sender }, events, () => spawned.Add("shown"), null, () => { });
+            runner.Run(new(container));
+            Assert.That(spawned, Is.EqualTo(new[] { "activate", "shown" }));
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void FailedSpawnFromSubscribedCancelsTheOwnerBeforeShow(bool useInjectedHub)
+        {
+            using IObjectResolver container = Build();
+            LifecycleEventHub management = container.Resolve<LifecycleEventHub>();
+            List<string> trace = new();
+            Probe first = new("A", trace), second = new("B", trace);
+            var failure = new InvalidOperationException("factory failed");
+            first.Action = phase =>
+            {
+                if (phase == "activate")
+                    (useInjectedHub ? first.Events : management).Spawn.OnNext(new(() => throw failure));
+            };
+            using LifecycleRunner runner = new(new[] { first, second }, management,
+                () => trace.Add("show"), null, () => trace.Add("destroy"));
+            Assert.That(Assert.Throws<InvalidOperationException>(() => runner.Run(new(container))), Is.SameAs(failure));
+            Assert.That(trace, Does.Not.Contain("B.activate"));
+            Assert.That(trace, Does.Not.Contain("show"));
+            Assert.That(trace, Does.Contain("destroy"));
+        }
+
+        [Test]
+        public void ReleaseCancelsUnfiredViewCallbacksAndDoesNotReplayThemOnReuse()
+        {
+            using IObjectResolver container = Build();
+            LifecycleEventHub events = container.Resolve<LifecycleEventHub>();
+            List<string> trace = new();
+            Probe first = new("A", trace), second = new("B", trace);
+            first.Action = phase => { if (phase == "updated") events.Release.OnNext(new()); };
+            using LifecycleRunner runner = new(new[] { first, second }, events, () => trace.Add("show"), null,
+                () => trace.Add("destroy"), returnToPool: () => trace.Add("pool"));
+            runner.Run(new(container));
+            Assert.That(trace, Does.Not.Contain("B.updated"));
+            Assert.That(trace, Does.Not.Contain("show"));
+            Assert.That(runner.State, Is.EqualTo(LifecycleState.Released));
+
+            int lateValues = 0, lateCompletions = 0;
+            using var old = second.LastView.Subscribe(_ => lateValues++, _ => lateCompletions++);
+            Assert.That(lateCompletions, Is.EqualTo(1));
+            first.Action = null;
+            runner.Run(new(container));
+            Assert.That(trace.FindAll(value => value == "A.initialize").Count, Is.EqualTo(2),
+                "返却時の再Injectionでは初期化しない");
+            Assert.That(trace.FindAll(value => value == "B.updated").Count, Is.EqualTo(1));
+            Assert.That(lateValues, Is.Zero);
+        }
+
+        sealed class Probe : IReactiveView, IReleasable
         {
             readonly string name;
             readonly List<string> trace;
@@ -214,16 +280,27 @@ namespace AetherAlmachina.Editor.DIVFactor
             internal bool ReleasedWithClosedUsage;
             internal Probe(string name, List<string> trace) { this.name = name; this.trace = trace; }
             void Record(string phase) { trace.Add(name + "." + phase); Action?.Invoke(phase); }
-            public void Injection(InjectableResolver resolver) => Record("inject");
-            public void Initialize() => Record("initialize");
-            public void UpdateView() => Record("view");
-            public void Subscribe(UsageLifetime lifetime)
+            internal Observable<Unit> LastView;
+            internal LifecycleEventHub Events;
+            public void Injection(InjectableResolver resolver)
             {
-                usage = lifetime;
-                Signal.Subscribe(amount => Received += amount).AddTo(lifetime);
-                Record("subscribe");
+                resolver.Inject(out Events);
+                Record("inject");
+                resolver.Injected.SubscribeLifecycle(() => Record("initialize"), resolver.Fail);
             }
-            public void Activate() => Record("activate");
+            public void UpdateView(ViewContext context)
+            {
+                Record("view");
+                LastView = context.UpdatedView;
+                LastView.SubscribeLifecycle(() => Record("updated"), context.Fail);
+            }
+            public void Subscribe(SubscriptionContext context)
+            {
+                usage = context.Lifetime;
+                Signal.Subscribe(amount => Received += amount).AddTo(usage);
+                Record("subscribe");
+                context.Subscribed.SubscribeLifecycle(() => Record("activate"), context.Fail);
+            }
             public void Release() { ReleasedWithClosedUsage = usage == null || usage.IsDisposed; Record("release"); }
         }
     }

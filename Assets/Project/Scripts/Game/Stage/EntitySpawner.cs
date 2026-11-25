@@ -48,6 +48,7 @@ namespace AetherAlmachina.Stage
 
             resolver.Inject(out friendlyLayoutEvent);
             resolver.Inject(out hostileLayoutEvent);
+            resolver.Injected.SubscribeLifecycle(Initialize, resolver.Fail);
         }
         public void Initialize() => Data = new(settings.Friendly.Entities, settings.Hostile.Entities);
 
@@ -58,7 +59,11 @@ namespace AetherAlmachina.Stage
             builder.Register<EnemyLifetime>()
                     .Inject(out enemyFactory);
         }
-        public void Subscribe(UsageLifetime lifetime) => targeting = lifetime;
+        public void Subscribe(SubscriptionContext context)
+        {
+            targeting = context.Lifetime;
+            context.Subscribed.SubscribeLifecycle(Activate, context.Fail);
+        }
 
         public void Activate()
         {

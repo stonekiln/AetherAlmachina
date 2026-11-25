@@ -21,7 +21,7 @@ namespace AetherAlmachina.Card.Object
         public void Injection(InjectableResolver resolver)
         {
             resolver.Inject(out parent);
-
+            resolver.Injected.SubscribeLifecycle(Initialize, resolver.Fail);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace AetherAlmachina.Card.Object
             }
             RectTransform.anchoredPosition = InitialPosition;
         }
-        public void UpdateView() => image.sprite = parent.SkillData.Icon;
+        public void UpdateView(ViewContext context) => image.sprite = parent.SkillData.Icon;
 
         public void Release()
         {

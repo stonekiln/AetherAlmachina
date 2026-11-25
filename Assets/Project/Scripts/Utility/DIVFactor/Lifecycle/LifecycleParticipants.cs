@@ -9,20 +9,23 @@ namespace DIVFactor.Lifecycle
     public sealed class LifecycleParticipants
     {
         internal readonly IInjectable[] Injectables;
-        internal readonly IInitializable[] Initializables;
         internal readonly IViewUpdatable[] Views;
         internal readonly IUsageSubscriber[] Subscribers;
-        internal readonly IActivatable[] Activatables;
         internal readonly IReleasable[] Releasables;
-        public LifecycleParticipants(IInjectable[] injectables, IInitializable[] initializables,
-            IViewUpdatable[] views, IUsageSubscriber[] subscribers, IActivatable[] activatables, IReleasable[] releasables)
-        { Injectables = injectables; Initializables = initializables; Views = views; Subscribers = subscribers; Activatables = activatables; Releasables = releasables; }
+        public LifecycleParticipants(IInjectable[] injectables,
+            IViewUpdatable[] views, IUsageSubscriber[] subscribers, IReleasable[] releasables)
+        {
+            Injectables = injectables;
+            Views = views;
+            Subscribers = subscribers;
+            Releasables = releasables;
+        }
         public static LifecycleParticipants From(IEnumerable<object> participants)
         {
             object[] targets = participants?.ToArray() ?? throw new ArgumentNullException(nameof(participants));
-            return new(targets.OfType<IInjectable>().ToArray(), targets.OfType<IInitializable>().ToArray(),
+            return new(targets.OfType<IInjectable>().ToArray(),
                 targets.OfType<IViewUpdatable>().ToArray(), targets.OfType<IUsageSubscriber>().ToArray(),
-                targets.OfType<IActivatable>().ToArray(), targets.OfType<IReleasable>().ToArray());
+                targets.OfType<IReleasable>().ToArray());
         }
     }
 }

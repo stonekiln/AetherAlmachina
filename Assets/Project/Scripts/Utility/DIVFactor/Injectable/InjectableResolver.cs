@@ -1,3 +1,5 @@
+using System;
+using R3;
 using VContainer;
 using DIVFactor.Lifecycle;
 
@@ -21,19 +23,25 @@ namespace DIVFactor.Injectable
     {
         IObjectResolver Resolver { get; init; }
         readonly LifecycleEventHub usageEvents;
+        readonly CompletionPhase injection;
+
+        public Observable<Unit> Injected => injection?.Signal ?? Observable.Empty<Unit>();
+        public void Fail(Exception exception) => injection?.Fail(exception);
+
         public InjectableResolver(IObjectResolver resolver)
         {
             Resolver = resolver;
         }
 
-        InjectableResolver(IObjectResolver resolver, LifecycleEventHub usageEvents)
+        InjectableResolver(IObjectResolver resolver, LifecycleEventHub usageEvents, CompletionPhase injection)
         {
             Resolver = resolver;
             this.usageEvents = usageEvents;
+            this.injection = injection;
         }
 
-        internal InjectableResolver WithLifecycleEvents(LifecycleEventHub events)
-            => new(Resolver, events);
+        internal InjectableResolver WithLifecycleEvents(LifecycleEventHub events, CompletionPhase injection)
+            => new(Resolver, events, injection);
 
         /// <summary>
         /// 引数にとった変数に依存関係を解決した状態のインスタンスを渡す

@@ -45,6 +45,7 @@ namespace AetherAlmachina.Entities
             LockOn = lockOn;
             Interaction = interaction;
             LayoutIndexSet = layoutIndexSet;
+            resolver.Injected.SubscribeLifecycle(Initialize, resolver.Fail);
         }
 
         public virtual void Initialize()
@@ -54,19 +55,19 @@ namespace AetherAlmachina.Entities
             deckList = statusAsset.Deck;
         }
 
-        public virtual void Subscribe(UsageLifetime lifetime)
+        public virtual void Subscribe(SubscriptionContext context)
         {
-            Status.Resource.Subscribe(Interaction.ResourceUpdate, lifetime);
-            deckController.Subscribe(lifetime);
-            AutoIncrease.Switch(Interaction.ResourceUpdate.Cost.Request).Subscribe(log => new(log.Delta)).AddTo(lifetime);
-            LayoutIndexSet.Subscribe(log => LayoutIndex = log.Index).AddTo(lifetime);
+            Status.Resource.Subscribe(Interaction.ResourceUpdate, context.Lifetime);
+            deckController.Subscribe(context.Lifetime);
+            AutoIncrease.Switch(Interaction.ResourceUpdate.Cost.Request).Subscribe(log => new(log.Delta)).AddTo(context.Lifetime);
+            LayoutIndexSet.Subscribe(log => LayoutIndex = log.Index).AddTo(context.Lifetime);
 
             Interaction.ResourceUpdate.HP.Response.Where(log => log.Current <= 0).Take(1).Subscribe(_ =>
             {
                 Debug.Log(gameObject.name + "が死亡しました。");
                 lifecycle.Release.OnNext(new());
-            }).AddTo(lifetime);
-
+            }).AddTo(context.Lifetime);
+            context.Subscribed.SubscribeLifecycle(Activate, context.Fail);
         }
 
         public virtual void Activate()

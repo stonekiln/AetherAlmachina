@@ -9,7 +9,7 @@ namespace AetherAlmachina.Card.Object
     /// カードのオブジェクトの親オブジェクトとなるクラス
     /// </summary>
     [RequireComponent(typeof(RectTransform))]
-    public class CardBase : MonoBehaviour, ICardData, IInitializableComponent, IReleasable
+    public class CardBase : MonoBehaviour, ICardData, IInjectable, IReleasable
     {
         CardSelector selector;
         SkillData skillData;
@@ -27,7 +27,7 @@ namespace AetherAlmachina.Card.Object
             resolver.Inject(out skillData);
             resolver.Inject(out selector);
             resolver.Inject(out lifecycle);
-
+            resolver.Injected.SubscribeLifecycle(Initialize, resolver.Fail);
         }
 
         public void Initialize()

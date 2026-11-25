@@ -26,25 +26,24 @@ namespace DIVFactor.Mold
     [DisallowMultipleComponent]
     public sealed class MoldMetadata : MonoBehaviour
     {
+        const int CurrentFormat = 2;
         [SerializeField, HideInInspector] int format;
         [SerializeField, HideInInspector] MonoBehaviour[] components = Array.Empty<MonoBehaviour>();
         [SerializeField, HideInInspector] MonoBehaviour[] spawners = Array.Empty<MonoBehaviour>();
         [SerializeField, HideInInspector] MonoBehaviour[] injectables = Array.Empty<MonoBehaviour>();
-        [SerializeField, HideInInspector] MonoBehaviour[] initializables = Array.Empty<MonoBehaviour>();
         [SerializeField, HideInInspector] MonoBehaviour[] views = Array.Empty<MonoBehaviour>();
         [SerializeField, HideInInspector] MonoBehaviour[] subscribers = Array.Empty<MonoBehaviour>();
-        [SerializeField, HideInInspector] MonoBehaviour[] activatables = Array.Empty<MonoBehaviour>();
         [SerializeField, HideInInspector] MonoBehaviour[] releasables = Array.Empty<MonoBehaviour>();
         [SerializeField, HideInInspector] FactoryBinding[] bindings = Array.Empty<FactoryBinding>();
         LifecycleParticipants participants;
         public IReadOnlyList<MonoBehaviour> Components => components;
         public IReadOnlyList<MonoBehaviour> Spawners => spawners;
         public IReadOnlyList<FactoryBinding> Bindings => bindings;
-        public bool IsBaked => format == 1;
+        public bool IsBaked => format == CurrentFormat;
         internal LifecycleParticipants Participants => participants ??= new(
-            injectables.Cast<IInjectable>().ToArray(), initializables.Cast<IInitializable>().ToArray(),
+            injectables.Cast<IInjectable>().ToArray(),
             views.Cast<IViewUpdatable>().ToArray(), subscribers.Cast<IUsageSubscriber>().ToArray(),
-            activatables.Cast<IActivatable>().ToArray(), releasables.Cast<IReleasable>().ToArray());
+            releasables.Cast<IReleasable>().ToArray());
         internal FactoryBinding Select(MonoBehaviour owner, Type factoryType, string fieldName)
         {
             if (!IsBaked) throw new InvalidOperationException("Moldの事前生成情報がありません。Editorで再生成してください。");
@@ -63,13 +62,11 @@ namespace DIVFactor.Mold
             components = targets;
             spawners = targets.Where(c => c is ILifetimeSpawner).ToArray();
             injectables = targets.Where(c => c is IInjectable).ToArray();
-            initializables = targets.Where(c => c is IInitializable).ToArray();
             views = targets.Where(c => c is IViewUpdatable).ToArray();
             subscribers = targets.Where(c => c is IUsageSubscriber).ToArray();
-            activatables = targets.Where(c => c is IActivatable).ToArray();
             releasables = targets.Where(c => c is IReleasable).ToArray();
             bindings = factoryBindings;
-            format = 1;
+            format = CurrentFormat;
             participants = null;
         }
 #endif

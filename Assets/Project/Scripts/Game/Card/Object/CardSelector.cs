@@ -29,7 +29,7 @@ namespace AetherAlmachina.Card.Object
             resolver.Inject(out CardActive);
             resolver.Inject(out parent);
             resolver.Inject(out design);
-
+            resolver.Injected.SubscribeLifecycle(Initialize, resolver.Fail);
         }
 
         /// <summary>
@@ -58,13 +58,13 @@ namespace AetherAlmachina.Card.Object
             rectTransform.anchoredPosition = initialPosition;
             transform.localScale = initialScale;
         }
-        public void Subscribe(UsageLifetime lifetime)
+        public void Subscribe(SubscriptionContext context)
         {
-            OnPointerClickAsObservable().Subscribe(eventData => MyPointerClick(eventData)).AddTo(lifetime);
-            OnPointerDownAsObservable().Subscribe(eventData => Push()).AddTo(lifetime);
-            OnPointerUpAsObservable().Subscribe(eventData => Release()).AddTo(lifetime);
-            OnPointerEnterAsObservable().Subscribe(eventData => Hover()).AddTo(lifetime);
-            OnPointerExitAsObservable().Subscribe(eventData => UnHover()).AddTo(lifetime);
+            OnPointerClickAsObservable().Subscribe(eventData => MyPointerClick(eventData)).AddTo(context.Lifetime);
+            OnPointerDownAsObservable().Subscribe(eventData => Push()).AddTo(context.Lifetime);
+            OnPointerUpAsObservable().Subscribe(eventData => Release()).AddTo(context.Lifetime);
+            OnPointerEnterAsObservable().Subscribe(eventData => Hover()).AddTo(context.Lifetime);
+            OnPointerExitAsObservable().Subscribe(eventData => UnHover()).AddTo(context.Lifetime);
         }
 
         public override void SetActive()

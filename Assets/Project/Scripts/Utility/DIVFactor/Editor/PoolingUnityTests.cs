@@ -119,9 +119,7 @@ namespace AetherAlmachina.Editor.DIVFactor
             UsageLifetime usage;
             public bool ReleasedWithClosedUsage;
             public void Injection(InjectableResolver resolver) { resolver.Inject(out Argument); resolver.Inject(out Fixed); resolver.Inject(out Events); }
-            public void Initialize() { }
-            public void Subscribe(UsageLifetime lifetime) => usage = lifetime;
-            public void Activate() { }
+            public void Subscribe(SubscriptionContext context) => usage = context.Lifetime;
             public void Release() => ReleasedWithClosedUsage = usage.IsDisposed;
         }
     }

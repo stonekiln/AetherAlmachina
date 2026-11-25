@@ -4,47 +4,50 @@
 
 ## 使用開始
 
-個体ごとにコンポーネント一覧を一度取得し、全対象のInjection → Initialize → UpdateView → Subscribe → 表示有効化 → Activateの順で実行する。途中で親を変えても、この一覧から対象を失わない。
+同じLifetimeObjectに属する対象を段階ごとにまとめて処理する。対象一覧はEditorで保存するため、実行時に表示上の親が変わっても所属を維持する。Buildは物理個体の初回だけ行う。
 
-| 定義 | 担当 |
-| --- | --- |
-| IInjectable.Injection(InjectableResolver) | 依存するインスタンスの代入だけ |
-| DIVFactor.Lifecycle.IInitializable.Initialize() | 引数から作る状態の初期化 |
-| IViewUpdatable.UpdateView() | 画像・テキスト・配置への反映 |
-| IUsageSubscriber.Subscribe(UsageLifetime) | 今回の購読・後始末の登録 |
-| IActivatable.Activate() | 全員の購読完了後の開始通知・動作開始 |
-| IReleasable.Release() | 自動管理外の停止・解除と固有の後始末 |
-
-各インターフェイスは任意実装。IInitializableはVContainer.Unityの同名インターフェイスと別なので、両方をusingする場合は型名を修飾する。Injectionは既存のDIVFactor.Injectable.IInjectableを使う。
-
-### インターフェイスのバンドル
-
-よく併用する契約をLifecycleBundles.csでまとめる。バンドルの継承元にある個別の契約は維持し、LifecycleRunnerは従来どおり各契約で判定する。同じIInjectableを複数の経路で継承してもInjectionを重複実行しない。
-
-| バンドル | 含む処理 | 使用する型 |
+| 順序 | API | 用途 |
 | --- | --- | --- |
-| IInitializableComponent | Injection、Initialize | CardBase |
-| ISubscriberComponent | Injection、Subscribe | SkillTriggerManager、FriendlyLayout、HostileLayout |
-| IReactiveComponent | Injection、Initialize、Subscribe | CostManager、CardSelector |
-| IActiveComponent | Injection、Initialize、Subscribe、Activate | Entity、HandController、EntitySpawner |
-| IViewComponent | Injection、Initialize、UpdateView | CardDesign |
-| IReactiveView | Injection、Initialize、UpdateView、Subscribe | CostDisplay |
-| IActiveView | Injection、Initialize、UpdateView、Activate、Release | PointerController |
+| 1 | `Injection(InjectableResolver resolver)` | 依存先を代入し、必要なら注入後の処理を登録する |
+| 2 | `resolver.Injected` | 全員の注入後に引数から状態を初期化する |
+| 3 | `UpdateView(ViewContext context)` | 現在の状態を表示へ反映する。従来どおり自動実行 |
+| 4 | `context.UpdatedView` | 全員の描画処理が戻った後に、表示に依存する処理を実行する |
+| 5 | `Subscribe(SubscriptionContext context)` | 使用期間の購読を `.AddTo(context.Lifetime)` で管理する |
+| 6 | `context.Subscribed` | 全員の購読後に初期イベントを送る |
+| 7 | 表示を有効化 | Unityで表示対象がactiveInHierarchyになり、スクリプトもenabledならOnEnableを受ける |
 
-Player/EnemyはEntityから、HandVisualizerはHandControllerから契約を引き継ぐ。ILifetimeSpawnerとICardData/IEntityInteractionは生成やゲーム側の役割なのでバンドルに含めない。
+各契約は任意。注入だけなら `IInjectable`、描画は `IViewUpdatable`、購読は `IUsageSubscriber`、返却時の固有の後始末は `IReleasable` を使う。併用する組み合わせには `ISubscriberComponent`（注入と購読）、`IViewComponent`（注入と描画）、`IReactiveView`（3つ全て）がある。従来のバンドル名を使うこともできる。InitializeやActivateは同名のメソッドを定義するだけでは呼ばれない。
 
-Injectionだけを行うBrainBase/EntityLayout、InjectionとUpdateViewだけのUIChildMark、ILifetimeSpawnerとInitializeだけのPointerSpawnerは個別のインターフェイスを維持する。既存の組み合わせに合わない型へ、空のInitializeやSubscribeなどを追加してバンドルへ合わせない。必要なら個別契約を併用する。
+```csharp
+public void Injection(InjectableResolver resolver)
+{
+    resolver.Inject(out skill);
+    resolver.Injected.SubscribeLifecycle(Initialize, resolver.Fail);
+}
 
-同じ段階内は初回に取得したHierarchy上の一覧順。Initializeから別対象のInitialize完了を前提にした通知は発行しない。現在のPlayerでは根のEntityのActivateでデッキを設定し、その後、配下のHandControllerのActivateで初期手札を引く。
+public void UpdateView(ViewContext context)
+{
+    Draw(skill);
+    context.UpdatedView.SubscribeLifecycle(AlignToOtherViews, context.Fail);
+}
 
-UnityのStartは再実行されないため、手札、Entity生成、ポインターのTweenなどの使用開始処理をActivateへ移した。シーンのStageSpawner.Startは従来の起動入口として維持する。シーンの一般MonoBehaviourをRootから自動注入する機能は追加していない。
+public void Subscribe(SubscriptionContext context)
+{
+    damageEvent.Subscribe(OnDamage).AddTo(context.Lifetime);
+    context.Subscribed.SubscribeLifecycle(Begin, context.Fail);
+}
+```
+
+3つの完了通知は、使用ごとに独立した読み取り専用のR3 `Observable<Unit>`。登録順に一度だけ呼び出し、完了後の登録には値を再配信しない。途中で終了要求が届いた場合、未実行の完了処理は取り消す。初期化の例外で有効化を中止するには、例のように `SubscribeLifecycle` を使う。通常のR3の `Subscribe(onNext)` だけを使った場合はR3の既定の例外処理に従う。通知の対象はメインスレッドで同期的に完了する処理。`UpdatedView` はUnityのフレーム描画やCanvasのレイアウト計算完了を表さない。
+
+Playerでは先にEntityがデッキを準備し、その後でHandControllerが初期手札を引く。シーンのStageSpawner.Startは従来どおり。管理外のSetActiveや別スコープとの通知順にはこの保証は及ばない。Editorのプレビューは今回の対象外。
 
 ## 使用期間の購読
 
 ```csharp
-public void Subscribe(UsageLifetime lifetime)
+public void Subscribe(SubscriptionContext context)
 {
-    damageEvent.Subscribe(OnDamage).AddTo(lifetime);
+    damageEvent.Subscribe(OnDamage).AddTo(context.Lifetime);
 }
 ```
 
@@ -75,13 +78,13 @@ CardBase createdCard = null;
 lifecycle.Spawn.OnNext(new SpawnRequest(() => createdCard = cardFactory.Spawn(skillData)));
 ```
 
-SpawnはActive中だけ受け付ける。FactoryのSpawnを直接呼ぶ方法も使用できる。ReleaseRequestは引数を持たない。Injectionで渡すLifecycleEventHubは使用期間ごとに新しくし、終了した期間のHubは完了状態にする。古いHubへの要求は次の使用へ届かない。Container.Resolveで直接得るHubは物理個体の管理用なので、遅延処理にはその使用時点で注入されたHubかUsageLifetimeを保持する。
+Spawn要求はスコープ内の全購読が揃った時点（Subscribed通知の開始）から、使用終了が要求されるまで受け付ける。FactoryのSpawnを直接呼ぶ方法も使用できる。ReleaseRequestは引数を持たない。Injectionで渡すLifecycleEventHubは使用期間ごとに新しくし、終了した期間のHubは完了状態にする。古いHubへの要求は次の使用へ届かない。Container.Resolveで直接得るHubは物理個体の管理用なので、遅延処理にはその使用時点で注入されたHubかUsageLifetimeを保持する。
 
 終了要求は開始フェーズ内で同期的に届いても再入せず、残りの開始処理を止めて終了へ進む。Release/Destroy要求の重複で後始末や破棄を重ねて実行しない。
 
 ## 終了と最終破棄
 
-所有する子スコープの使用終了 → 使用期間の購読解除 → Release（対象一覧の逆順）→ 非表示 → 引数のdefault化の順で処理する。プール対象ではInjectionを再実行して引数フィールドもdefaultへ更新してから返却する。次の使用では引数を差し替え、InjectionからActivateまで再実行する。Destroy要求・非プール個体・保管上限超過・初期化や後始末の失敗は最終破棄へ進める。
+所有する子スコープの使用終了 → 使用期間の購読解除 → Release（対象一覧の逆順）→ 非表示 → 引数のdefault化の順で処理する。プール対象ではInjectionを再実行して引数フィールドもdefaultへ更新してから返却する。返却時の再注入ではInjectedを通知しない。次の使用で引数を差し替え、Injectionから表示の有効化までを実行する。Destroy要求・非プール個体・保管上限超過・初期化や後始末の失敗は最終破棄へ進める。
 
 OnDestroyでは未実行の終了処理を依存先のコンテナが生きている間に済ませ、その後VContainerへ破棄を委譲する。親より先に子のReleaseとコンテナ破棄を行う。正常終了後のOnDestroyではReleaseを再実行しない。
 

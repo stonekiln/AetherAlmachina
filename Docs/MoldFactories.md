@@ -40,7 +40,7 @@ public void SpawnConfigure(SpawnerBuilder builder)
 
 管理フォルダは`Assets/Project/DIVFactorPrefabs`。例のパスは`Assets/Project/DIVFactorPrefabs/SkillCard/CardBase.prefab`に対応する。先頭`./`、拡張子、空要素、`.`、`..`は禁止。`Path.Combine`等のバックスラッシュは`/`に正規化する。キーは大小文字を区別するが、移植時の衝突を防ぐため大小文字だけ違うPrefabは登録できない。
 
-管理フォルダ内のPrefab追加・変更、スクリプト再コンパイル後に、ルートへ`MoldMetadata`を追加・更新する。非アクティブな子も含めて取得し、Spawner、Injection、Initialize、UpdateView、Subscribe、Activate、Releaseの参照配列とFactory対応表を保存する。配列はprivateのシリアライズフィールド。Inspectorには読み取り専用の一覧を表示する。`DIVFactor/Mold catalog`で全Prefab、実行用カタログ、各Moldの参照元を確認できる。
+管理フォルダ内のPrefab追加・変更、スクリプト再コンパイル後に、ルートへ`MoldMetadata`を追加・更新する。非アクティブな子も含めて取得し、Spawner、Injection、UpdateView、Subscribe、Releaseの参照配列とFactory対応表を保存する。完了フックは使用時に登録するので保存しない。旧形式のPrefabとシーンはEditorの既存の再生成処理で形式2へ更新する。配列はprivateのシリアライズフィールド。Inspectorには読み取り専用の一覧を表示する。`DIVFactor/Mold catalog`で全Prefab、実行用カタログ、各Moldの参照元を確認できる。
 
 Play直前とビルド直前にも再生成し、不備があれば停止する。手動更新は`DIVFactor/Rebuild open scenes`。Prefab Variant/Nested PrefabはLoadPrefabContentsで取得した実効構成を保存する。子のMoldMetadataを二重にライフサイクル対象とせず、生成するPrefab全体の実際のコンポーネント参照を保存する。Unity上でのVariant/Nestedの回帰確認は導入時に行うこと。
 
@@ -66,7 +66,7 @@ EditorのEnter Play Mode SettingsではReload Sceneを有効にする。Reload D
 
 表示用MoldはSpawnerのTransformへ配置する一方、制御用Lifetimeは所有Lifetime配下で管理する。Poolも各Spawner/Factoryに分け、親が終了すると子とPoolを閉じる。表示の非アクティブ化はライフサイクル順序を守るために残すが、DIのBuildをAwakeに先行させない制御は明示Buildで行う。通常のUnity Awake/OnEnableがDIより先に実行され得る点は変わらないため、DIを使う開始処理には専用ライフサイクルを使う。
 
-Injection → Initialize → UpdateView → Subscribe → 表示 → Activate、終了時の購読解除・逆順Release・引数クリア・Pool再利用は維持する。実行時に階層を再探索せず、保存済みの各フェーズ配列を使用する。コンポーネントのDI登録も保存済み一覧から選択する。VContainer内部のDI解決処理は引き続き存在する。
+Injection → Injected → UpdateView → UpdatedView → Subscribe → Subscribed → 表示の順に進める。終了時の購読解除・逆順Release・引数クリア・Pool再利用は維持する。実行時に階層を再探索せず、保存済みの各フェーズ配列を使用する。コンポーネントのDI登録も保存済み一覧から選択する。VContainer内部のDI解決処理は引き続き存在する。
 
 実行後のAddComponent・子追加への追従、非同期ロード、Addressables、外部MOD、Roslyn Analyzerは今回の対象外。明示Prefabを渡す旧Register/Action/Funcオーバーロードは移行・既存テスト用に残す。通常のゲームコードはMold付きFactoryを使う。
 

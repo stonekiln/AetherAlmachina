@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using DIVFactor.Injectable;
 using R3;
 
@@ -23,6 +22,8 @@ namespace DIVFactor.Lifecycle
         LifecycleEventHub usageEvents;
         InjectableResolver activeResolver;
         bool running;
+        bool subscriptionsReady;
+        Action<Exception> failStartingSpawn;
         bool endRequested;
         bool destroyRequested;
         bool disposeRequested;
@@ -61,27 +62,49 @@ namespace DIVFactor.Lifecycle
             if (resolver == null) throw new ArgumentNullException(nameof(resolver));
             usage = new UsageLifetime();
             usageEvents = CreateUsageEvents(usage);
-            activeResolver = resolver.WithLifecycleEvents(usageEvents);
-            endRequested = destroyRequested = disposeRequested = injected = false;
+            endRequested = destroyRequested = disposeRequested = injected = subscriptionsReady = false;
             began = running = true;
             State = LifecycleState.Starting;
             Exception failure = null;
+            bool CanContinue() => !endRequested;
+            void FailStart(Exception exception)
+            {
+                failure = Combine(failure, exception);
+                endRequested = destroyRequested = true;
+            }
             try
             {
+                failStartingSpawn = FailStart;
+                using var injection = new CompletionPhase(CanContinue, FailStart);
+                activeResolver = resolver.WithLifecycleEvents(usageEvents, injection);
                 RunPhase(participants.Injectables, target => target.Injection(activeResolver));
                 injected = !endRequested;
-                RunPhase(participants.Initializables, target => target.Initialize());
-                RunPhase(participants.Views, target => target.UpdateView());
-                RunPhase(participants.Subscribers, target => target.Subscribe(usage));
+                injection.Publish();
+
+                if (!endRequested && participants.Views.Length != 0)
+                {
+                    using var view = new CompletionPhase(CanContinue, FailStart);
+                    var context = new ViewContext(view);
+                    RunPhase(participants.Views, target => target.UpdateView(context));
+                    view.Publish();
+                }
+                if (!endRequested && participants.Subscribers.Length != 0)
+                {
+                    using var subscribed = new CompletionPhase(CanContinue, FailStart);
+                    var context = new SubscriptionContext(usage, subscribed);
+                    RunPhase(participants.Subscribers, target => target.Subscribe(context));
+                    subscriptionsReady = !endRequested;
+                    subscribed.Publish();
+                }
                 if (!endRequested)
                 {
+                    subscriptionsReady = true;
                     show?.Invoke();
-                    State = LifecycleState.Active;
-                    RunPhase(participants.Activatables, target => target.Activate());
+                    if (!endRequested) State = LifecycleState.Active;
                 }
             }
-            catch (Exception exception) { failure = exception; endRequested = destroyRequested = true; }
-            finally { running = false; }
+            catch (Exception exception) { FailStart(exception); }
+            finally { failStartingSpawn = null; running = false; }
             if (endRequested)
             {
                 try { FinishEnd(); }
@@ -101,9 +124,17 @@ namespace DIVFactor.Lifecycle
 
         void Spawn(SpawnRequest request)
         {
-            if (State != LifecycleState.Active || endRequested) return;
-            if (request.Factory == null) throw new ArgumentNullException(nameof(request.Factory));
-            request.Factory();
+            if (endRequested || !(State == LifecycleState.Active || (State == LifecycleState.Starting && subscriptionsReady))) return;
+            try
+            {
+                if (request.Factory == null) throw new ArgumentNullException(nameof(request.Factory));
+                request.Factory();
+            }
+            catch (Exception exception) when (State == LifecycleState.Starting && failStartingSpawn != null)
+            {
+                // EventPortを経由したFactoryの例外はR3の内側にあるため、開始処理へ明示的に戻す。
+                failStartingSpawn(exception);
+            }
         }
 
         void RunPhase<T>(IEnumerable<T> targets, Action<T> action)
@@ -178,7 +209,9 @@ namespace DIVFactor.Lifecycle
             if (returnToPool != null && injected)
                 foreach (IInjectable target in participants.Injectables)
                     Attempt(() => target.Injection(activeResolver), failures);
-            began = injected = false;
+            began = injected = subscriptionsReady = false;
+            activeResolver = null;
+            usageEvents = null;
             usage = null;
             State = LifecycleState.Released;
             if (failures.Count != 0) throw new AggregateException(failures);

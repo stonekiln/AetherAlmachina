@@ -19,12 +19,12 @@ namespace AetherAlmachina.Cost
         public void Injection(InjectableResolver resolver)
         {
             resolver.Inject(out owner);
-
+            resolver.Injected.SubscribeLifecycle(Initialize, resolver.Fail);
         }
 
-        public void Subscribe(UsageLifetime lifetime)
+        public void Subscribe(SubscriptionContext context)
         {
-            owner.Interaction.ResourceUpdate.Cost.Response.Subscribe(log => UpdateDisplay(log.Current)).AddTo(lifetime);
+            owner.Interaction.ResourceUpdate.Cost.Response.Subscribe(log => UpdateDisplay(log.Current)).AddTo(context.Lifetime);
         }
 
         public void Initialize()
@@ -32,7 +32,7 @@ namespace AetherAlmachina.Cost
             textMeshPro = GetComponent<TextMeshProUGUI>();
         }
 
-        public void UpdateView() => UpdateDisplay(owner.Status.Resource.Cost);
+        public void UpdateView(ViewContext context) => UpdateDisplay(owner.Status.Resource.Cost);
 
         /// <summary>
         /// 画面に現在のMPを表示する

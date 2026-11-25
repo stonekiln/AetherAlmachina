@@ -22,14 +22,14 @@ RegisterPooledはLifetimeObjectのSpawnConfigureで使用する。スポナー�
 - 待機個体があれば再使用する。
 - 空ならPrefabから新しい個体とDIコンテナを作成する。
 - maxRetainedは待機個体の保管上限。貸出総数の上限ではない。超過した返却分は破棄する。
-- 取得結果は引数の注入とActivateまで完了した個体。開始中に終了した場合は成功した個体として返さない。
+- 取得結果は引数の注入からSubscribedと表示の有効化まで完了した個体。開始中に終了した場合は成功した個体として返さない。
 - 所有元が使用中でなくなった後の取得は失敗する。破棄された親のファクトリーを使い続けない。
 
 ## 再使用と引数
 
 コンポーネント一覧はEditorで保存する。実行時の初回だけPrefab複製、保存済み一覧の復元、Spawnerの設定、コンテナ構築を行う。スコープ管理用GameObjectは返却時に無効化しない。表示用オブジェクトのルートだけを必要時に有効化/無効化する。
 
-各使用では引数を設定し、新しいUsageLifetimeと期間専用のLifecycleEventHubを作り、Injection → Initialize → UpdateView → Subscribe → 表示 → Activateを実行する。
+各使用では引数を設定し、新しいUsageLifetimeと期間専用のLifecycleEventHubを作り、Injection → Injected → UpdateView → UpdatedView → Subscribe → Subscribed → 表示を実行する。
 
 ファクトリー引数はDI内のLifetimeArgumentsが保持する。引数のアクセサーはTransient登録し、同じ固定コンテナから現在値を解決する。固定サービスやMonoBehaviourのSingletonは作り直さない。nullや値型のdefaultも扱う。同じ型を複数の引数として渡すことはできない。
 
@@ -41,9 +41,9 @@ RegisterPooledはLifetimeObjectのSpawnConfigureで使用する。スポナー�
 lifecycle.Release.OnNext(new ReleaseRequest());
 ```
 
-子スコープの使用終了 → UsageLifetimeのDispose → Release → 非表示 → 引数のdefault化 → Injectionによるフィールド更新 → プールへの返却を行う。Injectionは代入だけとし、この段階でもイベント登録や状態計算を行わない。例外があれば残りの後始末を試みて、その個体は再使用せず破棄する。
+子スコープの使用終了 → UsageLifetimeのDispose → Release → 非表示 → 引数のdefault化 → Injectionによるフィールド更新 → プールへの返却を行う。返却時はInjectedを通知しないため、初期化や使用開始の購読は再実行しない。例外があれば残りの後始末を試みて、その個体は再使用せず破棄する。
 
-固定サービスの内部状態、任意のゲーム状態、未登録の購読は自動でリセットしない。IReleasableとInitializeで扱う。今回対応したカードは選択・ホバー・サイズ・位置・画像をリセットする。ActPointerはTweenを停止し、位置・色・描画順を戻し、次のスキルで再設定する。使用者のEntityが破棄された場合もポインターを返却する。
+固定サービスの内部状態、任意のゲーム状態、未登録の購読は自動でリセットしない。IReleasableとInjectedのコールバックで扱う。今回対応したカードは選択・ホバー・サイズ・位置・画像をリセットする。ActPointerはTweenを停止し、位置・色・描画順を戻し、次のスキルで再設定する。使用者のEntityが破棄された場合もポインターを返却する。
 
 返却後のMonoBehaviour参照は使用しない。同じ物理個体が別の使用へ貸し出される可能性がある。
 

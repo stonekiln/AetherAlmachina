@@ -16,7 +16,7 @@ namespace AetherAlmachina.Stage.UI
             resolver.Inject(out ownership);
         }
 
-        public void UpdateView()
+        public void UpdateView(ViewContext context)
         {
             // Transformの親と、表示・破棄を担当するLifetimeの所属は別に保つ。
             ownership.Track(gameObject);

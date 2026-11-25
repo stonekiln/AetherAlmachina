@@ -8,8 +8,8 @@ using R3;
 using UnityEngine;
 using UnityEngine.TestTools;
 using VContainer;
-using VContainer.Unity;
-using IInitializable = DIVFactor.Lifecycle.IInitializable;
+using DIVFactor.Mold;
+using DIVFactor.Pooling;
 
 namespace AetherAlmachina.Editor.DIVFactor
 {
@@ -32,17 +32,18 @@ namespace AetherAlmachina.Editor.DIVFactor
             GameObject destination = Make("External view parent");
             NativeProbe probe = view.AddComponent<NativeProbe>();
             probe.Destination = destination.transform;
-            NativeScope scope;
-            // テストではプロジェクトの既定Rootを親として生成しない。
-            using (LifetimeScope.EnqueueParent((LifetimeScope)null))
-            {
-                scope = scopeObject.AddComponent<NativeScope>();
-                scopeObject.SetActive(true);
-            }
+            MoldMetadata metadata = model.AddComponent<MoldMetadata>();
+            metadata.EditorBake(new MonoBehaviour[] { probe }, System.Array.Empty<FactoryBinding>());
+            NativeScope scope = scopeObject.AddComponent<NativeScope>();
+            scopeObject.SetActive(true);
+            var arguments = LifetimeArguments.Create();
+            MoldTestTools.Call(scope, "Prepare", null, metadata, null, arguments, null, null, false);
+            MoldTestTools.Call(scope, "BuildPrepared");
+            MoldTestTools.Call(scope, "BeginUse", arguments);
             Assert.That(scope.Container, Is.Not.Null);
             Assert.That(view.transform.parent, Is.SameAs(destination.transform));
             Assert.That(view.activeSelf, Is.True);
-            Assert.That(probe.Trace, Is.EqualTo(new[] { "inject", "initialize", "view", "subscribe", "activate" }));
+            Assert.That(probe.Trace, Is.EqualTo(new[] { "inject", "initialize", "view", "updated", "subscribe", "activate", "enable" }));
             scope.Container.Resolve<LifecycleEventHub>().Release.OnNext(new());
             yield return null;
             Assert.That(probe.ReleasedAfterUnsubscribe, Is.True);
@@ -73,7 +74,7 @@ namespace AetherAlmachina.Editor.DIVFactor
             protected override void Register(ComponentRegister register) { }
         }
 
-        public class NativeProbe : MonoBehaviour, IActiveComponent, IReactiveView, IReleasable
+        public class NativeProbe : MonoBehaviour, IReactiveView, IReleasable
         {
             LifetimeOwnership ownership;
             LifecycleEventHub events;
@@ -81,11 +82,27 @@ namespace AetherAlmachina.Editor.DIVFactor
             public Transform Destination;
             public readonly List<string> Trace = new();
             public bool ReleasedAfterUnsubscribe;
-            public void Injection(InjectableResolver resolver) { resolver.Inject(out ownership); resolver.Inject(out events); Trace.Add("inject"); }
-            public void Initialize() => Trace.Add("initialize");
-            public void UpdateView() { ownership.Track(gameObject); transform.SetParent(Destination, false); Trace.Add("view"); }
-            public void Subscribe(UsageLifetime lifetime) { usage = lifetime; Trace.Add("subscribe"); }
-            public void Activate() => Trace.Add("activate");
+            public void Injection(InjectableResolver resolver)
+            {
+                resolver.Inject(out ownership);
+                resolver.Inject(out events);
+                Trace.Add("inject");
+                resolver.Injected.SubscribeLifecycle(() => Trace.Add("initialize"), resolver.Fail);
+            }
+            public void UpdateView(ViewContext context)
+            {
+                ownership.Track(gameObject);
+                transform.SetParent(Destination, false);
+                Trace.Add("view");
+                context.UpdatedView.SubscribeLifecycle(() => Trace.Add("updated"), context.Fail);
+            }
+            public void Subscribe(SubscriptionContext context)
+            {
+                usage = context.Lifetime;
+                Trace.Add("subscribe");
+                context.Subscribed.SubscribeLifecycle(() => Trace.Add("activate"), context.Fail);
+            }
+            void OnEnable() => Trace.Add("enable");
             public void Release()
             {
                 using System.IDisposable stillAlive = events.Release.Subscribe(_ => { });

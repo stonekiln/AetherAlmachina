@@ -256,11 +256,12 @@ namespace AetherAlmachina.Editor.DIVFactor
         }
         public record Payload(string Name, bool FailInitialize = false, bool FailRelease = false, bool EndImmediately = false, Action OnInitialize = null);
 
-        sealed class EndOnActivate : IActivatable
+        sealed class EndOnActivate : IUsageSubscriber
         {
             readonly LifecycleEventHub events;
             public EndOnActivate(LifecycleEventHub events) => this.events = events;
-            public void Activate() => events.Release.OnNext(new());
+            public void Subscribe(SubscriptionContext context)
+                => context.Subscribed.SubscribeLifecycle(() => events.Release.OnNext(new()), context.Fail);
         }
 
         sealed class Owner : IDisposable
@@ -314,14 +315,24 @@ namespace AetherAlmachina.Editor.DIVFactor
             public readonly List<string> InitializedNames = new();
             public int Received, ReleaseCount;
             public bool ReleasedAfterUnsubscribe;
-            public void Injection(InjectableResolver resolver) { resolver.Inject(out Payload); resolver.Inject(out Events); }
+            public void Injection(InjectableResolver resolver)
+            {
+                resolver.Inject(out Payload);
+                resolver.Inject(out Events);
+                resolver.Injected.SubscribeLifecycle(Initialize, resolver.Fail);
+            }
             public void Initialize()
             {
                 if (Payload.FailInitialize) throw new InvalidOperationException("initialize");
                 InitializedNames.Add(Payload.Name);
                 Payload.OnInitialize?.Invoke();
             }
-            public void Subscribe(UsageLifetime lifetime) { Usage = lifetime; Signal.Subscribe(value => Received += value).AddTo(lifetime); }
+            public void Subscribe(SubscriptionContext context)
+            {
+                Usage = context.Lifetime;
+                Signal.Subscribe(value => Received += value).AddTo(Usage);
+                context.Subscribed.SubscribeLifecycle(Activate, context.Fail);
+            }
             public void Activate() { if (Payload.EndImmediately) Events.Release.OnNext(new()); }
             public void Release()
             {

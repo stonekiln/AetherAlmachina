@@ -23,15 +23,15 @@ namespace AetherAlmachina.Cost
         {
             resolver.Inject(out settings);
             resolver.Inject(out AutoIncrease);
-
+            resolver.Injected.SubscribeLifecycle(Initialize, resolver.Fail);
         }
 
         public void Initialize() => costSettings = settings.CostSettings;
 
-        public void Subscribe(UsageLifetime lifetime)
+        public void Subscribe(SubscriptionContext context)
         {
             Observable.Interval(TimeSpan.FromSeconds(costSettings.TimeSpan))
-                .Switch(AutoIncrease).Subscribe(_ => new(costSettings.Delta)).AddTo(lifetime);
+                .Switch(AutoIncrease).Subscribe(_ => new(costSettings.Delta)).AddTo(context.Lifetime);
         }
     }
 }

@@ -2,14 +2,13 @@ using DIVFactor.Injectable;
 
 namespace DIVFactor.Lifecycle
 {
-    // 個別の契約を維持し、クラス宣言でよく併用する組み合わせだけをまとめる。
-    public interface IInitializableComponent : IInjectable, IInitializable { }
     public interface ISubscriberComponent : IInjectable, IUsageSubscriber { }
-
-    public interface IReactiveComponent : IInitializableComponent, ISubscriberComponent { }
-    public interface IActiveComponent : IReactiveComponent, IActivatable { }
-
-    public interface IViewComponent : IInitializableComponent, IViewUpdatable { }
+    public interface IViewComponent : IInjectable, IViewUpdatable { }
     public interface IReactiveView : IViewComponent, IUsageSubscriber { }
-    public interface IActiveView : IViewComponent, IActivatable, IReleasable { }
+
+    // 従来のバンドル名で実装するクラスにも、同じ完了通知の契約を提供する。
+    public interface IInitializableComponent : IInjectable { }
+    public interface IReactiveComponent : ISubscriberComponent { }
+    public interface IActiveComponent : IReactiveComponent { }
+    public interface IActiveView : IReactiveView, IReleasable { }
 }

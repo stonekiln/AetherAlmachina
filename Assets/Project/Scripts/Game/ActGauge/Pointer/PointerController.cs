@@ -12,7 +12,7 @@ namespace AetherAlmachina.ActGauge.Pointer
     /// </summary>
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(RectTransform))]
-    public class PointerController : MonoBehaviour, IActiveView, IUsageSubscriber
+    public class PointerController : MonoBehaviour, IActiveView
     {
         /// <summary>
         /// ポインターがディスプレイに表示される時間の最大値(sec)
@@ -38,6 +38,7 @@ namespace AetherAlmachina.ActGauge.Pointer
             resolver.Inject(out spawnerData);
 
             resolver.Inject(out lifecycle);
+            resolver.Injected.SubscribeLifecycle(Initialize, resolver.Fail);
         }
         /// <summary>
         /// 初期化処理
@@ -65,22 +66,23 @@ namespace AetherAlmachina.ActGauge.Pointer
             }
         }
 
-        public void UpdateView()
+        public void UpdateView(ViewContext context)
         {
             spriteRenderer.color = spawnerData.Color;
             spriteRenderer.sortingOrder = skillData.IsDeferrable ? initialSortingOrder : -1;
             //そのスキルの発動時間とディスプレイに表示される時間の割合とゲージの幅を掛けることで、そのスキルのポインターの初期位置を割り出す
             rectTransform.anchoredPosition = new(spawnerData.Transform.rect.xMax * remainingTime / DisplayThresholdSeconds, initialPosition.y);
         }
-        public void Subscribe(UsageLifetime lifetime)
+        public void Subscribe(SubscriptionContext context)
         {
-            usage = lifetime;
+            usage = context.Lifetime;
             if (skillData.User is AetherAlmachina.Entities.Entity owner)
             {
                 if (!owner) throw new System.InvalidOperationException("スキルの使用者は破棄されています。");
                 LifecycleEventHub currentEvents = lifecycle;
-                owner.destroyCancellationToken.Register(() => currentEvents.Release.OnNext(new())).AddTo(lifetime);
+                owner.destroyCancellationToken.Register(() => currentEvents.Release.OnNext(new())).AddTo(context.Lifetime);
             }
+            context.Subscribed.SubscribeLifecycle(Activate, context.Fail);
         }
 
         public void Activate()

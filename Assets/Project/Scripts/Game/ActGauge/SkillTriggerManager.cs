@@ -27,9 +27,9 @@ namespace AetherAlmachina.Stage
 
         }
 
-        public void Subscribe(UsageLifetime lifetime)
+        public void Subscribe(SubscriptionContext context)
         {
-            skillActivate.Subscribe(log => GaugeOn(log.Data)).AddTo(lifetime);
+            skillActivate.Subscribe(log => GaugeOn(log.Data)).AddTo(context.Lifetime);
         }
 
         /// <summary>

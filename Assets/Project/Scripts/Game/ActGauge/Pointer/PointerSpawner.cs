@@ -1,3 +1,4 @@
+using DIVFactor.Injectable;
 using DIVFactor.Lifecycle;
 using System;
 using AetherAlmachina.Skill;
@@ -18,7 +19,7 @@ namespace AetherAlmachina.ActGauge.Pointer
     /// ゲージに攻撃スキルの発動時間を示すポインターをスポーンさせるスポナー
     /// </summary>
     [RequireComponent(typeof(RectTransform))]
-    public abstract class PointerSpawner : MonoBehaviour, ILifetimeSpawner, IInitializable
+    public abstract class PointerSpawner : MonoBehaviour, ILifetimeSpawner, IInjectable
     {
         RectTransform rect;
         [Mold("Stage/ActPointer/Pointer")]
@@ -30,7 +31,10 @@ namespace AetherAlmachina.ActGauge.Pointer
             builder.RegisterPooled<ActPointerLifetime>()
                     .Inject(out pointerFactory);
         }
-        public void Initialize()
+        public void Injection(InjectableResolver resolver)
+            => resolver.Injected.SubscribeLifecycle(Initialize, resolver.Fail);
+
+        void Initialize()
         {
             rect = GetComponent<RectTransform>();
         }
