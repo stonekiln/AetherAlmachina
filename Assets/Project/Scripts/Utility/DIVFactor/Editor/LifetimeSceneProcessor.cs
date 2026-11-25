@@ -1,13 +1,13 @@
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine.SceneManagement;
+using AetherAlmachina.Editor.DIVFactor;
 
-public class LifetimeSceneProcessor : IProcessSceneWithReport
+public sealed class LifetimeSceneProcessor : IProcessSceneWithReport
 {
-    public int callbackOrder => 0;
-
+    public int callbackOrder => -10000;
     public void OnProcessScene(Scene scene, BuildReport report)
     {
-        // シーンのスコープ自動構築は未導入のため、現在は加工しない。
+        if (report != null) MoldBaker.ProcessScene(scene);
     }
 }

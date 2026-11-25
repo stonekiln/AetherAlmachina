@@ -72,10 +72,10 @@ lifecycle.Destroy.OnNext(new DestroyRequest());
 
 // 引数と生成結果の型は、既存のファクトリーに任せる。
 CardBase createdCard = null;
-lifecycle.Spawn.OnNext(new SpawnRequest(() => createdCard = cardFactory(skillData)));
+lifecycle.Spawn.OnNext(new SpawnRequest(() => createdCard = cardFactory.Spawn(skillData)));
 ```
 
-SpawnはActive中だけ受け付ける。既存のAction/Funcファクトリーを通常どおり直接呼ぶ方法も維持する。ReleaseRequestは引数を持たない。Injectionで渡すLifecycleEventHubは使用期間ごとに新しくし、終了した期間のHubは完了状態にする。古いHubへの要求は次の使用へ届かない。Container.Resolveで直接得るHubは物理個体の管理用なので、遅延処理にはその使用時点で注入されたHubかUsageLifetimeを保持する。
+SpawnはActive中だけ受け付ける。FactoryのSpawnを直接呼ぶ方法も使用できる。ReleaseRequestは引数を持たない。Injectionで渡すLifecycleEventHubは使用期間ごとに新しくし、終了した期間のHubは完了状態にする。古いHubへの要求は次の使用へ届かない。Container.Resolveで直接得るHubは物理個体の管理用なので、遅延処理にはその使用時点で注入されたHubかUsageLifetimeを保持する。
 
 終了要求は開始フェーズ内で同期的に届いても再入せず、残りの開始処理を止めて終了へ進む。Release/Destroy要求の重複で後始末や破棄を重ねて実行しない。
 

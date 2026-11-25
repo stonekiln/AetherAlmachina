@@ -11,7 +11,7 @@ namespace DIVFactor.Lifecycle
     /// <summary>対象一覧と固定コンテナを維持し、使用期間ごとに開始・終了する。</summary>
     public sealed class LifecycleRunner : IDisposable
     {
-        readonly object[] participants;
+        readonly LifecycleParticipants participants;
         readonly Action show;
         readonly Action hide;
         readonly Action destroy;
@@ -34,8 +34,13 @@ namespace DIVFactor.Lifecycle
         public LifecycleRunner(IEnumerable<object> participants, LifecycleEventHub events,
             Action show, Action hide, Action destroy, Action beforeRelease = null,
             Action returnToPool = null, Action clearArguments = null)
+            : this(LifecycleParticipants.From(participants), events, show, hide, destroy, beforeRelease, returnToPool, clearArguments) { }
+
+        public LifecycleRunner(LifecycleParticipants participants, LifecycleEventHub events,
+            Action show, Action hide, Action destroy, Action beforeRelease = null,
+            Action returnToPool = null, Action clearArguments = null)
         {
-            this.participants = participants?.ToArray() ?? throw new ArgumentNullException(nameof(participants));
+            this.participants = participants ?? throw new ArgumentNullException(nameof(participants));
             this.show = show;
             this.hide = hide;
             this.destroy = destroy ?? throw new ArgumentNullException(nameof(destroy));
@@ -63,16 +68,16 @@ namespace DIVFactor.Lifecycle
             Exception failure = null;
             try
             {
-                RunPhase<IInjectable>(target => target.Injection(activeResolver));
+                RunPhase(participants.Injectables, target => target.Injection(activeResolver));
                 injected = !endRequested;
-                RunPhase<IInitializable>(target => target.Initialize());
-                RunPhase<IViewUpdatable>(target => target.UpdateView());
-                RunPhase<IUsageSubscriber>(target => target.Subscribe(usage));
+                RunPhase(participants.Initializables, target => target.Initialize());
+                RunPhase(participants.Views, target => target.UpdateView());
+                RunPhase(participants.Subscribers, target => target.Subscribe(usage));
                 if (!endRequested)
                 {
                     show?.Invoke();
                     State = LifecycleState.Active;
-                    RunPhase<IActivatable>(target => target.Activate());
+                    RunPhase(participants.Activatables, target => target.Activate());
                 }
             }
             catch (Exception exception) { failure = exception; endRequested = destroyRequested = true; }
@@ -101,12 +106,12 @@ namespace DIVFactor.Lifecycle
             request.Factory();
         }
 
-        void RunPhase<T>(Action<T> action)
+        void RunPhase<T>(IEnumerable<T> targets, Action<T> action)
         {
-            foreach (object participant in participants)
+            foreach (T target in targets)
             {
                 if (endRequested) break;
-                if (participant is T target) action(target);
+                action(target);
             }
         }
 
@@ -162,8 +167,8 @@ namespace DIVFactor.Lifecycle
             List<Exception> failures = new();
             Attempt(beforeRelease, failures);
             Attempt(() => usage.Dispose(), failures);
-            for (int index = participants.Length - 1; index >= 0; index--)
-                if (participants[index] is IReleasable target) Attempt(target.Release, failures);
+            for (int index = participants.Releasables.Length - 1; index >= 0; index--)
+                Attempt(participants.Releasables[index].Release, failures);
             Attempt(hide, failures);
             // 完了したHubはDisposeせず完了状態に保つ。遅延した古いOnNextを安全に無視する。
             Attempt(() => usageEvents.Release.OnCompleted(), failures);
@@ -171,8 +176,8 @@ namespace DIVFactor.Lifecycle
             Attempt(() => usageEvents.Spawn.OnCompleted(), failures);
             Attempt(clearArguments, failures);
             if (returnToPool != null && injected)
-                foreach (object participant in participants)
-                    if (participant is IInjectable target) Attempt(() => target.Injection(activeResolver), failures);
+                foreach (IInjectable target in participants.Injectables)
+                    Attempt(() => target.Injection(activeResolver), failures);
             began = injected = false;
             usage = null;
             State = LifecycleState.Released;

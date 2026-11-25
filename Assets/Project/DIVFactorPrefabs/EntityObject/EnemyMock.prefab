@@ -1,0 +1,399 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6886011605178443731
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4812700715082687259}
+  - component: {fileID: 8558657584637604171}
+  - component: {fileID: 910040014878765843}
+  m_Layer: 0
+  m_Name: EnemyMock
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4812700715082687259
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6886011605178443731}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4024379595190976188}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8558657584637604171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6886011605178443731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc1a8d09af7b818469cc9e4e3739e315, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.Entities.Faction.Enemy
+--- !u!114 &910040014878765843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6886011605178443731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a37fa24c605a4c759d82ae6b8d36937e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DIVFactor.Mold.MoldMetadata
+  format: 1
+  components:
+  - {fileID: 8558657584637604171}
+  - {fileID: 3178666361502938917}
+  - {fileID: 6979416315786280586}
+  - {fileID: 7166217431427397677}
+  - {fileID: 5506576202048931029}
+  - {fileID: 5935199552383994690}
+  - {fileID: 3393631592818549542}
+  - {fileID: 8609395439064166638}
+  - {fileID: 6281639596562581452}
+  - {fileID: 2384353975698685950}
+  - {fileID: 4087628505629326350}
+  - {fileID: 411758429934285646}
+  - {fileID: 8187832379879369555}
+  - {fileID: 6110604445753093044}
+  - {fileID: 7132192680241630738}
+  - {fileID: 1066659803304976337}
+  - {fileID: 542570572098730304}
+  - {fileID: 4692121403823345129}
+  - {fileID: 3505456133613195355}
+  spawners: []
+  injectables:
+  - {fileID: 8558657584637604171}
+  initializables:
+  - {fileID: 8558657584637604171}
+  views: []
+  subscribers:
+  - {fileID: 8558657584637604171}
+  activatables:
+  - {fileID: 8558657584637604171}
+  releasables: []
+  bindings: []
+--- !u!1001 &2375263838718510946
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4812700715082687259}
+    m_Modifications:
+    - target: {fileID: -8653719598885068355, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      propertyPath: m_Name
+      value: EnemyDesign
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 773631551000901861}
+  m_SourcePrefab: {fileID: 4843985084834002234, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+--- !u!114 &411758429934285646 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2684283899988980780, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!114 &542570572098730304 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -6381256593880400350, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!114 &1066659803304976337 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3331300952514468019, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!114 &2384353975698685950 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 135192302097971356, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!1 &2815152461633513183 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8653719598885068355, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &773631551000901861
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2815152461633513183}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4a3a67f0cb53ae14a96c58f186463b4b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3178666361502938917 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -8292738976235098041, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!114 &3393631592818549542 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -8075455421149879228, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!114 &3505456133613195355 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -8047017570632509639, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!4 &4024379595190976188 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -7552582706839291426, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4087628505629326350 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1750930037259778924, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!114 &4692121403823345129 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7055841469671672459, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!114 &5506576202048931029 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -1396705218001189961, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!114 &5935199552383994690 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8262048592018148384, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!114 &6110604445753093044 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8375459173758725334, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!114 &6281639596562581452 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -587020401536548690, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!114 &6979416315786280586 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4624492894863260136, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!114 &7132192680241630738 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -4464190295720572560, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!114 &7166217431427397677 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4865335832444469071, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!114 &8187832379879369555 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -3362034105255236559, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin
+--- !u!114 &8609395439064166638 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6308441822140856204, guid: b9532737a21fb7a4aab74f6b4599301f, type: 3}
+  m_PrefabInstance: {fileID: 2375263838718510946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c008f954fe54a8bb972de1018a2cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteSkin

@@ -1,75 +1,60 @@
 using System;
-using DIVFactor.Lifecycle;
 using DIVFactor.Lifetime;
 using DIVFactor.Pooling;
 using VContainer;
-
 namespace DIVFactor.Spawner
 {
-    /// <summary>型付きファクトリーの呼び出し方を維持し、取得方法を生成またはプールへ委譲する。</summary>
-    public class SpawnerInjector<TScope> where TScope : LifetimeObject
+    public sealed class SpawnerInjector<TScope> where TScope : LifetimeObject
     {
-        readonly Func<Func<LifetimeArguments, IObjectResolver>> bind;
-
-        internal SpawnerInjector(Func<Func<LifetimeArguments, IObjectResolver>> bind) => this.bind = bind;
-
-        public SpawnerInjector(Func<LifetimeSeed> makeSeed, Func<LifetimeSeed, IObjectResolver> makeResolver)
+        readonly Func<Type, string, Func<LifetimeArguments, IObjectResolver>> bind;
+        internal SpawnerInjector(Func<Type, string, Func<LifetimeArguments, IObjectResolver>> bind) => this.bind = bind;
+        public void Inject(out ActionFactory factory, string fieldName = null) => factory = new(bind(typeof(ActionFactory), fieldName));
+        public void Inject(out Action factory)
         {
-            if (makeSeed == null) throw new ArgumentNullException(nameof(makeSeed));
-            if (makeResolver == null) throw new ArgumentNullException(nameof(makeResolver));
-            bind = () => arguments => makeResolver(makeSeed().SetArguments(arguments));
+            var acquire = bind(typeof(Action), null);
+            factory = () => acquire(LifetimeArguments.Create());
         }
-
-        public void Inject(out Action action)
-        {
-            var factory = bind();
-            action = () => factory(LifetimeArguments.Create());
-        }
+        public void Inject<TResult>(out Factory<TResult> factory, string fieldName = null) => factory = new(bind(typeof(Factory<TResult>), fieldName));
         public void Inject<TResult>(out Func<TResult> factory)
         {
-            var rent = bind();
-            factory = () => ResolveResult<TResult>(rent(LifetimeArguments.Create()));
+            var acquire = bind(typeof(Func<TResult>), null);
+            factory = () => FactoryResult.Resolve<TResult>(acquire(LifetimeArguments.Create()));
         }
-        public void Inject<TParam>(out Action<TParam> action)
+        public void Inject<T1>(out ActionFactory<T1> factory, string fieldName = null) => factory = new(bind(typeof(ActionFactory<T1>), fieldName));
+        public void Inject<T1>(out Action<T1> factory)
         {
-            var factory = bind();
-            action = value => factory(LifetimeArguments.Create(value));
+            var acquire = bind(typeof(Action<T1>), null);
+            factory = argument1 => acquire(LifetimeArguments.Create(argument1));
         }
-        public void Inject<TParam, TResult>(out Func<TParam, TResult> factory)
+        public void Inject<T1, TResult>(out Factory<T1, TResult> factory, string fieldName = null) => factory = new(bind(typeof(Factory<T1, TResult>), fieldName));
+        public void Inject<T1, TResult>(out Func<T1, TResult> factory)
         {
-            var rent = bind();
-            factory = value => ResolveResult<TResult>(rent(LifetimeArguments.Create(value)));
+            var acquire = bind(typeof(Func<T1, TResult>), null);
+            factory = argument1 => FactoryResult.Resolve<TResult>(acquire(LifetimeArguments.Create(argument1)));
         }
-        public void Inject<T1, T2>(out Action<T1, T2> action)
+        public void Inject<T1, T2>(out ActionFactory<T1, T2> factory, string fieldName = null) => factory = new(bind(typeof(ActionFactory<T1, T2>), fieldName));
+        public void Inject<T1, T2>(out Action<T1, T2> factory)
         {
-            var factory = bind();
-            action = (first, second) => factory(LifetimeArguments.Create(first, second));
+            var acquire = bind(typeof(Action<T1, T2>), null);
+            factory = (argument1, argument2) => acquire(LifetimeArguments.Create(argument1, argument2));
         }
+        public void Inject<T1, T2, TResult>(out Factory<T1, T2, TResult> factory, string fieldName = null) => factory = new(bind(typeof(Factory<T1, T2, TResult>), fieldName));
         public void Inject<T1, T2, TResult>(out Func<T1, T2, TResult> factory)
         {
-            var rent = bind();
-            factory = (first, second) => ResolveResult<TResult>(rent(LifetimeArguments.Create(first, second)));
+            var acquire = bind(typeof(Func<T1, T2, TResult>), null);
+            factory = (argument1, argument2) => FactoryResult.Resolve<TResult>(acquire(LifetimeArguments.Create(argument1, argument2)));
         }
-        public void Inject<T1, T2, T3>(out Action<T1, T2, T3> action)
+        public void Inject<T1, T2, T3>(out ActionFactory<T1, T2, T3> factory, string fieldName = null) => factory = new(bind(typeof(ActionFactory<T1, T2, T3>), fieldName));
+        public void Inject<T1, T2, T3>(out Action<T1, T2, T3> factory)
         {
-            var factory = bind();
-            action = (first, second, third) => factory(LifetimeArguments.Create(first, second, third));
+            var acquire = bind(typeof(Action<T1, T2, T3>), null);
+            factory = (argument1, argument2, argument3) => acquire(LifetimeArguments.Create(argument1, argument2, argument3));
         }
+        public void Inject<T1, T2, T3, TResult>(out Factory<T1, T2, T3, TResult> factory, string fieldName = null) => factory = new(bind(typeof(Factory<T1, T2, T3, TResult>), fieldName));
         public void Inject<T1, T2, T3, TResult>(out Func<T1, T2, T3, TResult> factory)
         {
-            var rent = bind();
-            factory = (first, second, third) => ResolveResult<TResult>(rent(LifetimeArguments.Create(first, second, third)));
-        }
-
-        static TResult ResolveResult<TResult>(IObjectResolver resolver)
-        {
-            try { return resolver.Resolve<TResult>(); }
-            catch
-            {
-                // 戻り値の登録ミスでも、生成済みの個体を貸出中のまま残さない。
-                resolver.Resolve<LifecycleEventHub>().Destroy.OnNext(new());
-                throw;
-            }
+            var acquire = bind(typeof(Func<T1, T2, T3, TResult>), null);
+            factory = (argument1, argument2, argument3) => FactoryResult.Resolve<TResult>(acquire(LifetimeArguments.Create(argument1, argument2, argument3)));
         }
     }
 }

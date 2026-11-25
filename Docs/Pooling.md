@@ -2,13 +2,17 @@
 
 ## 対象と登録
 
-Unity 6000.3のUnityEngine.Pool.ObjectPool<T>を使用する。カードとActPointerをプール対象に変更した。Stage、Player、Enemyなど通常のRegisterによる生成は維持する。シーン上のスコープ自動構築、抽象MonoBehaviourへの移行、Responseイベント追加は今回の対象外。
+Unity 6000.3のUnityEngine.Pool.ObjectPool<T>を使用する。カードとActPointerをプール対象に変更した。Stage、Player、Enemyなど通常のRegisterによる生成は維持する。Mold属性、事前生成カタログ、明示Buildとの関係はMoldFactories.mdを参照する。
 
 ```csharp
-builder.RegisterPooled<CardLifetime>(prefab, maxRetained: 64)
-    .Inject(out cardFactory);
+[Mold("SkillCard/CardBase")]
+Factory<SkillData, CardBase> cardFactory;
 
-CardBase card = cardFactory(skillData);
+// ILifetimeSpawner.SpawnConfigure内
+builder.RegisterPooled<CardLifetime>(maxRetained: 64).Inject(out cardFactory);
+
+// 使用時
+CardBase card = cardFactory.Spawn(skillData);
 ```
 
 RegisterPooledはLifetimeObjectのSpawnConfigureで使用する。スポナーのGameObjectにLifetimePoolコンポーネントを自動付与し、親スコープが管理する。シーンへの手動配置は不要。ActiveCountとInactiveCountは保持中の実個体の数を返す。
@@ -23,7 +27,7 @@ RegisterPooledはLifetimeObjectのSpawnConfigureで使用する。スポナー�
 
 ## 再使用と引数
 
-初回だけPrefab複製、コンポーネント一覧取得、Spawnerの設定、コンテナ構築を行う。スコープ管理用GameObjectは返却時に無効化しない。表示用オブジェクトのルートだけを必要時に有効化/無効化する。
+コンポーネント一覧はEditorで保存する。実行時の初回だけPrefab複製、保存済み一覧の復元、Spawnerの設定、コンテナ構築を行う。スコープ管理用GameObjectは返却時に無効化しない。表示用オブジェクトのルートだけを必要時に有効化/無効化する。
 
 各使用では引数を設定し、新しいUsageLifetimeと期間専用のLifecycleEventHubを作り、Injection → Initialize → UpdateView → Subscribe → 表示 → Activateを実行する。
 

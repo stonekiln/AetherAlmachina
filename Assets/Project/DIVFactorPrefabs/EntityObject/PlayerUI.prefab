@@ -86,6 +86,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1788963754114018173}
   - component: {fileID: 9096384543040035863}
+  - component: {fileID: 7076977379390589652}
   m_Layer: 5
   m_Name: PlayerUI
   m_TagString: Untagged
@@ -126,6 +127,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3db7b699614d79547ac21e7dfbf79c35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.Stage.UI.UIChildMark
+--- !u!114 &7076977379390589652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4521393833516852809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a37fa24c605a4c759d82ae6b8d36937e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DIVFactor.Mold.MoldMetadata
+  format: 1
+  components:
+  - {fileID: 9096384543040035863}
+  - {fileID: 5913854952702306310}
+  - {fileID: 2779890640131527836}
+  - {fileID: 754023508930074959}
+  - {fileID: 6728486814066430438}
+  spawners:
+  - {fileID: 2779890640131527836}
+  injectables:
+  - {fileID: 9096384543040035863}
+  - {fileID: 2779890640131527836}
+  - {fileID: 6728486814066430438}
+  initializables:
+  - {fileID: 2779890640131527836}
+  - {fileID: 6728486814066430438}
+  views:
+  - {fileID: 9096384543040035863}
+  - {fileID: 6728486814066430438}
+  subscribers:
+  - {fileID: 2779890640131527836}
+  - {fileID: 6728486814066430438}
+  activatables:
+  - {fileID: 2779890640131527836}
+  releasables: []
+  bindings:
+  - owner: {fileID: 2779890640131527836}
+    fieldName: spawner
+    factoryType: DIVFactor.Spawner.Factory`2[[AetherAlmachina.Skill.SkillData, Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[AetherAlmachina.Card.Object.CardBase,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    path: SkillCard/CardBase
 --- !u!1 &8833764736440199889
 GameObject:
   m_ObjectHideFlags: 0

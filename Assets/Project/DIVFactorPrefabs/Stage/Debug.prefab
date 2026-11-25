@@ -471,6 +471,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2777843008944352279}
+  - component: {fileID: 5711032036691750821}
   m_Layer: 0
   m_Name: Debug
   m_TagString: Untagged
@@ -496,6 +497,89 @@ Transform:
   - {fileID: 5077942325199251396}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5711032036691750821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2119431232545187698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a37fa24c605a4c759d82ae6b8d36937e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DIVFactor.Mold.MoldMetadata
+  format: 1
+  components:
+  - {fileID: 3749708330016419633}
+  - {fileID: 9192634502352841643}
+  - {fileID: 3850442123538550081}
+  - {fileID: 120734780504096521}
+  - {fileID: 8670719578863106603}
+  - {fileID: 5285629239869532666}
+  - {fileID: 1869482031846349168}
+  - {fileID: 3995783008483924784}
+  - {fileID: 4074130475286660862}
+  - {fileID: 8853175574656691351}
+  - {fileID: 4217122783619167502}
+  - {fileID: 4266785197075189596}
+  - {fileID: 8713671823580393063}
+  - {fileID: 5784259630177666742}
+  - {fileID: 2405411580546517934}
+  spawners:
+  - {fileID: 3749708330016419633}
+  - {fileID: 4074130475286660862}
+  - {fileID: 8853175574656691351}
+  injectables:
+  - {fileID: 3749708330016419633}
+  - {fileID: 9192634502352841643}
+  - {fileID: 3850442123538550081}
+  - {fileID: 120734780504096521}
+  - {fileID: 3995783008483924784}
+  initializables:
+  - {fileID: 3749708330016419633}
+  - {fileID: 120734780504096521}
+  - {fileID: 4074130475286660862}
+  - {fileID: 8853175574656691351}
+  views: []
+  subscribers:
+  - {fileID: 3749708330016419633}
+  - {fileID: 9192634502352841643}
+  - {fileID: 3850442123538550081}
+  - {fileID: 120734780504096521}
+  - {fileID: 3995783008483924784}
+  activatables:
+  - {fileID: 3749708330016419633}
+  releasables: []
+  bindings:
+  - owner: {fileID: 3749708330016419633}
+    fieldName: playerFactory
+    factoryType: DIVFactor.Spawner.Factory`2[[AetherAlmachina.Entities.Parameter.StatusAsset,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[AetherAlmachina.Entities.Faction.Player,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    path: EntityObject/PlayerMock
+  - owner: {fileID: 3749708330016419633}
+    fieldName: enemyFactory
+    factoryType: DIVFactor.Spawner.Factory`2[[AetherAlmachina.Entities.Parameter.StatusAsset,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[AetherAlmachina.Entities.Faction.Enemy,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    path: EntityObject/EnemyMock
+  - owner: {fileID: 4074130475286660862}
+    fieldName: pointerFactory
+    factoryType: DIVFactor.Spawner.ActionFactory`2[[AetherAlmachina.Skill.ActivatedSkillData,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[AetherAlmachina.ActGauge.Pointer.PointerSpawnerData,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    path: Stage/ActPointer/Pointer
+  - owner: {fileID: 8853175574656691351}
+    fieldName: pointerFactory
+    factoryType: DIVFactor.Spawner.ActionFactory`2[[AetherAlmachina.Skill.ActivatedSkillData,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[AetherAlmachina.ActGauge.Pointer.PointerSpawnerData,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    path: Stage/ActPointer/Pointer
 --- !u!1 &2345948153315174201
 GameObject:
   m_ObjectHideFlags: 0

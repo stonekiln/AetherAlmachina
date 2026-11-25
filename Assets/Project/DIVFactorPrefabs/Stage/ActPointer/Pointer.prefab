@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3260763591402887787}
   - component: {fileID: 6189156085609823003}
   - component: {fileID: 1144416734278160276}
+  - component: {fileID: 3259172025107447005}
   m_Layer: 5
   m_Name: Pointer
   m_TagString: Untagged
@@ -108,3 +109,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1607d7ca47604c24baa81ed9bc09ad2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.ActGauge.Pointer.PointerController
+--- !u!114 &3259172025107447005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 855671401489777810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a37fa24c605a4c759d82ae6b8d36937e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DIVFactor.Mold.MoldMetadata
+  format: 1
+  components:
+  - {fileID: 1144416734278160276}
+  spawners: []
+  injectables:
+  - {fileID: 1144416734278160276}
+  initializables:
+  - {fileID: 1144416734278160276}
+  views:
+  - {fileID: 1144416734278160276}
+  subscribers:
+  - {fileID: 1144416734278160276}
+  activatables:
+  - {fileID: 1144416734278160276}
+  releasables:
+  - {fileID: 1144416734278160276}
+  bindings: []

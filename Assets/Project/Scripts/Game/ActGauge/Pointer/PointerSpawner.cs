@@ -1,6 +1,5 @@
 using DIVFactor.Lifecycle;
 using System;
-using System.IO;
 using AetherAlmachina.Skill;
 using DConfig.ActPointerLife;
 using DIVFactor.Spawner;
@@ -22,12 +21,13 @@ namespace AetherAlmachina.ActGauge.Pointer
     public abstract class PointerSpawner : MonoBehaviour, ILifetimeSpawner, IInitializable
     {
         RectTransform rect;
-        Action<ActivatedSkillData, PointerSpawnerData> pointerFactory;
+        [Mold("Stage/ActPointer/Pointer")]
+        ActionFactory<ActivatedSkillData, PointerSpawnerData> pointerFactory;
         protected abstract Color PointerColor { get; }
 
         public void SpawnConfigure(SpawnerBuilder builder)
         {
-            builder.RegisterPooled<ActPointerLifetime>(Resources.Load<GameObject>(Path.Combine("Stage", "ActPointer", "Pointer")))
+            builder.RegisterPooled<ActPointerLifetime>()
                     .Inject(out pointerFactory);
         }
         public void Initialize()
@@ -39,6 +39,6 @@ namespace AetherAlmachina.ActGauge.Pointer
         /// ポインターを生成し、ゲージに乗せる
         /// </summary>
         /// <param name="skill">そのポインターに乗せるスキル</param>
-        public void MakePointer(ActivatedSkillData skill) => pointerFactory(skill, new(rect, PointerColor));
+        public void MakePointer(ActivatedSkillData skill) => pointerFactory.Spawn(skill, new(rect, PointerColor));
     }
 }

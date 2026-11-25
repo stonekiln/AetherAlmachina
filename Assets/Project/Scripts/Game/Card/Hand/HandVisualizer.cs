@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.IO;
 using UnityEngine;
 using R3;
 using DConfig.CardLife;
@@ -17,7 +16,8 @@ namespace AetherAlmachina.Card.Hand
     /// </summary>
     public class HandVisualizer : HandController, ILifetimeSpawner
     {
-        Func<SkillData, CardBase> spawner;
+        [Mold("SkillCard/CardBase")]
+        Factory<SkillData, CardBase> spawner;
 
         public override void Injection(InjectableResolver resolver)
         {
@@ -26,13 +26,13 @@ namespace AetherAlmachina.Card.Hand
 
         public void SpawnConfigure(SpawnerBuilder builder)
         {
-            builder.RegisterPooled<CardLifetime>(Resources.Load<GameObject>(Path.Combine("SkillCard", "CardBase")))
+            builder.RegisterPooled<CardLifetime>()
                     .Inject(out spawner);
         }
 
         protected override List<ICardData> AddHand(List<SkillData> skills)
         {
-            return Hand.Concat(skills.Select(skill => spawner(skill))).OrderBy(card => card.SkillData.Cost).Select((card, index) => card.SetCard(index)).ToList();
+            return Hand.Concat(skills.Select(skill => spawner.Spawn(skill))).OrderBy(card => card.SkillData.Cost).Select((card, index) => card.SetCard(index)).ToList();
         }
         protected override List<ICardData> RemoveHand()
         {

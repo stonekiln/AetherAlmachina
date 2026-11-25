@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a657e4a1fec41a8b9c30b22cb648e92, type: 3}
+  m_Name: Catalog_99c9720ab356a0642a771bea13969a05
+  m_EditorClassIdentifier: Assembly-CSharp::DIVFactor.Mold.PrefabCatalog
+  entries:
+  - path: EntityObject/EnemyMock
+    prefab: {fileID: 910040014878765843, guid: 0d01638dcf60e6a4ab79411abde567ce, type: 3}
+  - path: EntityObject/PlayerMock
+    prefab: {fileID: 906446410716902196, guid: bc161dcb4af3982478f8ff4fabc093c4, type: 3}
+  - path: SkillCard/CardBase
+    prefab: {fileID: 8819144919633190877, guid: 07f43ab77acd63b4cac99698def44ffc, type: 3}
+  - path: Stage/ActPointer/Pointer
+    prefab: {fileID: 3259172025107447005, guid: 576067cb678a8ec4cbe723cb68a78b4d, type: 3}
+  - path: Stage/Debug
+    prefab: {fileID: 5711032036691750821, guid: 872dcd92d744d5c41b2be3ad222aa07d, type: 3}
+  dependencies:
+  - source: 'Scene: Assets/Project/Scenes/Debug.unity'
+    member: 'StageSpawner: StageSpawner.spawner'
+    target: Stage/Debug
+  - source: EntityObject/PlayerMock
+    member: 'PlayerMock/EnvironmentCanvas/PlayerUI/Hand: HandVisualizer.spawner'
+    target: SkillCard/CardBase
+  - source: Stage/Debug
+    member: 'Debug/Dynamic: EntitySpawner.playerFactory'
+    target: EntityObject/PlayerMock
+  - source: Stage/Debug
+    member: 'Debug/Dynamic: EntitySpawner.enemyFactory'
+    target: EntityObject/EnemyMock
+  - source: Stage/Debug
+    member: 'Debug/Environment/UI/ActGauge (Old)/HostileGauge: HostilePointer.pointerFactory'
+    target: Stage/ActPointer/Pointer
+  - source: Stage/Debug
+    member: 'Debug/Environment/UI/ActGauge (Old)/FriendlyGauge: FriendlyPointer.pointerFactory'
+    target: Stage/ActPointer/Pointer

@@ -1,7 +1,6 @@
 using DIVFactor.Lifecycle;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Entities.Faction;
@@ -31,8 +30,10 @@ namespace AetherAlmachina.Stage
         /// <param name="Hostile">敵対的なエンティティ</param>
         //友好敵対の基準はプレイヤー
         public record EntityList(StatusAsset[] Friendly, StatusAsset[] Hostile);
-        Func<StatusAsset, Player> playerFactory;
-        Func<StatusAsset, Enemy> enemyFactory;
+        [Mold("EntityObject/PlayerMock")]
+        Factory<StatusAsset, Player> playerFactory;
+        [Mold("EntityObject/EnemyMock")]
+        Factory<StatusAsset, Enemy> enemyFactory;
         EntityList Data;
         StageSettingsAsset settings;
         UsageLifetime targeting;
@@ -52,17 +53,17 @@ namespace AetherAlmachina.Stage
 
         public void SpawnConfigure(SpawnerBuilder builder)
         {
-            builder.Register<PlayerLifetime>(Resources.Load<GameObject>(Path.Combine("EntityObject", "PlayerMock")))
+            builder.Register<PlayerLifetime>()
                     .Inject(out playerFactory);
-            builder.Register<EnemyLifetime>(Resources.Load<GameObject>(Path.Combine("EntityObject", "EnemyMock")))
+            builder.Register<EnemyLifetime>()
                     .Inject(out enemyFactory);
         }
         public void Subscribe(UsageLifetime lifetime) => targeting = lifetime;
 
         public void Activate()
         {
-            friendlyEntity = Data.Friendly.Select(asset => (Entity)playerFactory(asset)).ToList();
-            hostileEntity = Data.Hostile.Select(asset => (Entity)enemyFactory(asset)).ToList();
+            friendlyEntity = Data.Friendly.Select(asset => (Entity)playerFactory.Spawn(asset)).ToList();
+            hostileEntity = Data.Hostile.Select(asset => (Entity)enemyFactory.Spawn(asset)).ToList();
 
             friendlyLayoutEvent.OnNext(new(friendlyEntity));
             hostileLayoutEvent.OnNext(new(hostileEntity));

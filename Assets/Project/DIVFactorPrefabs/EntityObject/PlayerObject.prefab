@@ -226,6 +226,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7497102771045880046}
   - component: {fileID: 5691585636181366722}
+  - component: {fileID: 7012451057728061519}
   m_Layer: 0
   m_Name: PlayerObject
   m_TagString: Untagged
@@ -262,6 +263,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb172c25e4023fe4099a15ee197a8542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
+--- !u!114 &7012451057728061519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7368238424143314677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a37fa24c605a4c759d82ae6b8d36937e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DIVFactor.Mold.MoldMetadata
+  format: 1
+  components:
+  - {fileID: 5691585636181366722}
+  - {fileID: 4768210018024843201}
+  - {fileID: 1569043576230126729}
+  - {fileID: 4439293233988536395}
+  - {fileID: 1276044395794054234}
+  - {fileID: 7292304086174974144}
+  - {fileID: 5319178062359547155}
+  - {fileID: 2217797668417799610}
+  spawners:
+  - {fileID: 7292304086174974144}
+  injectables:
+  - {fileID: 5691585636181366722}
+  - {fileID: 4439293233988536395}
+  - {fileID: 7292304086174974144}
+  - {fileID: 2217797668417799610}
+  initializables:
+  - {fileID: 5691585636181366722}
+  - {fileID: 7292304086174974144}
+  - {fileID: 2217797668417799610}
+  views:
+  - {fileID: 4439293233988536395}
+  - {fileID: 2217797668417799610}
+  subscribers:
+  - {fileID: 5691585636181366722}
+  - {fileID: 7292304086174974144}
+  - {fileID: 2217797668417799610}
+  activatables:
+  - {fileID: 5691585636181366722}
+  - {fileID: 7292304086174974144}
+  releasables: []
+  bindings:
+  - owner: {fileID: 7292304086174974144}
+    fieldName: spawner
+    factoryType: DIVFactor.Spawner.Factory`2[[AetherAlmachina.Skill.SkillData, Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[AetherAlmachina.Card.Object.CardBase,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    path: SkillCard/CardBase
 --- !u!1001 &4874953224818250844
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -360,8 +413,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 567cd779e4f41eb46af66d54ed587be7, type: 3}
+--- !u!114 &1276044395794054234 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5913854952702306310, guid: 567cd779e4f41eb46af66d54ed587be7, type: 3}
+  m_PrefabInstance: {fileID: 4874953224818250844}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
+--- !u!114 &2217797668417799610 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6728486814066430438, guid: 567cd779e4f41eb46af66d54ed587be7, type: 3}
+  m_PrefabInstance: {fileID: 4874953224818250844}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9de250c959e2764448beff1dae77c550, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CostDisplay
+--- !u!114 &4439293233988536395 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9096384543040035863, guid: 567cd779e4f41eb46af66d54ed587be7, type: 3}
+  m_PrefabInstance: {fileID: 4874953224818250844}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3db7b699614d79547ac21e7dfbf79c35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AetherAlmachina.Stage.UI.UIChildMark
+--- !u!114 &5319178062359547155 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 754023508930074959, guid: 567cd779e4f41eb46af66d54ed587be7, type: 3}
+  m_PrefabInstance: {fileID: 4874953224818250844}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!224 &6590170534228279073 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1788963754114018173, guid: 567cd779e4f41eb46af66d54ed587be7, type: 3}
   m_PrefabInstance: {fileID: 4874953224818250844}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7292304086174974144 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2779890640131527836, guid: 567cd779e4f41eb46af66d54ed587be7, type: 3}
+  m_PrefabInstance: {fileID: 4874953224818250844}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67b295f90bbe9ae4b9af5c30487981d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HandController

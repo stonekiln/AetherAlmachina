@@ -1,4 +1,7 @@
 using UnityEngine;
+using DIVFactor.Mold;
+using System;
+using System.Linq;
 using VContainer;
 using VContainer.Unity;
 
@@ -30,19 +33,21 @@ namespace DIVFactor.Lifetime
     public class ComponentRegister
     {
         IContainerBuilder Builder { get; init; }
-        Transform LifetimeTransform { get; init; }
-        public ComponentRegister(IContainerBuilder builder, Transform transform)
+        MoldMetadata Metadata { get; init; }
+        public ComponentRegister(IContainerBuilder builder, MoldMetadata metadata)
         {
             Builder = builder;
-            LifetimeTransform = transform;
+            Metadata = metadata;
         }
         /// <summary>
         /// そのLifetimeObjectの配下にあるComponentを探してDI登録する
         /// </summary>
         /// <typeparam name="T">MonoBehaviourの種類</typeparam>
-        public ComponentRegistrationBuilder ComponentInChild<T>() where T : MonoBehaviour
+        public RegistrationBuilder ComponentInChild<T>() where T : MonoBehaviour
         {
-            return Builder.RegisterComponentInHierarchy<T>().UnderTransform(LifetimeTransform);
+            T target = Metadata.Components.OfType<T>().FirstOrDefault();
+            if (!target) throw new InvalidOperationException(typeof(T).Name + " が事前保存一覧にありません。");
+            return Builder.RegisterComponent(target);
         }
     }
 }

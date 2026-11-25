@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8070751546896951916}
   - component: {fileID: 3384821510247914499}
+  - component: {fileID: 2927987294966254404}
   m_Layer: 0
   m_Name: EnemyBrain
   m_TagString: Untagged
@@ -44,3 +45,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b675040ab96bbb24aa7d6c0dbb2ceb96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBrain
+--- !u!114 &2927987294966254404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3325013321847136136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a37fa24c605a4c759d82ae6b8d36937e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DIVFactor.Mold.MoldMetadata
+  format: 1
+  components:
+  - {fileID: 3384821510247914499}
+  spawners: []
+  injectables:
+  - {fileID: 3384821510247914499}
+  initializables: []
+  views: []
+  subscribers: []
+  activatables: []
+  releasables: []
+  bindings: []

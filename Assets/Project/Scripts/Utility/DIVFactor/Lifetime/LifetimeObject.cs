@@ -5,6 +5,7 @@ using DIVFactor.Injectable;
 using DIVFactor.Lifecycle;
 using DIVFactor.Pooling;
 using DIVFactor.Spawner;
+using DIVFactor.Mold;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -21,34 +22,52 @@ namespace DIVFactor.Lifetime
         LifetimeArguments arguments;
         GameObject model;
         Transform modelParent;
-        bool deferStart;
+        MoldMetadata metadata;
+        PrefabCatalog catalog;
+        bool sceneRoot;
+        bool prepared;
+        internal PrefabCatalog Catalog => catalog;
         bool closed;
         bool destroyScheduled;
         bool finalized;
-        Action<IContainerBuilder> callback;
         LifecycleRunner lifecycle;
         public IReadOnlyList<GameObject> ChildObjects => ownership.Objects;
         internal bool IsInitialized => lifecycle?.State == LifecycleState.Active;
         internal bool IsUsable => !closed && Container != null && lifecycle != null;
         internal bool AcceptsSpawning => !closed && (lifecycle?.State == LifecycleState.Starting || lifecycle?.State == LifecycleState.Active);
 
-        protected override void Awake()
+        protected sealed override void Awake()
         {
-            LifetimeSeed seed = GetComponent<LifetimeSeed>();
-            using (IDisposable parentOverride = seed != null && seed.Parent ? EnqueueParent(seed.Parent) : null)
+            autoRun = false;
+            base.Awake();
+        }
+
+        internal void Prepare(LifetimeObject parent, MoldMetadata metadata, PrefabCatalog catalog,
+            LifetimeArguments arguments, LifetimePool pool, Transform displayParent, bool sceneRoot = false)
+        {
+            if (prepared || Container != null) throw new InvalidOperationException("Lifetimeは設定済みです。");
+            if (!metadata || !metadata.IsBaked) throw new InvalidOperationException("事前生成情報がありません。");
+            this.metadata = metadata;
+            this.catalog = catalog;
+            this.arguments = arguments ?? LifetimeArguments.Create();
+            this.sceneRoot = sceneRoot;
+            poolOwner = pool;
+            modelParent = displayParent;
+            parentReference.Object = parent;
+            if (!sceneRoot)
             {
-                if (seed != null)
-                {
-                    callback = seed.CallBack;
-                    arguments = seed.Arguments;
-                    poolOwner = seed.Pool;
-                    deferStart = seed.DeferStart;
-                    modelParent = seed.SpawnParent;
-                    Destroy(seed);
-                }
-                arguments ??= LifetimeArguments.Create();
-                base.Awake();
+                model = metadata.gameObject;
+                ownership.Track(model);
             }
+            prepared = true;
+        }
+
+        internal void BuildPrepared()
+        {
+            if (!prepared || Container != null) throw new InvalidOperationException("初期設定前または構築済みです。");
+            if (parentReference.Object && parentReference.Object.Container == null)
+                throw new InvalidOperationException("親コンテナを先に構築してください。");
+            using (EnqueueParent(parentReference.Object)) Build();
         }
 
         protected override void OnDestroy()
@@ -69,34 +88,30 @@ namespace DIVFactor.Lifetime
 
         protected sealed override void Configure(IContainerBuilder builder)
         {
+            if (!prepared) throw new InvalidOperationException("Prepareの前に構築できません。");
             builder.RegisterEventHub<LifecycleEventHub>();
             builder.RegisterInstance(ownership);
             arguments ??= LifetimeArguments.Create();
             arguments.Register(builder);
             Install(new(builder));
-            Register(new(builder, transform));
-            callback?.Invoke(builder);
-            callback = null;
+            Register(new(builder, metadata));
             builder.RegisterBuildCallback(BuildCallback);
         }
 
         void BuildCallback(IObjectResolver container)
         {
-            MonoBehaviour[] components = GetComponentsInChildren<MonoBehaviour>(true);
-            model = transform.GetChild(0).gameObject;
-            ownership.Track(model);
-            modelParent ??= transform.parent;
-            model.transform.SetParent(modelParent, false);
+            if (!prepared) throw new InvalidOperationException("Prepareの前に構築できません。");
+            if (model) model.transform.SetParent(modelParent, false);
             if (Parent) transform.SetParent(Parent.transform, false);
             parentOwner = Parent as LifetimeObject;
             parentOwner?.children.Add(this);
-            foreach (MonoBehaviour component in components)
-                if (component is ILifetimeSpawner spawner) spawner.SpawnConfigure(new(component.transform, this));
+            foreach (MonoBehaviour component in metadata.Spawners)
+                if (component) ((ILifetimeSpawner)component).SpawnConfigure(new(component, this, metadata));
 
-            lifecycle = new LifecycleRunner(components, container.Resolve<LifecycleEventHub>(),
+            lifecycle = new LifecycleRunner(sceneRoot ? LifecycleParticipants.From(Array.Empty<object>()) : metadata.Participants, container.Resolve<LifecycleEventHub>(),
                 () => ownership.SetVisible(true), () => ownership.SetVisible(false), ScheduleDestroy,
                 EndChildUses, poolOwner ? ReturnToPool : null, arguments.Clear);
-            if (!deferStart) BeginUse(arguments);
+
         }
 
         internal void BeginUse(LifetimeArguments next)
@@ -181,7 +196,6 @@ namespace DIVFactor.Lifetime
 
         void NotifyDestroyed()
         {
-            callback = null;
             parentOwner?.children.Remove(this);
             if (poolOwner) poolOwner.NotifyDestroyed(this);
             poolOwner = null;

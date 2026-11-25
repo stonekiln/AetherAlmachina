@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DIVFactor.Injectable;
 using DIVFactor.Lifecycle;
 using DIVFactor.Lifetime;
+using DIVFactor.Mold;
 using DIVFactor.Pooling;
 using DIVFactor.Spawner;
 using NUnit.Framework;
@@ -25,19 +26,23 @@ namespace AetherAlmachina.Editor.DIVFactor
             PooledScope.BuildCount = 0;
             GameObject template = Make("pool template");
             template.SetActive(false);
-            template.AddComponent<PooledView>();
+            PooledView templateView = template.AddComponent<PooledView>();
+            template.AddComponent<MoldMetadata>().EditorBake(new MonoBehaviour[] { templateView }, System.Array.Empty<FactoryBinding>());
             GameObject ownerObject = Make("pool owner");
             ownerObject.SetActive(false);
             GameObject model = Make("owner model");
             model.transform.SetParent(ownerObject.transform, false);
             PoolSpawner spawner = model.AddComponent<PoolSpawner>();
             spawner.Template = template;
-            OwnerScope owner;
-            using (LifetimeScope.EnqueueParent((LifetimeScope)null))
-            {
-                owner = ownerObject.AddComponent<OwnerScope>();
-                ownerObject.SetActive(true);
-            }
+            MoldMetadata ownerMetadata = model.AddComponent<MoldMetadata>();
+            ownerMetadata.EditorBake(new MonoBehaviour[] { spawner }, System.Array.Empty<FactoryBinding>());
+            OwnerScope owner = ownerObject.AddComponent<OwnerScope>();
+            ownerObject.SetActive(true);
+            Assert.That(owner.Container, Is.Null, "Awakeは自動Buildしない");
+            var initialArguments = LifetimeArguments.Create();
+            MoldTestTools.Call(owner, "Prepare", null, ownerMetadata, null, initialArguments, null, null, false);
+            MoldTestTools.Call(owner, "BuildPrepared");
+            MoldTestTools.Call(owner, "BeginUse", initialArguments);
             PooledView first = spawner.Factory(new Payload("first"));
             GameObject firstObject = first.gameObject;
             PoolingTests.FixedService fixedService = first.Fixed;
