@@ -1,7 +1,7 @@
+using AetherAlmachina.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AetherAlmachina.Entities;
 using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Selectors

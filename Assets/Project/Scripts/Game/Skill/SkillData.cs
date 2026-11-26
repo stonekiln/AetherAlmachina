@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Skill.Effect;
 using R3;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AetherAlmachina.Skill

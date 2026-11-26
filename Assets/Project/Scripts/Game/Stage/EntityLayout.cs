@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-using DIVFactor.Injectable;
-using DIVFactor.Event;
-using DConfig.StageLife.Event;
 using AetherAlmachina.Entities;
-using R3;
+using DConfig.StageLife.Event;
+using DIVFactor.Event;
+using DIVFactor.Injectable;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace AetherAlmachina.Stage

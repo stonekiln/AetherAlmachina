@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using R3;
+using AetherAlmachina.Card.Object;
+using AetherAlmachina.Skill;
 using DConfig.CardLife;
 using DIVFactor.Injectable;
 using DIVFactor.Spawner;
-using AetherAlmachina.Card.Object;
-using AetherAlmachina.Skill;
+using R3;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AetherAlmachina.Card.Hand
 {

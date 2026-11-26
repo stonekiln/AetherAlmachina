@@ -1,6 +1,6 @@
-using System;
-using DIVFactor.Pooling;
 using DIVFactor.Lifecycle;
+using DIVFactor.Pooling;
+using System;
 using VContainer;
 
 namespace DIVFactor.Spawner

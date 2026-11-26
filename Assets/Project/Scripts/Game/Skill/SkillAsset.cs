@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using AetherAlmachina.Skill.Effect;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace AetherAlmachina.Skill

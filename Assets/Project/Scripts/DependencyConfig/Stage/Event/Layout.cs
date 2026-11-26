@@ -1,7 +1,7 @@
-using System.Collections.Generic;
 using AetherAlmachina.Entities;
 using DIVFactor.Event;
 using DIVFactor.Extensions;
+using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;

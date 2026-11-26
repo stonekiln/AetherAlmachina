@@ -1,7 +1,7 @@
+using AetherAlmachina.Editor.DIVFactor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine.SceneManagement;
-using AetherAlmachina.Editor.DIVFactor;
 
 public sealed class LifetimeSceneProcessor : IProcessSceneWithReport
 {

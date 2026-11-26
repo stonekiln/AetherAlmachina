@@ -1,5 +1,5 @@
-using System;
 using R3.Triggers;
+using System;
 
 namespace Tools
 {

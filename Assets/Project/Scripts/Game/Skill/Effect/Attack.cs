@@ -1,6 +1,6 @@
-using System;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Entities.Parameter;
+using System;
 using Tools.Helpers;
 using UnityEngine;
 

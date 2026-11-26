@@ -1,5 +1,5 @@
-using UnityEngine;
 using R3;
+using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Contracts
 {

@@ -1,6 +1,6 @@
+using DIVFactor.Lifecycle;
 using System;
 using System.Collections.Generic;
-using DIVFactor.Lifecycle;
 using VContainer;
 
 namespace DIVFactor.Pooling

@@ -1,6 +1,6 @@
+using DIVFactor.Mold;
 using System;
 using System.Collections.Generic;
-using DIVFactor.Mold;
 using UnityEngine;
 
 namespace DIVFactor

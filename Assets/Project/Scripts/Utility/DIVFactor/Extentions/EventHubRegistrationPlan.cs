@@ -1,8 +1,8 @@
+using DIVFactor.Event;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-using DIVFactor.Event;
 
 namespace DIVFactor.Extensions
 {

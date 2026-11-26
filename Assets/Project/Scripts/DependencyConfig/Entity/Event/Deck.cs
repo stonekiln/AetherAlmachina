@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using AetherAlmachina.Deck;
 using AetherAlmachina.Skill;
 using DIVFactor.Event;
 using DIVFactor.Extensions;
+using System.Collections.Generic;
 using VContainer;
 using VContainer.Unity;
 

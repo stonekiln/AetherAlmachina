@@ -1,7 +1,7 @@
-using System;
-using R3;
-using VContainer;
 using DIVFactor.Lifecycle;
+using R3;
+using System;
+using VContainer;
 
 namespace DIVFactor.Injectable
 {

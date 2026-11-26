@@ -1,5 +1,5 @@
-using System;
 using AetherAlmachina.Entities.Parameter;
+using System;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers
 {

@@ -1,10 +1,9 @@
-using DIVFactor.Lifecycle;
-using System.Collections.Generic;
 using AetherAlmachina.Skill;
 using DConfig.EntityLife.Event;
 using DIVFactor.Event;
-using DIVFactor.Extensions;
+using DIVFactor.Lifecycle;
 using R3;
+using System.Collections.Generic;
 using Tools.Extensions;
 
 namespace AetherAlmachina.Deck

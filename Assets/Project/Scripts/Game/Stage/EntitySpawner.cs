@@ -1,7 +1,3 @@
-using DIVFactor.Lifecycle;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Entities.Faction;
 using AetherAlmachina.Entities.Parameter;
@@ -10,10 +6,12 @@ using DConfig.EntityLife.Event;
 using DConfig.PlayerLife;
 using DConfig.StageLife.Event;
 using DIVFactor.Event;
-using DIVFactor.Extensions;
 using DIVFactor.Injectable;
+using DIVFactor.Lifecycle;
 using DIVFactor.Spawner;
 using R3;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AetherAlmachina.Stage

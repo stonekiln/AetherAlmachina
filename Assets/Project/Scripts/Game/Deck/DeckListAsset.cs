@@ -1,8 +1,8 @@
+using AetherAlmachina.Entities;
+using AetherAlmachina.Skill;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AetherAlmachina.Entities;
-using AetherAlmachina.Skill;
 using UnityEngine;
 
 namespace AetherAlmachina.Deck

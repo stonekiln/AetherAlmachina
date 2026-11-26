@@ -1,7 +1,7 @@
-using System;
-using System.Collections.Generic;
 using DIVFactor.Injectable;
 using R3;
+using System;
+using System.Collections.Generic;
 
 namespace DIVFactor.Lifecycle
 {

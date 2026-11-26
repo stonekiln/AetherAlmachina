@@ -1,9 +1,9 @@
-using DIVFactor.Lifecycle;
-using System;
-using System.Collections.Generic;
 using AetherAlmachina.Skill.Effect.Modifiers;
 using DConfig.EntityLife.Event;
+using DIVFactor.Lifecycle;
 using R3;
+using System;
+using System.Collections.Generic;
 
 namespace AetherAlmachina.Entities.Parameter
 {

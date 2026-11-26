@@ -1,10 +1,12 @@
+using DIVFactor.Injectable;
+using DIVFactor.Lifecycle;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DIVFactor.Injectable;
-using DIVFactor.Lifecycle;
-using DIVFactor.Spawner;
 using UnityEngine;
+#if UNITY_EDITOR
+using DIVFactor.Spawner;
+#endif
 
 namespace DIVFactor.Mold
 {

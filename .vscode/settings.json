@@ -60,5 +60,12 @@
     "cSpell.words": [
         "Almachina",
         "asmdef"
-    ]
+    ],
+    "csharpOrganizeUsings.sortOrder": "",
+    "csharpOrganizeUsings.splitGroups": false,
+    "[csharp]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    }
 }

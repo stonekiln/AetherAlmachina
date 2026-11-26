@@ -1,14 +1,14 @@
-using DIVFactor.Lifecycle;
-using R3;
-using UnityEngine;
-using System.Linq;
-using DConfig.StageLife.Event;
-using DConfig.EntityLife.Event;
-using DIVFactor.Event;
-using DIVFactor.Injectable;
 using AetherAlmachina.Deck;
 using AetherAlmachina.Entities.Parameter;
+using DConfig.EntityLife.Event;
+using DConfig.StageLife.Event;
+using DIVFactor.Event;
 using DIVFactor.Extensions;
+using DIVFactor.Injectable;
+using DIVFactor.Lifecycle;
+using R3;
+using System.Linq;
+using UnityEngine;
 
 namespace AetherAlmachina.Entities
 {

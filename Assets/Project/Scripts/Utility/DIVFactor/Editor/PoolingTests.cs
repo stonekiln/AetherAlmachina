@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
 using DIVFactor.Extensions;
 using DIVFactor.Injectable;
 using DIVFactor.Lifecycle;
 using DIVFactor.Pooling;
 using NUnit.Framework;
 using R3;
+using System;
+using System.Collections.Generic;
 using VContainer;
 
 namespace AetherAlmachina.Editor.DIVFactor

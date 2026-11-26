@@ -1,8 +1,8 @@
-using System;
 using AetherAlmachina.Entities;
 using AetherAlmachina.Skill.Effect.Contracts;
 using AetherAlmachina.Skill.Effect.Modifiers;
 using R3;
+using System;
 using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect

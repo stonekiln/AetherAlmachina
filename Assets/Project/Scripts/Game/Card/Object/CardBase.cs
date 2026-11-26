@@ -1,6 +1,6 @@
-using DIVFactor.Lifecycle;
 using AetherAlmachina.Skill;
 using DIVFactor.Injectable;
+using DIVFactor.Lifecycle;
 using UnityEngine;
 
 namespace AetherAlmachina.Card.Object

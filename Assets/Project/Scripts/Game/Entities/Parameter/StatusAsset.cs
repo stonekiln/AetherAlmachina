@@ -1,7 +1,7 @@
+using AetherAlmachina.Deck;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using AetherAlmachina.Deck;
 using UnityEngine;
 
 namespace AetherAlmachina.Entities.Parameter

@@ -1,7 +1,7 @@
+using DIVFactor.Event;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using DIVFactor.Event;
 using VContainer;
 
 namespace DIVFactor.Extensions

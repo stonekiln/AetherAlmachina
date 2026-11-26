@@ -1,10 +1,10 @@
+using DConfig.EntityLife.Event;
+using DIVFactor.Injectable;
 using DIVFactor.Lifecycle;
 using R3;
+using Tools;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using DIVFactor.Injectable;
-using DConfig.EntityLife.Event;
-using Tools;
 
 namespace AetherAlmachina.Card.Object
 {

@@ -1,5 +1,5 @@
-using DIVFactor.Lifecycle;
 using DConfig.StageLife.Event;
+using DIVFactor.Lifecycle;
 using R3;
 
 namespace AetherAlmachina.Stage

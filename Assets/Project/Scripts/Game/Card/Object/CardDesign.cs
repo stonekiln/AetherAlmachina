@@ -1,5 +1,5 @@
-using DIVFactor.Lifecycle;
 using DIVFactor.Injectable;
+using DIVFactor.Lifecycle;
 using UnityEngine;
 using UnityEngine.UI;
 

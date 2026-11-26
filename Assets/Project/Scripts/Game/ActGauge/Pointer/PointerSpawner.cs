@@ -1,8 +1,7 @@
-using DIVFactor.Injectable;
-using DIVFactor.Lifecycle;
-using System;
 using AetherAlmachina.Skill;
 using DConfig.ActPointerLife;
+using DIVFactor.Injectable;
+using DIVFactor.Lifecycle;
 using DIVFactor.Spawner;
 using UnityEngine;
 

@@ -1,16 +1,16 @@
+using AetherAlmachina.Entities;
+using AetherAlmachina.Entities.Faction;
+using AetherAlmachina.Skill;
+using DConfig.EntityLife.Event;
+using DConfig.StageLife.Event;
+using DIVFactor.Event;
+using DIVFactor.Injectable;
 using DIVFactor.Lifecycle;
+using R3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using R3;
-using DConfig.EntityLife.Event;
-using DIVFactor.Injectable;
-using DIVFactor.Event;
-using AetherAlmachina.Entities;
-using AetherAlmachina.Entities.Faction;
-using AetherAlmachina.Skill;
-using DConfig.StageLife.Event;
 
 namespace AetherAlmachina.Card.Hand
 {

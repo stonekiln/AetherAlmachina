@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using AetherAlmachina.Card;
 using AetherAlmachina.Card.Hand;
 using DConfig.EntityLife.Event;
 using DIVFactor.Injectable;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace AetherAlmachina.Entities.Brain

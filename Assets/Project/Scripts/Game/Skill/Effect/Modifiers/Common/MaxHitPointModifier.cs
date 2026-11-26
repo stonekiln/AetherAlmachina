@@ -1,6 +1,6 @@
-using System;
 using AetherAlmachina.Entities.Parameter;
 using AetherAlmachina.Skill.Effect.Modifiers;
+using System;
 using UnityEngine;
 
 namespace AetherAlmachina.Skill.Effect.Modifiers

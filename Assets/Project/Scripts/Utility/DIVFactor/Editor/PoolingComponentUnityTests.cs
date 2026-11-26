@@ -1,8 +1,4 @@
 #if UNITY_EDITOR
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
 using AetherAlmachina.ActGauge.Pointer;
 using AetherAlmachina.Card.Object;
 using AetherAlmachina.Entities;
@@ -18,6 +14,10 @@ using DIVFactor.Lifecycle;
 using DIVFactor.Pooling;
 using NUnit.Framework;
 using R3;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.TestTools;

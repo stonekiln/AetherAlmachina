@@ -1,6 +1,6 @@
-using DIVFactor.Lifecycle;
 using AetherAlmachina.Entities.Faction;
 using DIVFactor.Injectable;
+using DIVFactor.Lifecycle;
 using R3;
 using TMPro;
 using UnityEngine;

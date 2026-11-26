@@ -1,10 +1,10 @@
-using DIVFactor.Lifecycle;
 using AetherAlmachina.ActGauge.Pointer;
 using AetherAlmachina.Entities.Faction;
 using AetherAlmachina.Skill;
 using DConfig.StageLife.Event;
 using DIVFactor.Event;
 using DIVFactor.Injectable;
+using DIVFactor.Lifecycle;
 using R3;
 using UnityEngine;
 

@@ -1,5 +1,5 @@
-using System;
 using DIVFactor.Event;
+using System;
 
 namespace DIVFactor.Lifecycle
 {
