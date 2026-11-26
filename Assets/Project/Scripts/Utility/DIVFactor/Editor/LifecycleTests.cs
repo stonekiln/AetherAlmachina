@@ -269,7 +269,7 @@ namespace AetherAlmachina.Editor.DIVFactor
             Assert.That(lateValues, Is.Zero);
         }
 
-        sealed class Probe : IReactiveView, IReleasable
+        sealed class Probe : ISubscribingViewUpdater, IReleasable
         {
             readonly string name;
             readonly List<string> trace;

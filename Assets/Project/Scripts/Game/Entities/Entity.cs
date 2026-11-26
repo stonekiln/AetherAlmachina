@@ -15,7 +15,7 @@ namespace AetherAlmachina.Entities
     /// <summary>
     /// エンティティのMonoBehaviour
     /// </summary>
-    public abstract class Entity : MonoBehaviour, IEntityInteraction, IActiveComponent
+    public abstract class Entity : MonoBehaviour, IEntityInteraction, ISubscriberComponent
     {
         public string Name { get; private set; }
         public LockOnEventHub LockOn { get; private set; }

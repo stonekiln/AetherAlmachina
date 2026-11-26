@@ -17,7 +17,7 @@ namespace AetherAlmachina.Card.Hand
     /// <summary>
     /// 手札を制御するためのクラス
     /// </summary>
-    public class HandController : MonoBehaviour, IActiveComponent
+    public class HandController : MonoBehaviour, ISubscriberComponent
     {
         const int HandLimit = 5;
         const int Stack = 1;

@@ -74,7 +74,7 @@ namespace AetherAlmachina.Editor.DIVFactor
             protected override void Register(ComponentRegister register) { }
         }
 
-        public class NativeProbe : MonoBehaviour, IReactiveView, IReleasable
+        public class NativeProbe : MonoBehaviour, ISubscribingViewUpdater, IReleasable
         {
             LifetimeOwnership ownership;
             LifecycleEventHub events;

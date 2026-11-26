@@ -306,7 +306,7 @@ namespace AetherAlmachina.Editor.DIVFactor
             }
         }
 
-        sealed class View : IActiveComponent, IReleasable
+        sealed class View : ISubscriberComponent, IReleasable
         {
             public Payload Payload;
             public LifecycleEventHub Events;

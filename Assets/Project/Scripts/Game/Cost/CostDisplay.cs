@@ -11,7 +11,7 @@ namespace AetherAlmachina.Cost
     /// あるエンティティのコストを表示するためのクラス
     /// </summary>
     [RequireComponent(typeof(TextMeshProUGUI))]
-    public class CostDisplay : MonoBehaviour, IReactiveView
+    public class CostDisplay : MonoBehaviour, ISubscribingViewUpdater
     {
         TextMeshProUGUI textMeshPro;
         Player owner;

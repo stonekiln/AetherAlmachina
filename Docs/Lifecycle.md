@@ -16,7 +16,7 @@
 | 6 | `context.Subscribed` | 全員の購読後に初期イベントを送る |
 | 7 | 表示を有効化 | Unityで表示対象がactiveInHierarchyになり、スクリプトもenabledならOnEnableを受ける |
 
-各契約は任意。注入だけなら `IInjectable`、描画は `IViewUpdatable`、購読は `IUsageSubscriber`、返却時の固有の後始末は `IReleasable` を使う。併用する組み合わせには `ISubscriberComponent`（注入と購読）、`IViewComponent`（注入と描画）、`IReactiveView`（3つ全て）がある。従来のバンドル名を使うこともできる。InitializeやActivateは同名のメソッドを定義するだけでは呼ばれない。
+各契約は任意。注入だけなら `IInjectable`、表示更新だけなら `IViewUpdatable`、購読だけなら `IUsageSubscriber` を使う。注入と購読を行う場合は `ISubscriberComponent`、注入と表示更新を行う場合は `IViewUpdater`、その両方に参加する場合は `ISubscribingViewUpdater` を使う。使用終了時に固有の後始末が必要なクラスには `IReleasable` を個別に追加する。InitializeやActivateは同名のメソッドを定義するだけでは呼ばれない。
 
 ```csharp
 public void Injection(InjectableResolver resolver)

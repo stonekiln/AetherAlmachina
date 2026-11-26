@@ -12,7 +12,7 @@ namespace AetherAlmachina.ActGauge.Pointer
     /// </summary>
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(RectTransform))]
-    public class PointerController : MonoBehaviour, IActiveView
+    public class PointerController : MonoBehaviour, ISubscribingViewUpdater, IReleasable
     {
         /// <summary>
         /// ポインターがディスプレイに表示される時間の最大値(sec)

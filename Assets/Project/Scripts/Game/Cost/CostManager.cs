@@ -13,7 +13,7 @@ namespace AetherAlmachina.Cost
     /// <summary>
     /// 各エンティティにコストを設定するためのクラス
     /// </summary>
-    public class CostManager : MonoBehaviour, IReactiveComponent
+    public class CostManager : MonoBehaviour, ISubscriberComponent
     {
         EventPort<AutoIncreaseEvent> AutoIncrease;
         CostSettingsAsset costSettings;

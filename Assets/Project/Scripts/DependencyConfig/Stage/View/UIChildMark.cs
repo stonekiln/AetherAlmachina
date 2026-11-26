@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AetherAlmachina.Stage.UI
 {
-    public class UIChildMark : MonoBehaviour, IInjectable, IViewUpdatable
+    public class UIChildMark : MonoBehaviour, IViewUpdater
     {
         PlayerUIRoot destination;
         LifetimeOwnership ownership;

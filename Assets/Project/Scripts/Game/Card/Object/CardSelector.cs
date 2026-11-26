@@ -12,7 +12,7 @@ namespace AetherAlmachina.Card.Object
     /// カードを画面から選択するためのクラス
     /// </summary>
     [RequireComponent(typeof(RectTransform))]
-    public class CardSelector : ButtonBase, IReactiveComponent, IReleasable
+    public class CardSelector : ButtonBase, ISubscriberComponent, IReleasable
     {
         CardActiveEventHub CardActive;
         CardBase parent;

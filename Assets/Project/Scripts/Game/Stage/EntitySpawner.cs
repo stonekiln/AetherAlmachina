@@ -19,7 +19,7 @@ namespace AetherAlmachina.Stage
     /// <summary>
     /// エンティティをスポーンさせるスポナー
     /// </summary>
-    public class EntitySpawner : MonoBehaviour, IActiveComponent, ILifetimeSpawner
+    public class EntitySpawner : MonoBehaviour, ISubscriberComponent, ILifetimeSpawner
     {
         /// <summary>
         /// スポーンできるエンティティの情報を渡す

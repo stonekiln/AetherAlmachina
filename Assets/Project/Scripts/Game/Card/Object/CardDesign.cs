@@ -10,7 +10,7 @@ namespace AetherAlmachina.Card.Object
     /// </summary>
     [RequireComponent(typeof(RectTransform))]
     [RequireComponent(typeof(Image))]
-    public class CardDesign : MonoBehaviour, IViewComponent, IReleasable
+    public class CardDesign : MonoBehaviour, IViewUpdater, IReleasable
     {
         CardBase parent;
         public RectTransform RectTransform { get; set; }

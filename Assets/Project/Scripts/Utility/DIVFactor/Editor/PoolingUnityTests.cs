@@ -111,7 +111,7 @@ namespace AetherAlmachina.Editor.DIVFactor
             public System.Func<Payload, PooledView> Factory;
             public void SpawnConfigure(SpawnerBuilder builder) => builder.RegisterPooled<PooledScope>(Template, 1).Inject(out Factory);
         }
-        public class PooledView : MonoBehaviour, IActiveComponent, IReleasable
+        public class PooledView : MonoBehaviour, ISubscriberComponent, IReleasable
         {
             public Payload Argument;
             public PoolingTests.FixedService Fixed;
