@@ -21,6 +21,11 @@ namespace Tools.Helpers
             bits = ToBits(initialValue);
         }
 
+        private EnumFlags(ulong initialBits)
+        {
+            bits = initialBits;
+        }
+
         public TEnum Value => FromBits(bits);
 
         public bool IsEmpty => bits == 0;
@@ -30,21 +35,52 @@ namespace Tools.Helpers
 
         /// <summary>すべてのビットが立っていれば true。指定ビットがゼロなら常に true です。</summary>
         public bool HasAll(TEnum first, params TEnum[] additional)
-        {
-            ulong mask = Combine(first, additional);
-            return (bits & mask) == mask;
-        }
+            => HasAllBits(Combine(first, additional));
+
+        // in を付けた集合版より、既存の列挙値版が default リテラルで優先されます。
+        /// <summary>相手の集合のフラグをすべて含むか判定します。</summary>
+        public bool HasAll(in EnumFlags<TEnum> other)
+            => HasAllBits(GetBits(other));
 
         /// <summary>いずれかのビットが立っていれば true。指定ビットがゼロなら常に false です。</summary>
         public bool HasAny(TEnum first, params TEnum[] additional)
-        {
-            ulong mask = Combine(first, additional);
-            return (bits & mask) != 0;
-        }
+            => (bits & Combine(first, additional)) != 0;
+
+        /// <summary>相手の集合と重なるフラグが一つでもあるか判定します。</summary>
+        public bool HasAny(in EnumFlags<TEnum> other)
+            => (bits & GetBits(other)) != 0;
 
         /// <summary>指定値と現在値で立っている状態が異なるフラグを返します。</summary>
         public TEnum GetChangedFlags(TEnum other)
             => FromBits(bits ^ ToBits(other));
+
+        /// <summary>二つの集合でオン・オフが異なるフラグを返します。</summary>
+        public TEnum GetChangedFlags(in EnumFlags<TEnum> other)
+            => FromBits(bits ^ GetBits(other));
+
+        /// <summary>現在値と指定値の和集合を新しいインスタンスで返します。</summary>
+        public EnumFlags<TEnum> Union(TEnum other)
+            => new EnumFlags<TEnum>(bits | ToBits(other));
+
+        /// <summary>二つの集合の和集合を新しいインスタンスで返します。</summary>
+        public EnumFlags<TEnum> Union(in EnumFlags<TEnum> other)
+            => new EnumFlags<TEnum>(bits | GetBits(other));
+
+        /// <summary>現在値と指定値の共通部分を新しいインスタンスで返します。</summary>
+        public EnumFlags<TEnum> Intersect(TEnum other)
+            => new EnumFlags<TEnum>(bits & ToBits(other));
+
+        /// <summary>二つの集合の共通部分を新しいインスタンスで返します。</summary>
+        public EnumFlags<TEnum> Intersect(in EnumFlags<TEnum> other)
+            => new EnumFlags<TEnum>(bits & GetBits(other));
+
+        /// <summary>現在値から指定値のフラグを除いた集合を新しいインスタンスで返します。</summary>
+        public EnumFlags<TEnum> Except(TEnum other)
+            => new EnumFlags<TEnum>(bits & ~ToBits(other));
+
+        /// <summary>現在の集合から相手のフラグを除いた集合を新しいインスタンスで返します。</summary>
+        public EnumFlags<TEnum> Except(in EnumFlags<TEnum> other)
+            => new EnumFlags<TEnum>(bits & ~GetBits(other));
 
         public bool Add(TEnum first, params TEnum[] additional)
             => Update(bits | Combine(first, additional));
@@ -60,6 +96,11 @@ namespace Tools.Helpers
         public bool Replace(TEnum value) => Update(ToBits(value));
 
         public bool Clear() => Update(0);
+
+        bool HasAllBits(ulong mask) => (bits & mask) == mask;
+
+        static ulong GetBits(EnumFlags<TEnum> other)
+            => (other ?? throw new ArgumentNullException(nameof(other))).bits;
 
         bool Update(ulong next)
         {
@@ -103,24 +144,5 @@ namespace Tools.Helpers
             MemoryMarshal.Cast<ulong, TEnum>(storage)[0] = value;
             return storage[0];
         }
-    }
-
-    // 既存の HasAll(default) / HasAny(default) が列挙値を受け取るよう、集合版は拡張メソッドにします。
-    public static class EnumFlagsExtensions
-    {
-        /// <summary>相手の集合に含まれるフラグをすべて持つか判定します。</summary>
-        public static bool HasAll<TEnum>(this EnumFlags<TEnum> flags, EnumFlags<TEnum> other)
-            where TEnum : unmanaged, Enum
-            => flags.HasAll((other ?? throw new ArgumentNullException(nameof(other))).Value);
-
-        /// <summary>相手の集合と重なるフラグが一つでもあるか判定します。</summary>
-        public static bool HasAny<TEnum>(this EnumFlags<TEnum> flags, EnumFlags<TEnum> other)
-            where TEnum : unmanaged, Enum
-            => flags.HasAny((other ?? throw new ArgumentNullException(nameof(other))).Value);
-
-        /// <summary>二つの集合で立っている状態が異なるフラグを返します。</summary>
-        public static TEnum GetChangedFlags<TEnum>(this EnumFlags<TEnum> flags, EnumFlags<TEnum> other)
-            where TEnum : unmanaged, Enum
-            => flags.GetChangedFlags((other ?? throw new ArgumentNullException(nameof(other))).Value);
     }
 }
